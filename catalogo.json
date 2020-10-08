@@ -20,8 +20,8 @@
         ]
     }, {
         "id": 2,
-        "titulo": "La guerra de las galaxias: Episodio 2-La amenaza fantasma",
-        "poster": "imagenes/guerraepisodio1.jpg",
+        "titulo": "La guerra de las galaxias: Episodio 2-El ataque de los clones",
+        "poster": "imagenes/guerraepisodio2.jpg",
         "director": "George Lucas",
         "precio": 18.99,
         "categoria": "Aventura",

@@ -7,6 +7,21 @@ function checkFields() {
     }
 }
 
+function loadJSON(callback) {
+    var obj = new XMLHttpRequest();
+    obj.open('GET', 'catalogo.json', true);
+    obj.onreadystatechange = function() {
+        if (obj.readyState == 4 && obj.status == "200") {
+            callback(obj.responseText)
+        }
+    }
+    obj.send(null)
+}
+
+function jsonToTable() {
+    loadJSON(function())
+}
+
 function passwordStrenth() {
 
 }

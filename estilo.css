@@ -83,3 +83,9 @@ body {
     position: relative;
     text-align: center;
 }
+
+.descmovie {
+    width: 10em;
+    margin: auto;
+    text-align: justify;
+}
