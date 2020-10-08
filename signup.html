@@ -5,7 +5,9 @@
     <head>
         <title>Registro</title>
         <meta charset="UTF-8"/>
-        <link rel="stylesheet" href="style.css">
+        <link rel="stylesheet" href="estilo.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="javascript.js"></script>
     </head>
     <body>
         <div class="info">
@@ -15,18 +17,18 @@
             <main>
                 <form>        
                     <label>Nombre de usuario</label><br>
-                    <input name ="Nombre de usuario" type="text" placeholder="Introduzca el nombre">
-                    <br>
+                    <input id="username" name ="Nombre de usuario" type="text" placeholder="Introduzca el nombre">
+                    <br><br>
                     <label>Contraseña</label><br>
-                    <input name="Contraseña" type="Contraseña" placeholder="Introduzca la contraseña">
-                    <br>
+                    <input id="password" name="Contraseña" type="Contraseña" placeholder="Introduzca la contraseña">
+                    <br><br>
                     <label>Email</label><br>
-                    <input name="email" type="email" placeholder="Introduzca email">
-                    <br>
+                    <input id="email" name="email" type="email" placeholder="Introduzca email">
+                    <br><br>
                     <label>Credit card</label><br>
-                    <input type="tel" inputmode="numeric" pattern="[0-9\s]{13,19}" autocomplete="cc-number" maxlength="19" placeholder="xxxx xxxx xxxx xxxx">
+                    <input id="card" type="tel" inputmode="numeric" pattern="[0-9\s]{13,19}" autocomplete="cc-number" maxlength="19" placeholder="xxxx xxxx xxxx xxxx">
                     <br>
-                    <input type="submit" value="Registrarse">
+                    <button type="button" onclick="checkFields('username', 'password', 'email', 'card')">Registrarse</button>
                 </form>
             </main>
         </div>

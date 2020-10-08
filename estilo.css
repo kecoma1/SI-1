@@ -66,3 +66,13 @@ body {
     position: relative;
     top: 45px;
 }
+
+.errorMsg {
+    color: red;
+    text-align: center;
+}
+
+.images {
+    width: 300px;
+    height: 100px;
+}
