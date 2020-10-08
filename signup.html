@@ -24,7 +24,7 @@
                     <input name="email" type="email" placeholder="Introduzca email">
                     <br>
                     <label>Credit card</label><br>
-                    <input name="tarjeta" placeholder="Introduzca tarjeta de crédito" x-autocompletetype="cc-number">
+                    <input type="tel" inputmode="numeric" pattern="[0-9\s]{13,19}" autocomplete="cc-number" maxlength="19" placeholder="xxxx xxxx xxxx xxxx">
                     <br>
                     <input type="submit" value="Registrarse">
                 </form>
