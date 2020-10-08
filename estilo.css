@@ -73,6 +73,13 @@ body {
 }
 
 .images {
-    width: 300px;
-    height: 100px;
+    height: 300px;
+    width: 200px;
+}
+
+.mainSection {
+    left: 220px;
+    width: 70%;
+    position: relative;
+    text-align: center;
 }

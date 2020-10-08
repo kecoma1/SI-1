@@ -6,3 +6,7 @@ function checkFields() {
         }
     }
 }
+
+function passwordStrenth() {
+
+}
