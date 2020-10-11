@@ -1,50 +1,52 @@
 <!DOCTYPE html>
 
 <html>
-    <meta name="viewport" content="width=device-width, intial-scale=1.0">
-    <head>
-        <title>Registro</title>
-        <meta charset="UTF-8"/>
-        <link rel="stylesheet" href="estilo.css">
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-        <script src="javascript.js"></script>
-    </head>
-    <body>
-        <div class="info">
-            <header>
-                <h1>Página de registro</h1>
-            </header>
-            <main>
-                <form>        
-                    <label>Nombre de usuario</label><br>
-                    <input id="username" name ="Nombre de usuario" type="text" placeholder="Introduzca el nombre">
-                    <br><br>
-                    <label>Contraseña</label><br>
-                    <input id="password" name="Contraseña" type="password" placeholder="Introduzca la contraseña">
-                    <br><br>
-                    <label>Email</label><br>
-                    <input id="email" name="email" type="email" placeholder="Introduzca email">
-                    <br><br>
-                    <label>Credit card</label><br>
-                    <input id="card" type="tel" inputmode="numeric" pattern="[0-9\s]{13,19}" autocomplete="cc-number" maxlength="19" placeholder="xxxx xxxx xxxx xxxx">
-                    <br>
-                    <button type="button" onclick="checkFields('username', 'password', 'email', 'card')">Registrarse</button>
-                </form>
-            </main>
-        </div>
-        <footer>
+<meta name="viewport" content="width=device-width, intial-scale=1.0">
 
-        </footer>
-    </body>
-    <div class="topnav">
-        <a>Registrarse</a>
-        <a>Películas</a>
-        <a>Iniciar sesión</a>
+<head>
+    <title>Registro</title>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="estilo.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="javascript.js"></script>
+</head>
+
+<body>
+    <div class="info">
+        <header>
+            <h1>Página de registro</h1>
+        </header>
+        <main>
+            <form>
+                <label>Nombre de usuario</label><br>
+                <input id="username" name="Nombre de usuario" type="text" placeholder="Introduzca el nombre">
+                <br><br>
+                <label>Contraseña</label><br>
+                <input id="password" name="Contraseña" type="password" placeholder="Introduzca la contraseña">
+                <br><br>
+                <label>Email</label><br>
+                <input id="email" name="email" type="email" placeholder="Introduzca email">
+                <br><br>
+                <label>Credit card</label><br>
+                <input id="card" type="tel" inputmode="numeric" pattern="[0-9\s]{13,19}" autocomplete="cc-number" maxlength="19" placeholder="xxxx xxxx xxxx xxxx">
+                <br>
+                <button type="button" onclick="checkFields('username', 'password', 'email', 'card')">Registrarse</button>
+            </form>
+        </main>
     </div>
-    <div class="sidenav">
-        <a>Top films</a>
-        <a>DVD's disponibles</a>
-        <a>Inicio</a>
-    </div>
+    <footer>
+
+    </footer>
+</body>
+<div class="topnav">
+    <a>Registrarse</a>
+    <a>Películas</a>
+    <a>Iniciar sesión</a>
+</div>
+<div class="sidenav">
+    <a>Top films</a>
+    <a>DVD's disponibles</a>
+    <a>Inicio</a>
+</div>
 
 </html>
