@@ -11,7 +11,3 @@ function jsonToTable() {
     fetch('./catalogo.json').then(results => results.json()).then(console.log());
     a = 1;
 }
-
-function passwordStrenth() {
-
-}

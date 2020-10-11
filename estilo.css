@@ -74,6 +74,11 @@ body {
     text-align: center;
 }
 
+.correctInput {
+    color: green;
+    text-align: center;
+}
+
 .images {
     height: 300px;
     width: 200px;

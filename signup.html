@@ -9,6 +9,37 @@
     <link rel="stylesheet" href="estilo.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="javascript.js"></script>
+    <script>
+        $(document).ready(function(){
+            $("button").click(function(){
+                var password = document.getElementById('password').value;
+                var fortaleza = 4;
+                if (password.length < 6) {
+                   document.getElementById('errorMSG').innerHTML = "La contraseña debe tener como mínimo 6 caracteres.";
+                   fortaleza -= 1;
+                }
+                if (/[A-Z]/.test(password) == false) {
+                    document.getElementById('errorMSG').innerHTML = "La contraseña debe tener como mínimo 1 mayúscula.";
+                    fortaleza -= 1;
+                } 
+                if (/[a-z]/.test(password) == false) {
+                    document.getElementById('errorMSG').innerHTML = "La contraseña debe tener como mínimo 1 minúscula.";
+                    fortaleza -= 1;
+                }
+                if (/[0-9]/.test(password) == false) {
+                    document.getElementById('errorMSG').innerHTML = "La contraseña debe tener como mínimo 1 dígito.";
+                    fortaleza -= 1;
+                }
+
+                if (fortaleza != 4) {
+                    document.getElementById('fortaleza').innerHTML = "Se cumplen "+fortaleza+" de 4 requisitos en la contraseña";
+                } else {
+                    document.getElementById('buenaContra').innerHTML = "La contraseña cumple todos los requisitos";
+                    document.getElementById('fortaleza').innerHTML = "";
+                }
+            });
+          }); 
+    </script>
 </head>
 
 <body>
@@ -30,8 +61,17 @@
                 <label>Credit card</label><br>
                 <input id="card" type="tel" inputmode="numeric" pattern="[0-9\s]{13,19}" autocomplete="cc-number" maxlength="19" placeholder="xxxx xxxx xxxx xxxx">
                 <br>
-                <button type="button" onclick="checkFields('username', 'password', 'email', 'card')">Registrarse</button>
+                <button id="button" type="button" onclick="checkFields('username', 'password', 'email', 'card')">Registrarse</button>
             </form>
+            <br><br>
+            <div class="errorMsg">
+                <p id="errorMSG"></p>
+                <p id="fortaleza"></p>
+            </div>
+            <div class="correctInput">
+                <p id="buenaContra"></p>
+            </div>
+            
         </main>
     </div>
     <footer>
