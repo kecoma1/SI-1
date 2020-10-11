@@ -32,7 +32,7 @@
                 }
 
                 if (fortaleza != 4) {
-                    document.getElementById('fortaleza').innerHTML = "Se cumplen "+fortaleza+" de 4 requisitos en la contraseña";
+                    document.getElementById('fortaleza').innerHTML = "Se cumplen "+fortaleza+" de 4 requisitos en la contraseña.<br /><br />Requisitos:<br />- Contraseña con 6 o más digitos<br />- 1 mayúscula<br />- 1 minúscula<br />- 1 dígito";
                     document.getElementById('buenaContra').innerHTML = "";
                 } else {
                     document.getElementById('buenaContra').innerHTML = "La contraseña cumple todos los requisitos";
@@ -76,18 +76,22 @@
         </main>
     </div>
     <footer>
-
     </footer>
+    <div class="sidenav">
+        <a>Acción</a>
+        <a>Antiguas</a>
+        <a>Anime</a>
+        <a>Aventuras</a>
+        <a>Bélicas</a>
+        <a>Ciencia Ficción</a>
+        <a>Comedia</a>
+        <a>Infantiles</a>
+        <a>Suspense</a>
+    </div>
+    <div class="topnav">
+        <a>Inicio</a>
+        <a>Iniciar sesión</a>
+        <a>Registrarse</a>
+    </div>
 </body>
-<div class="topnav">
-    <a>Registrarse</a>
-    <a>Películas</a>
-    <a>Iniciar sesión</a>
-</div>
-<div class="sidenav">
-    <a>Top films</a>
-    <a>DVD's disponibles</a>
-    <a>Inicio</a>
-</div>
-
 </html>

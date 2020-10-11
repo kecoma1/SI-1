@@ -7,7 +7,7 @@ body {
 .sidenav {
     width: 153px;
     position: fixed;
-    top: 58px;
+    top: 50px;
     background: #333;
     overflow-x: hidden;
     padding: 8px 0;
