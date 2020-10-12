@@ -8,6 +8,6 @@ function checkFields() {
 }
 
 function jsonToTable() {
-    fetch('./catalogo.json').then(results => results.json()).then(console.log());
-    a = 1;
+    var catalogo = JSON.parse(catalogo.json);
+    catalogo[0];
 }

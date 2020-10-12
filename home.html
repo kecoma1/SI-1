@@ -6,36 +6,53 @@
         <meta charset="UTF-8"/>
         <link rel="stylesheet" href="estilo.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-        <script src="javascript.js"></script>
-        <script src="catalogo.json"></script>
+        <script type="text/javascript" src="catalogo.json"></script>
+        <script type="text/javascript" src="javascript.js"></script>
     </head>
     
     <body>
         <div class="info">    
             <header>
+                <h1>Catálogo de películas</h1>
             </header>
             <main>
                 <div class="mainSection">
-                    <button type="button" onclick="jsonToTable()">a</a>
+                    <div>
+                        <div class="mainSection">
+                            <div>
+                                <img src="imagenes/joker.jpg" alt="joker" class="images"><br>
+                                <h3>Joker</h3>
+                                <p class="descmovie">
+                                    Joker (conocida como Guasón en Hispanoamérica) es una película de suspenso y drama psicológico estadounidense de 2019 distribuida por Warner Bros. Pictures y basada en el Joker, personaje de DC Comics
+                                </p>
+                            </div>
+                            <div>
+                                <img src="imagenes/cadena_perpetua.jpg" alt="joker" class="images"><br>
+                                <h3>Cadena perpetua</h3>
+                                <p class="descmovie">
+                                    The Shawshank Redemption (Cadena perpetua en España; Sueño de fuga en Colombia, Chile, México, Perú y Venezuela; y Sueños de libertad o Escape a la libertad en Argentina) es una película estadounidense de 1994 escrita y dirigida por Frank Darabont y protagonizada por Tim Robbins y Morgan Freeman.
+                                </p>
+                            </div>
+                            <div>
+                                <img src="imagenes/spiderman.jpg" alt="joker" class="images"><br>
+                                <h3>Spider-man</h3>
+                                <p class="descmovie">
+                                   El mejor spiderman. 
+                                </p>
+                            </div>
+                            <div>
+                                <img src="imagenes/pulp_fiction.jpg" alt="joker" class="images"><br>
+                                <h3>Pulp Fiction</h3>
+                                <p class="descmovie">
+                                    Pulp Fiction (en Hispanoamérica Tiempos violentos) es una película estadounidense de 19944​ escrita y dirigida por Quentin Tarantino. El guion está basado en historias que el mismo Tarantino desarrolló en colaboración con Roger Avary durante los años 1992 y 1993, incluyendo escenas que originalmente habían sido escritas para True Romance.
+                                </p>
+                            </div>
+                    </div>
                 </div>
             </main>
         </div>
-        <div class="sidenav">
-            <a>Acción</a>
-            <a>Antiguas</a>
-            <a>Anime</a>
-            <a>Aventuras</a>
-            <a>Bélicas</a>
-            <a>Ciencia Ficción</a>
-            <a>Comedia</a>
-            <a>Infantiles</a>
-            <a>Suspense</a>
-        </div>
-        <div class="topnav">
-            <a>Inicio</a>
-            <a>Iniciar sesión</a>
-            <a>Registrarse</a>
-        </div>
+        <iframe src="sidenav.html" class="sidenav"></iframe>
+        <iframe src="topnav.html" class="topnav"></iframe>
         <footer>
         </footer>
     </body>
