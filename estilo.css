@@ -4,8 +4,12 @@ body {
     margin: 0;
 }
 
-header {
-    top: 100px;
+.pageTitle {
+    margin-left: 40%;
+    margin-top: 3%;
+    margin-bottom: 0px;
+    position: fixed;
+    align-self: center;
 }
 
 .sidenav {
@@ -94,18 +98,40 @@ header {
 }
 
 .mainSection {
-    left: 220px;
-    width: 70%;
+    left: 160px;
+    margin-right: 10px;
+    width: 90%;
+    display: flex;  
+    flex-direction: row;
     position: relative;
     text-align: center;
+    align-items: center;
+    top: 45px;
+}
+
+.movie {
+    width: 300px;
+    margin: 5px;
+    height: 300px;
+    border-radius: 5px;
+    text-align: center;
+    position: relative; 
+    top: 100px;   
 }
 
 .descmovie {
-    width: 10em;
-    margin: auto;
+    width: 200px;
     border: 1px;
+    font-size: 15px;
     border-radius: 5px;
     text-align: center;
     border-style: solid;
     border-color: #333;
+}
+
+.price {
+    text-align: center;
+    font-size: 35px;
+    margin: 0px;
+    color: darkseagreen;
 }
