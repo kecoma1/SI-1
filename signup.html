@@ -9,40 +9,6 @@
     <link rel="stylesheet" href="estilo.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="javascript.js"></script>
-    <script>
-        $(document).ready(function(){
-            $("button").click(function(){
-                var password = document.getElementById('password').value;
-                var fortaleza = 4;
-                if (password.length < 6) {
-                   document.getElementById('errorMSG').innerHTML = "La contraseña debe tener como mínimo 6 caracteres.";
-                   fortaleza -= 1;
-                }
-                if (/[A-Z]/.test(password) == false) {
-                    document.getElementById('errorMSG').innerHTML = "La contraseña debe tener como mínimo 1 mayúscula.";
-                    fortaleza -= 1;
-                } 
-                if (/[a-z]/.test(password) == false) {
-                    document.getElementById('errorMSG').innerHTML = "La contraseña debe tener como mínimo 1 minúscula.";
-                    fortaleza -= 1;
-                }
-                if (/[0-9]/.test(password) == false) {
-                    document.getElementById('errorMSG').innerHTML = "La contraseña debe tener como mínimo 1 dígito.";
-                    fortaleza -= 1;
-                }
-
-                if (fortaleza != 4) {
-                    document.getElementById('fortaleza').innerHTML = "Se cumplen "+fortaleza+" de 4 requisitos en la contraseña.<br /><br />Requisitos:<br />- Contraseña con 6 o más caracteres<br />- 1 mayúscula<br />- 1 minúscula<br />- 1 dígito";
-                    document.getElementById('buenaContra').innerHTML = "";
-                    document.getElementById('errorMSG').innerHTML = "";
-                } else {
-                    document.getElementById('buenaContra').innerHTML = "La contraseña cumple todos los requisitos";
-                    document.getElementById('fortaleza').innerHTML = "";
-                    document.getElementById('errorMSG').innerHTML = "";
-                }
-            });
-          }); 
-    </script>
 </head>
 
 <body>
@@ -51,30 +17,76 @@
             <h1>Página de registro</h1>
         </header>
         <main>
-            <form>
+            <form action="home.html">
                 <label>Nombre de usuario</label><br>
-                <input id="username" name="Nombre de usuario" type="text" placeholder="Introduzca el nombre">
+                <input id="username" name="Nombre de usuario" type="text" placeholder="Introduzca el nombre" required>
                 <br><br>
                 <label>Contraseña</label><br>
-                <input id="password" name="Contraseña" type="password" placeholder="Introduzca la contraseña">
+                <input id="password_input" name="Contraseña" type="password" placeholder="Introduzca la contraseña" required><br>
+                <meter max="4" id="password_strength_meter" min="0" max="4" low="3" high="4"></meter>
+                <script>
+                    $(document).ready(function(){
+                        $("#password_input").keypress(function(key){
+                            var password = document.getElementById('password_input').value;
+                            var fortaleza = 4;
+                            var keypressed = key.key;
+                            var meter = document.getElementById('password_strength_meter');
+                            password += keypressed;
+                            if (password.length < 6) {
+                                document.getElementById('errMSG').innerHTML = "6 caracteres mínimo";
+                               fortaleza -= 1;
+                            }
+                            if (/[A-Z]/.test(password) == false) {
+                                document.getElementById('errMSG').innerHTML = "1 mayúscula mínimo";
+                                fortaleza -= 1;
+                            } 
+                            if (/[a-z]/.test(password) == false) {
+                                document.getElementById('errMSG').innerHTML = "1 minúscula mínimo";
+                                fortaleza -= 1;
+                            }
+                            if (/[0-9]/.test(password) == false) {
+                                document.getElementById('errMSG').innerHTML = "1 dígito mínimo";
+                                fortaleza -= 1;
+                            }
+            
+                            if (fortaleza == 4) {
+                                document.getElementById('errMSG').innerHTML = "";
+                            }
+            
+                            meter.value = fortaleza;
+                        });
+                      }); 
+                </script>
+                <br><br>
+                <label>Repetir contraseña</label><br>
+                <input id="password_input_repeat" name="Contraseña" type="password" placeholder="Introduzca la contraseña" required>
+                <script>
+                    $(document).ready(function(){
+                        $("#password_input_repeat").keypress(function(key){
+                            var password = document.getElementById('password_input').value;
+                            var password_repeat = document.getElementById('password_input_repeat').value;
+                            password_repeat += key.key;
+                            if (password.localeCompare(password_repeat) == 0) {
+                                document.getElementById('errMSG').innerHTML = "";
+                            } else {
+                                document.getElementById('errMSG').innerHTML = "Contraseñas diferentes";
+                            }
+                        });
+                      }); 
+                </script>
                 <br><br>
                 <label>Email</label><br>
-                <input id="email" name="email" type="email" placeholder="Introduzca email">
+                <input id="email" name="email" type="email" placeholder="Introduzca email" required>
                 <br><br>
                 <label>Credit card</label><br>
-                <input id="card" type="tel" inputmode="numeric" pattern="[0-9\s]{13,19}" autocomplete="cc-number" maxlength="19" placeholder="xxxx xxxx xxxx xxxx">
+                <input id="card" type="tel" inputmode="numeric" pattern="[0-9\s]{13,19}" autocomplete="cc-number" maxlength="19" placeholder="xxxx xxxx xxxx xxxx" required>
                 <br>
-                <button id="button" type="button" onclick="checkFields('username', 'password', 'email', 'card')">Registrarse</button>
+                <button id="button" type="submit" class="buttonP">Registrarse</button>
             </form>
             <br><br>
             <div class="errorMsg">
-                <p id="errorMSG"></p>
-                <p id="fortaleza"></p>
+                <p id="errMSG"></p>
             </div>
-            <div class="correctInput">
-                <p id="buenaContra"></p>
-            </div>
-            
         </main>
     </div>
     <iframe src="sidenav.html" class="sidenav"></iframe>

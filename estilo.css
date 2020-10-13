@@ -4,6 +4,29 @@ body {
     margin: 0;
 }
 
+input {
+    width: 300px;
+    border: 1px solid rgb(173, 172, 172);
+    background-color: rgb(245, 245, 245);
+    border-radius: 4px;
+    padding: 11px 20px;
+    margin: 8px 0;
+    box-sizing: border-box;
+    font-size: 14px;
+    animation: input_inicio 2s;
+    transition: width 0.4s ease-in-out;
+}
+
+input:focus {
+    width: 400px;
+}
+
+@keyframes input_inicio {
+    0%   {background-color:rgb(245, 245, 245);}
+    75%  {background-color:rgb(214, 214, 214);}
+    100% {background-color:rgb(245, 245, 245);}
+}
+
 .pageTitle {
     margin-left: 40%;
     margin-top: 3%;
@@ -48,6 +71,14 @@ body {
     text-align: center;
     font-size: 17px;
     margin: 4px 2px;
+    width: 100px;
+    animation: button_animation 2s;
+}
+
+@keyframes button_animation {
+    0%   {width: 0px; border-radius: 0%; background-color: white;}
+    50%  {width: 100px;}
+    100% {border-radius: 5%; background-color: #333;}
 }
 
 .topnav {
@@ -83,11 +114,7 @@ body {
 .errorMsg {
     color: red;
     text-align: center;
-}
-
-.correctInput {
-    color: green;
-    text-align: center;
+    font-size: 15px;
 }
 
 .images {
@@ -95,6 +122,19 @@ body {
     width: 200px;
     border-color: #333;
     border-radius: 10px;
+    animation: imagenes_inicio 1s;
+    animation-iteration-count: 1;
+    transition: 500ms;
+}
+
+@keyframes imagenes_inicio {
+    0%   {opacity: 0%;}
+    100% {opacity: 100%;}
+}
+
+.images:hover {
+    height: 315px;
+    width: 210px;
 }
 
 .mainSection {
@@ -110,9 +150,9 @@ body {
 }
 
 .movie {
-    width: 300px;
+    width: 250px;
     margin: 5px;
-    height: 300px;
+    height: 320px;
     border-radius: 5px;
     text-align: center;
     position: relative; 
@@ -130,8 +170,39 @@ body {
 }
 
 .price {
+    animation: price_hover_animation_out 500ms;
     text-align: center;
     font-size: 35px;
     margin: 0px;
     color: darkseagreen;
 }
+
+.price:hover {
+    font-size: 45px;
+    animation: price_hover_animation_in 500ms;
+}
+
+@keyframes price_hover_animation_in {
+    0%   {font-size: 35px;}
+    100% {font-size: 45px;}
+}
+
+@keyframes price_hover_animation_out {
+    0%   {font-size: 45px;}
+    100% {font-size: 35px;}
+}
+
+meter {
+    width: 250px;
+    background: white;
+    animation: meter_animation;
+    animation-duration: 3s;
+}
+
+@keyframes meter_animation {
+    0%   {width: 0px;}
+    100% {width: 250px;}
+}
+
+meter::-webkit-meter-optimum-value {background: red;}
+meter::-webkit-meter-suboptimum-value{background:green;}

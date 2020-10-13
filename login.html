@@ -14,13 +14,13 @@
                 <h1>Login Usuario</h1>
             </header>
             <main>
-                <form>    
+                <form action="home.html">    
                     <label>Nombre de usuario</label><br>
-                    <input id="username" name ="Nombre de usuario" type="text" placeholder="Introduzca el nombre">
+                    <input id="username" name ="Nombre de usuario" type="text" placeholder="Introduzca el nombre" required>
                     <br><br>
                     <label>Contraseña</label><br>
-                    <input id="password" name="Contraseña" type="password" placeholder="Introduzca la contraseña"><br>
-                    <button type="button" onclick="checkFields('username', 'password')">Login</button>
+                    <input id="password" name="Contraseña" type="password" placeholder="Introduzca la contraseña" required><br>
+                    <button type="submit" class="buttonP">Login</button>
                 </form>
             </main>
         </div>
