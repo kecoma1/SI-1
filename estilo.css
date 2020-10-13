@@ -77,7 +77,7 @@ input:focus {
 
 @keyframes button_animation {
     0%   {width: 0px; border-radius: 0%; background-color: white;}
-    50%  {width: 100px;}
+    50%  {width: 100px; border-radius: 30%;}
     100% {border-radius: 5%; background-color: #333;}
 }
 
