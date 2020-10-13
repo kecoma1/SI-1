@@ -154,6 +154,7 @@ input:focus {
     margin: 5px;
     height: 320px;
     border-radius: 5px;
+    align-items: center;
     text-align: center;
     position: relative; 
     top: 100px;   
@@ -170,26 +171,15 @@ input:focus {
 }
 
 .price {
-    animation: price_hover_animation_out 500ms;
     text-align: center;
     font-size: 35px;
     margin: 0px;
     color: darkseagreen;
+    transition: 500ms;
 }
 
 .price:hover {
     font-size: 45px;
-    animation: price_hover_animation_in 500ms;
-}
-
-@keyframes price_hover_animation_in {
-    0%   {font-size: 35px;}
-    100% {font-size: 45px;}
-}
-
-@keyframes price_hover_animation_out {
-    0%   {font-size: 45px;}
-    100% {font-size: 35px;}
 }
 
 meter {
