@@ -262,10 +262,11 @@ meter {
 }
 
 .mainCarrito{
+  top: 45px;
   margin-right: 10px;
   width: 100%;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   position: relative;
   text-align: center;
   align-items: center;
@@ -273,6 +274,7 @@ meter {
 
 .carritoTitle{
   text-align: center;
+  align-self: center;
 }
 
 .imagesCarrito{
@@ -293,15 +295,79 @@ meter {
   position: relative;
 }
 
+.eliminar{
+  color: red;
+  font-style: oblique;
+  font-size: 20px;
+  width: 100px;
+  transition: 500ms;
+}
+
 .mainEstructura{
-  left: 110px;
-  width: 100%;
+  display: flex;
+  flex-direction: row;
+  text-align: center;
+  align-items: center;
+  position: relative;
+}
+
+.eliminar:hover{
+  font-size: 30px;
+}
+
+.pedido{
+  width: 200px;
+  display: flex;
+  margin-right: 20px;
+  flex-direction: row;
+  text-align: center;
+  align-items: center;
+  position: relative;
+}
+
+.subpedido{
+  display: flex;
+  margin-right: 10px;
+  flex-direction: column;
+  text-align: center;
+  align-items: center;
+  position: relative;
+}
+
+.pago{
+  font-size: 30px;
+  width:200px;
+  transition: 500ms;
+}
+
+.opciones{
+  text-align: center;
+  font-size: 20px;
+  margin: 0px;
+  transition: 500ms;
+  border: 1px;
+  border-radius: 5px;
+  border-style: solid;
+  background-color: darkseagreen;
+}
+
+.opciones:hover{
+  font-size: 25px;
+}
+
+.mainHistorial{
+  width: 90%;
   display: flex;
   flex-direction: column;
   position: relative;
   text-align: center;
   align-items: center;
   top: 45px;
+}
+
+.tableHistorial{
+  border: 2px solid darkseagreen;
+  padding: 10px;
 }
 
 meter::-webkit-meter-optimum-value {background: red;}
