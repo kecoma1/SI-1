@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}
+    <div class="pageTitle">
+        <h1>Catálogo de películas</h1>
+    </div>
+{% endblock %}
+{% block content %}
+    <div class="mainSection">
+        {% for film in movies %}
+        <div class="movie">
+            <a href="filmDetail.html" alt="página filmDetail">
+            <img src="{{film.poster}}" alt="{{film.titulo}}" class="images"></a><br>
+            <h3>{{film.titulo}}</h3>
+            <p class="price">{{film.precio}}</p>
+            <p class="descmovie">
+                {{film.descripcion}}    
+            </p>
+        </div>
+        {% endfor %}
+    </div>
+{% endblock %}
+

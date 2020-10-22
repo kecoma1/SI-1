@@ -10,10 +10,9 @@ import sys
 @app.route('/')
 @app.route('/index')
 def index():
-    print (url_for('static', filename='estilo.css'), file=sys.stderr)
     catalogue_data = open(os.path.join(app.root_path,'catalogue/catalogue.json'), encoding="utf-8").read()
     catalogue = json.loads(catalogue_data)
-    return render_template('index.html', title = "Home", movies=catalogue['peliculas'])
+    return render_template('index.html', movies=catalogue['peliculas'])
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
