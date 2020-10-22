@@ -1,5 +1,13 @@
 {% extends "base.html" %}
 
+<head>
+    <title>Inicio</title>
+    <meta charset="UTF-8"/>
+    <link rel="stylesheet" href="../static/estilo.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="text/javascript" src="../static/javascript/javascript.js"></script>
+</head>
+
 {% block title %}
     <div class="pageTitle">
         <h1>Catálogo de películas</h1>
@@ -9,7 +17,7 @@
     <div class="mainSection">
         {% for film in movies %}
         <div class="movie">
-            <a href="filmDetail.html" alt="página filmDetail">
+            <a href="{{url_for('films', type='{{film.id}}')}}" alt="página filmDetail">
             <img src="{{film.poster}}" alt="{{film.titulo}}" class="images"></a><br>
             <h3>{{film.titulo}}</h3>
             <p class="price">{{film.precio}}</p>

@@ -1,4 +1,5 @@
-<!DOCTYPE html>
+{% extends "base.html" %}
+
 <html>
     <meta name="viewport" content="width=device-width, intial-scale=1.0">
     <head>
@@ -6,13 +7,15 @@
         <meta charset="UTF-8"/>
         <link rel="stylesheet" href="../static/estilo.css">
     </head>
+
+    {% block content %}
     <body>
         <div class="info">
             <header>
             </header>
             <main>
               <div class="mainFilmDetail">
-                  <img src="../static/imagenes/peliculas/joker.jpg" width="1200" alt="joker" class="imagesFilmDetail"><br />
+                  <img src="{{film.imagen}}" width="1200" alt="joker" class="imagesFilmDetail"><br />
                   <div class="venta">
                     <a href="carrito.html" target="_parent"><p class="buttonP">Comprar</p></a>
                     <p class="price">18.99€</p>
@@ -52,4 +55,5 @@
         <footer>
         </footer>
     </body>
+    {% endblock %}
 </html>

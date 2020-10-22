@@ -7,9 +7,12 @@ import json
 import os
 import sys
 
+catalogue = None
+
 @app.route('/')
 @app.route('/index')
 def index():
+    global catalogue
     catalogue_data = open(os.path.join(app.root_path,'catalogue/catalogue.json'), encoding="utf-8").read()
     catalogue = json.loads(catalogue_data)
     return render_template('index.html', movies=catalogue['peliculas'])
@@ -56,3 +59,16 @@ def main():
 @app.route("/login.html", methods=['GET'])
 def login_page():
     return render_template('login.html')
+
+@app.route("/signup.html", methods=['GET'])
+def signup_page():
+    return render_template('signup.html')
+
+@app.route("/filmDetail.html", methods=['GET'])
+def film_detail():
+    selected_film = request.args.get('type')
+    for film in catalogue:
+        if selected_film == film.id:
+            return render_template('filmDetail.html', film=film)
+    
+    return None
