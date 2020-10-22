@@ -39,3 +39,20 @@ def login():
 def logout():
     session.pop('usuario', None)
     return redirect(url_for('index'))
+
+# Rutas a las diferentes páginas
+@app.route("/sidenav.html", methods=['GET'])
+def sidenav():
+    return render_template('sidenav.html')
+
+@app.route("/topnav.html", methods=['GET'])
+def topnav():
+    return render_template('topnav.html')
+
+@app.route("/index.html", methods=['GET'])
+def main():
+    return redirect('index')
+
+@app.route("/login.html", methods=['GET'])
+def login_page():
+    return render_template('login.html')
