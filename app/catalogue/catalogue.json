@@ -11,12 +11,12 @@
         "actores": [{
                 "nombre": "Joaquin Phoenix",
                 "personaje": "Joker",
-                "foto": "../static/imagenes/actores/Joaquin.jpeg"
+                "foto": "../static/imagenes/actores/Joaquin.jpg"
             },
             {
                 "nombre": "Robert De Niro",
                 "personaje": "Murray Franklin",
-                "foto": "../static/imagenes/actores/RobertDeNiro.jpeg"
+                "foto": "../static/imagenes/actores/RobertDeNiro.jpg"
             }
         ]
     }, {
@@ -31,7 +31,7 @@
         "actores": [{
                 "nombre": "Tim Robbins",
                 "personaje": "Andy Dufresne",
-                "foto": "../static/imagenes/actores/Joaquin.jpg"
+                "foto": "../static/imagenes/actores/TodRobbins.png"
             },
             {
                 "nombre": "Morgan Freeman",
@@ -111,7 +111,7 @@
         "actores": [{
                 "nombre": "Christian Bale",
                 "personaje": "Batman",
-                "foto": "../static/imagenes/actores/christianBale.jpeg"
+                "foto": "../static/imagenes/actores/christianBale.jpg"
             },
             {
                 "nombre": "Michael Caine",
@@ -131,7 +131,7 @@
         "actores": [{
                 "nombre": "Matthew McConaughey",
                 "personaje": "Joseph Cooper",
-                "foto": "../static/imagenes/actores/MatthewMc.jpg"
+                "foto": "../static/imagenes/actores/matthewMc.jpg"
             },
             {
                 "nombre": "Anne Hathaway",
@@ -176,7 +176,7 @@
             {
                 "nombre": "Ewan McGregor",
                 "personaje": "Obi-Wan Kenobi",
-                "foto": "../static/imagenes/actores/EanMcgregor.jpg"
+                "foto": "../static/imagenes/actores/EwanMcgregor.jpg"
             }
         ] 
     }, {
@@ -191,7 +191,7 @@
         "actores": [{
                 "nombre": "",
                 "personaje": "Eren Jaeger",
-                "foto": "../static/imagenes/actores/ErenJaeger.jpg"
+                "foto": "../static/imagenes/actores/ErenJaeger.png"
             },
             {
                 "nombre": "",

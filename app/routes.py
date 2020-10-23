@@ -8,13 +8,14 @@ import os
 import sys
 
 catalogue = None
+catalogue_data = open(os.path.join(app.root_path,'catalogue/catalogue.json'), encoding="utf-8").read()
+catalogue = json.loads(catalogue_data)
 
 @app.route('/')
 @app.route('/index')
+@app.route("/index.html", methods=['GET'])
 def index():
     global catalogue
-    catalogue_data = open(os.path.join(app.root_path,'catalogue/catalogue.json'), encoding="utf-8").read()
-    catalogue = json.loads(catalogue_data)
     return render_template('index.html', movies=catalogue['peliculas'])
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -44,31 +45,39 @@ def logout():
     return redirect(url_for('index'))
 
 # Rutas a las diferentes páginas
+@app.route("/index/sidenav.html", methods=['GET'])
 @app.route("/sidenav.html", methods=['GET'])
 def sidenav():
     return render_template('sidenav.html')
 
+@app.route("/index/topnav.html", methods=['GET'])
 @app.route("/topnav.html", methods=['GET'])
 def topnav():
     return render_template('topnav.html')
 
-@app.route("/index.html", methods=['GET'])
-def main():
-    return redirect('index')
-
 @app.route("/login.html", methods=['GET'])
 def login_page():
-    return render_template('login.html')
+    return render_template('login.html', title='login')
 
 @app.route("/signup.html", methods=['GET'])
 def signup_page():
-    return render_template('signup.html')
+    return render_template('signup.html', title='signup')
 
-@app.route("/filmDetail.html", methods=['GET'])
-def film_detail():
-    selected_film = request.args.get('type')
-    for film in catalogue:
-        if selected_film == film.id:
-            return render_template('filmDetail.html', film=film)
-    
-    return None
+@app.route("/index/<id>", methods=['GET'])
+def film_detail(id):
+    global catalogue
+    return render_template('filmDetail.html', film=catalogue['peliculas'][int(id)-1])
+
+# Redirects desde index/<id>   
+@app.route("/index/index", methods=['GET'])
+@app.route("/index/index.html", methods=['GET'])
+def redirect_index():
+    return redirect('/index')
+
+@app.route("/index/login.html", methods=['GET'])
+def redirect_login_page():
+    return redirect(url_for('login_page'))
+
+@app.route("/index/signup.html", methods=['GET'])
+def redirect_signup_page():
+    return redirect(url_for('signup_page'))

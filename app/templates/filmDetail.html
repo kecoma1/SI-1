@@ -15,45 +15,37 @@
             </header>
             <main>
               <div class="mainFilmDetail">
-                  <img src="{{film.imagen}}" width="1200" alt="joker" class="imagesFilmDetail"><br />
+                  <img src="{{film.poster}}" width="1200" alt="joker" class="imagesFilmDetail"><br />
                   <div class="venta">
                     <a href="carrito.html" target="_parent"><p class="buttonP">Comprar</p></a>
-                    <p class="price">18.99€</p>
+                    <p class="price">{{film.precio}}</p>
                     <a href="carrito.html" target="_parent"><p class="buttonP">Alquilar</p></a>
                   </div>
                   <p class="subsecciones">Descripción:</p>
                   <p class="descmovieFilmDetail">
-                      Joker (conocida como Guasón en Hispanoamérica) es una película de suspenso y drama psicológico estadounidense de 2019 distribuida por Warner Bros. Pictures y basada en el Joker, personaje de DC Comics
+                     {{film.descripcion}} 
                   </p>
                   <p class="subsecciones">Director:</p>
                   <div>
                     <p class="descmovieFilmDetail">
-                        Todd Phillips
+                        {{film.director}}<br>
+                        {{film.categoria}}
                     </p>
                   </div>
                   <p class="subsecciones">Actores principales:</p>
                   <div class="actores">
-                    <div class=actor>
-                    <img src="../static/imagenes/actores/Joaquin.jpg" alt="Foto Joaquin Phoenix" class="images">
-                    <p class="descActor">
-                      Joaquin Phoenix.<br>
-                      Joker.
-                    </p>
-                    </div>
-                    <div class=actor>
-                    <img src="../static/imagenes/actores/RobertDeNiro.jpg" alt="Foto Robert De Niro" class="images">
-                    <p class="descActor">
-                      Robert De Niro.<br>
-                      Murray Franklin.
-                    </div>
+                    {% for actor in film.actores %}
+                      <div class=actor>
+                        <img src="{{actor.foto}}" alt="Foto {{actor.nombre}}" class="images">
+                        <p class="descActor">
+                          {{actor.nombre}}<br>{{actor.personaje}}
+                        </p>
+                      </div>
+                    {% endfor %}
                   </div>
               </div>
             </main>
         </div>
-        <iframe src="sidenav.html" class="sidenav"></iframe>
-        <iframe src="topnav.html" class="topnav"></iframe>
-        <footer>
-        </footer>
     </body>
     {% endblock %}
 </html>

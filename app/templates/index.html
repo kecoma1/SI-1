@@ -17,7 +17,7 @@
     <div class="mainSection">
         {% for film in movies %}
         <div class="movie">
-            <a href="{{url_for('films', type='{{film.id}}')}}" alt="página filmDetail">
+            <a href="index/{{film.id}}" alt="página filmDetail">
             <img src="{{film.poster}}" alt="{{film.titulo}}" class="images"></a><br>
             <h3>{{film.titulo}}</h3>
             <p class="price">{{film.precio}}</p>
