@@ -6,7 +6,13 @@
     </head>
     <div class="topnav">
         <a href="index.html" target="_parent">Inicio</a>
-        <a href="login.html" target="_parent">Iniciar sesión</a>
+        <a href="login.html" target="_parent">
+            {% if logged %}
+                Cerrar sesión
+            {% else %}
+                Iniciar sesión
+            {% endif %}
+        </a>
         <a href="signup.html" target="_parent">Registrarse</a>
         <a href="historial.html" target="_parent">Historial</a>
         <a href="carrito.html" target="_parent"><img src="../static/imagenes/utils/carrito5.png" alt="Carrito" height="30px" width="30px"></a>

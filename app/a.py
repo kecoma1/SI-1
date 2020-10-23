@@ -9,3 +9,7 @@ with open('catalogue/catalogue.json', 'r') as myfile:
 catalogue = json.loads(data)
 
 print(catalogue['peliculas'][0])
+
+dir_path = homedir = os.path.expanduser("~")
+dir_path += "/public_html/usuarios"
+print(dir_path)

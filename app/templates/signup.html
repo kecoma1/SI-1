@@ -15,12 +15,12 @@
             <h1>Página de registro</h1>
         </header>
         <main>
-            <form action="home.html">
+            <form action="/signup.html" method="POST">
                 <label>Nombre de usuario</label><br>
-                <input id="username" name="Nombre de usuario" type="text" placeholder="Introduzca el nombre" required>
+                <input id="username" name="username" type="text" placeholder="Introduzca el nombre" required>
                 <br><br>
                 <label>Contraseña</label><br>
-                <input id="password_input" name="Contraseña" type="password" placeholder="Introduzca la contraseña" required><br>
+                <input id="password_input" name="password_input" type="password" placeholder="Introduzca la contraseña" required><br>
                 <meter max="4" id="password_strength_meter" min="0" max="4" low="3" high="4"></meter>
                 <script>
                     $(document).ready(function(){
@@ -77,13 +77,13 @@
                 <input id="email" name="email" type="email" placeholder="Introduzca email" required>
                 <br><br>
                 <label>Credit card</label><br>
-                <input id="card" type="tel" inputmode="numeric" pattern="[0-9\s]{13,19}" autocomplete="cc-number" maxlength="19" placeholder="xxxx xxxx xxxx xxxx" required>
+                <input id="card" name="card" type="tel" inputmode="numeric" pattern="[0-9\s]{13,19}" autocomplete="cc-number" maxlength="19" placeholder="xxxx xxxx xxxx xxxx" required>
                 <br>
                 <button id="button" type="submit" class="buttonP">Registrarse</button>
             </form>
             <br><br>
             <div class="errorMsg">
-                <p id="errMSG"></p>
+                <p id="errMSG">{{error}}</p>
             </div>
         </main>
     </div>
