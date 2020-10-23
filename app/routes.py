@@ -79,6 +79,9 @@ def login_page_GET():
 @app.route("/signup.html", methods=['POST'])
 def signup_page():
     global logged
+    if logged == True:
+        return render_template('signup.html', title='signup', logged=logged, error="Cierre sesión por favor")
+
     if request.form['username']:
         username = request.form['username']
         password = hashlib.sha512((request.form['password_input']).encode('utf-8')).hexdigest()
@@ -113,7 +116,10 @@ def signup_page():
 @app.route("/signup.html", methods=['GET'])
 def signup_page_get():
     global logged
-    return render_template('signup.html', title='signup', logged=logged)
+    if logged == True:
+        return render_template('signup.html', title='signup', logged=logged, error="Cierre sesión por favor")
+    else:
+        return render_template('signup.html', title='signup', logged=logged)
 
 @app.route("/index/<id>", methods=['GET'])
 def film_detail(id):
