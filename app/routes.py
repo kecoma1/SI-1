@@ -6,6 +6,8 @@ from flask import render_template, request, url_for, redirect, session
 import json
 import os
 import sys
+import hashlib
+import random
 
 # Catálogo
 catalogue = None
@@ -22,34 +24,6 @@ def index():
     global catalogue, logged
     return render_template('index.html', movies=catalogue['peliculas'], logged=logged)
 
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    global logged
-    # doc sobre request object en http://flask.pocoo.org/docs/1.0/api/#incoming-request-data
-    if 'username' in request.form:
-        # aqui se deberia validar con fichero .dat del usuario
-        if request.form['username'] == 'pp':
-            session['usuario'] = request.form['username']
-            session.modified=True
-            # se puede usar request.referrer para volver a la pagina desde la que se hizo login
-            return redirect(url_for('index'))
-        else:
-            # aqui se le puede pasar como argumento un mensaje de login invalido
-            return render_template('login.html', title = "Sign In", logged=logged)
-    else:
-        # se puede guardar la pagina desde la que se invoca 
-        session['url_origen']=request.referrer
-        session.modified=True        
-        # print a error.log de Apache si se ejecuta bajo mod_wsgi
-        print (request.referrer, file=sys.stderr)
-        return render_template('login.html', title = "Sign In", logged=logged)
-
-@app.route('/logout', methods=['GET', 'POST'])
-def logout():
-    global logged
-    session.pop('usuario', None)
-    return redirect(url_for('index'))
-
 # Rutas a las diferentes páginas
 @app.route("/index/sidenav.html", methods=['GET'])
 @app.route("/sidenav.html", methods=['GET'])
@@ -63,20 +37,56 @@ def topnav():
     global logged
     return render_template('topnav.html', logged=logged)
 
-@app.route("/login.html", methods=['GET'])
-def login_page():
+@app.route("/login.html", methods=['POST'])
+def login_page_POST():
     global logged
-    return render_template('login.html', title='login', logged=logged)
+    if request.form['username']:
+        username = request.form['username']
+        password = hashlib.sha512((request.form['password']).encode('utf-8')).hexdigest()
+
+        # Comprobamos si existe el usuario
+        dir_path = homedir = os.path.expanduser("~")
+        dir_path += "/public_html/usuarios/"+username
+        if os.path.exists(dir_path):
+            f = open(dir_path+"/datos.dat", "r")
+            data = f.read()
+            f.close()
+            data = data.split(' ')
+            users_password = data[1]
+            if users_password == password:
+                session['usuario'] = username
+                logged = True
+                return redirect(url_for('index'))
+            else:
+                return render_template('login.html', title='login', logged=logged, error="El usuario o contraseña incorrectos")
+        else:
+            return render_template('login.html', title='login', logged=logged, error="El usuario o contraseña incorrectos")
+    else:
+        return render_template('signup.html', title='signup', logged=logged, error="Los datos no fueron introducidos correctamente")
+
+@app.route("/login.html", methods=['GET'])
+def login_page_GET():
+    global logged
+    if logged:
+        # Cerrando sesión
+        logged = False
+        session.pop('usuario', None)
+        return redirect(url_for('index'))
+    else:
+        return render_template('login.html', title='login', logged=logged)
+
 
 @app.route("/signup.html", methods=['POST'])
 def signup_page():
     global logged
     if request.form['username']:
         username = request.form['username']
+        password = hashlib.sha512((request.form['password_input']).encode('utf-8')).hexdigest()
+        card = request.form['card']
+        card = card.replace(' ', '')
+        wallet = random.randrange(0, 100)
+
         session['usuario'] = username
-        session['password_input'] = request.form['password_input']
-        session['email'] = request.form['email']
-        session['card'] = request.form['card']
 
         # Comprobamos si existe el usuario
         dir_path = homedir = os.path.expanduser("~")
@@ -85,10 +95,16 @@ def signup_page():
             return render_template('signup.html', title='signup', logged=logged, error="El usuario ya existe")
         else:
             os.mkdir(dir_path)
+
+            # Creando historial
             f = open(dir_path+"/historial.json","w")
             f.close()
+
+            # Escribiendo los datos
             f = open(dir_path+"/datos.dat","w")
+            f.write(username+" "+password+" "+request.form['email']+" "+card+" "+str(wallet))
             f.close()
+            
             logged = True
             return redirect(url_for('index'))
     else:

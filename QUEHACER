@@ -1,9 +1,9 @@
 1. Barra de busqueda en el footer
     - Que funcione con filtros. año y categorias 
-2. Cifrar contraseñas con sha512
+2.----------------------- Cifrar contraseñas con sha512 DONE
 3. Precargar el campo usuario de la pagina del login con el nombre de usuario del ultimo usuario que inicio sesión
-4. En la carpeta usuario, para cada nuevo usuario crear una nueva subcarpeta para este DONE
-    - Asignar a cada usuario entre 0 y 100 € de saldo
+4..----------------------- En la carpeta usuario, para cada nuevo usuario crear una nueva subcarpeta para este DONE
+  .----------------------- - Asignar a cada usuario entre 0 y 100 € de saldo DONE
 5. Validar datos introducidos en signup con javascript
 6. Implementar el carrito de la compra usando flask sesions
 7. En la página de carrito poder borrar peliculas
