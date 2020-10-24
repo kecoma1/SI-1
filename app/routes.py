@@ -34,6 +34,10 @@ def topnav():
     global logged
     return render_template('topnav.html', logged=logged)
 
+@app.route("/bottonnav.html", methods=['GET'])
+def bottonnav():
+    return render_template('bottonnav.html')
+
 @app.route("/login.html", methods=['POST'])
 def login_page_POST():
     global logged
@@ -144,3 +148,7 @@ def redirect_topnav():
 @app.route("/index/sidenav.html", methods=['GET'])
 def redirect_sidenav():
     return render_template('sidenav.html', logged=logged)
+
+@app.route("/index/bottonnav.html", methods=['GET'])
+def redirect_bottonnav():
+    return render_template('bottonnav.html')
