@@ -11,7 +11,7 @@ import random
 
 # Catálogo
 catalogue = None
-catalogue_data = open(os.path.join(app.root_path,'catalogue/catalogue.json'), encoding="utf-8").read()
+catalogue_data = open(os.path.join(app.root_path,'catalogue/catalogue.json')).read()
 catalogue = json.loads(catalogue_data)
 
 # Variable booleana para saber si hay un usuario logeado
@@ -25,13 +25,11 @@ def index():
     return render_template('index.html', movies=catalogue['peliculas'], logged=logged)
 
 # Rutas a las diferentes páginas
-@app.route("/index/sidenav.html", methods=['GET'])
 @app.route("/sidenav.html", methods=['GET'])
 def sidenav():
     global logged
     return render_template('sidenav.html', logged=logged)
 
-@app.route("/index/topnav.html", methods=['GET'])
 @app.route("/topnav.html", methods=['GET'])
 def topnav():
     global logged
@@ -134,8 +132,16 @@ def redirect_index():
 
 @app.route("/index/login.html", methods=['GET'])
 def redirect_login_page():
-    return redirect(url_for('login_page'))
+    return redirect(url_for('login_page_GET'))
 
 @app.route("/index/signup.html", methods=['GET'])
 def redirect_signup_page():
-    return redirect(url_for('signup_page'))
+    return redirect(url_for('signup_page_get'))
+
+@app.route("/index/topnav.html", methods=['GET'])
+def redirect_topnav():
+    return render_template('topnav.html', logged=logged)
+
+@app.route("/index/sidenav.html", methods=['GET'])
+def redirect_sidenav():
+    return render_template('sidenav.html', logged=logged)

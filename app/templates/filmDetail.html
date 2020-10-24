@@ -1,12 +1,6 @@
 {% extends "base.html" %}
 
-<html>
-    <meta name="viewport" content="width=device-width, intial-scale=1.0">
-    <head>
-        <title>Film Details</title>
-        <meta charset="UTF-8"/>
-        <link rel="stylesheet" href="../static/estilo.css">
-    </head>
+{% block titleHead %}{{film.titulo}}{% endblock %}
 
     {% block content %}
     <body>
@@ -48,4 +42,3 @@
         </div>
     </body>
     {% endblock %}
-</html>
