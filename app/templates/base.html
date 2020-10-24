@@ -1,27 +1,29 @@
 <!DOCTYPE html>
 <html>
-    <meta name="viewport" content="width=device-width, intial-scale=1.0">
-    <head>
-        <title>{% block titleHead %}{% endblock %}</title>
-        <meta charset="UTF-8"/>
-        <link rel="stylesheet" href="../static/estilo.css">
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-        <script type="text/javascript" src="../static/javascript/javascript.js"></script>
-    </head>
+<meta name="viewport" content="width=device-width, intial-scale=1.0">
 
-    {% block title %}{% endblock %}
+<head>
+    <title>{% block titleHead %}{% endblock %}</title>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="../static/estilo.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="text/javascript" src="../static/javascript/javascript.js"></script>
+</head>
 
-    {% block body %}
-    <body>
-        <main>
-            {% block content %}{% endblock %}
-        </main>
+{% block title %}{% endblock %}
 
-    </body>
-    {% endblock %}
-    <footer>
-    </footer>
-    <iframe src="sidenav.html" class="sidenav"></iframe>
-    <iframe src="topnav.html" class="topnav"></iframe>
-    <iframe src="bottonnav.html" class="bottonnav"></iframe>
+{% block body %}
+<body>
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+</body>
+{% endblock %}
+<footer>
+</footer>
+<iframe src="sidenav.html" class="sidenav"></iframe>
+<iframe src="topnav.html" class="topnav"></iframe>
+<iframe src="bottonnav.html" class="bottonnav"></iframe>
+
 </html>
