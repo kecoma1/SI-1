@@ -19,7 +19,6 @@ logged = False
 
 @app.route('/')
 @app.route('/index')
-@app.route("/index.html", methods=['GET', 'POST'])
 def index():
     global catalogue, logged
     return render_template('index.html', movies=catalogue['peliculas'], logged=logged)
@@ -125,18 +124,18 @@ def film_detail(id):
     return render_template('filmDetail.html', film=catalogue['peliculas'][int(id)-1], logged=logged)
 
 # Redirects desde index/<id>   
-@app.route("/index/index", methods=['GET'])
+@app.route("/index.html", methods=['GET', 'POST'])
 @app.route("/index/index.html", methods=['GET'])
 def redirect_index():
     return redirect(url_for('index'))
 
 @app.route("/index/login.html", methods=['GET'])
 def redirect_login_page():
-    return redirect(url_for('login_page_GET'))
+    return render_template('login.html', title='login', logged=logged)
 
 @app.route("/index/signup.html", methods=['GET'])
 def redirect_signup_page():
-    return redirect(url_for('signup_page_get'))
+    return render_template('signup.html', title='signup', logged=logged)
 
 @app.route("/index/topnav.html", methods=['GET'])
 def redirect_topnav():
