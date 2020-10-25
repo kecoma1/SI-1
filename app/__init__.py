@@ -23,5 +23,4 @@ try:
 except ImportError as e:
     sys.stderr.write ("Flask-Session no disponible, usando sesiones de Flask en cookie")
 
-
 from app import routes

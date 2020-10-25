@@ -8,6 +8,7 @@ import os
 import sys
 import hashlib
 import random
+import datetime
 
 # Catálogo
 catalogue = None
@@ -155,7 +156,15 @@ def historial():
         f.close()
         data = data.split(' ')
         saldo = data[4]
-        return render_template('historial.html', logged=logged, saldo=saldo)
+        f.close()
+        
+        f = open(dir_path+"/historial.json", "r")
+        historial_data = f.read()
+        if historial_data != '':
+            historial = json.loads(historial_data)
+        else:
+            historial = []
+        return render_template('historial.html', logged=logged, saldo=saldo, historial=historial)
     else:
         return redirect(url_for('index'))
 
@@ -199,53 +208,51 @@ def busqueda():
 
 # Redirects desde index/<id>
 
-
 @app.route("/index.html", methods=['GET', 'POST'])
 @app.route("/index/index", methods=['GET'])
 @app.route("/cargar_categoria/index", methods=['GET'])
+@app.route("/realizar_compra/index", methods=['GET'])
 def redirect_index():
     return redirect(url_for('index'))
 
+@app.route("/realizar_compra/index/<id>", methods=['GET'])
 @app.route("/cargar_categoria/index/<id>", methods=['GET'])
 def redirect_filmDetail(id):
     return redirect(url_for('film_detail', id= id))
 
+@app.route("/realizar_compra/login.html", methods=['GET'])
 @app.route("/index/login.html", methods=['GET'])
 def redirect_login_page():
-    return render_template('login.html', title='login', logged=logged)
+    return redirect(url_for('login_page_GET'))
 
-
+@app.route("/realizar_compra/signup.html", methods=['GET'])
 @app.route("/index/signup.html", methods=['GET'])
 def redirect_signup_page():
-    return render_template('signup.html', title='signup', logged=logged)
+    return redirect(url_for('signup_page_get'))
 
+@app.route("/realizar_compra/topnav.html", methods=['GET'])
 @app.route("/cargar_categoria/topnav.html", methods=['GET'])
 @app.route("/index/topnav.html", methods=['GET'])
 def redirect_topnav():
     return render_template('topnav.html', logged=logged)
 
+@app.route("/realizar_compra/sidenav.html", methods=['GET'])
 @app.route("/cargar_categoria/sidenav.html", methods=['GET'])
 @app.route("/index/sidenav.html", methods=['GET'])
 def redirect_sidenav():
     return render_template('sidenav.html', logged=logged)
 
-@app.route("/cargar_categoria/bottonnav.html", methods=['GET'])
-@app.route("/index/bottonnav.html", methods=['GET'])
-def redirect_bottonnav():
-    return render_template('bottonnav.html')
-
-
+@app.route("/realizar_compra/historial.html", methods=['GET'])
 @app.route("/index/historial.html", methods=['GET'])
 def redirect_historial():
-    return render_template('historial.html', logged=logged)
+    return redirect(url_for('historial'))
 
-
+@app.route("/realizar_compra/carrito.html", methods=['GET'])
 @app.route("/index/carrito.html", methods=['GET'])
 def redirect_carrito():
     return redirect(url_for('carrito'))
 
 # Rutas para el carrito
-
 
 @app.route("/index/añadir_carrito/<string:id>", methods=['POST'])
 def añadir_carrito(id):
@@ -266,8 +273,8 @@ def eliminar_carrito(id):
     return redirect(url_for('carrito'))
 
 
-@app.route("/realizar_compra", methods=['POST'])
-def realizar_compra():
+@app.route("/realizar_compra/<string:id>", methods=['POST', 'GET'])
+def realizar_compra(id):
     global catalogue, username_logged
     if logged:
         # Cargando el archivo del usuario
@@ -280,7 +287,7 @@ def realizar_compra():
 
         if logged == True:
             for film in catalogue['peliculas']:
-                if str(film['id']) in session:
+                if id in session and str(film['id']) == id:
                     if saldo > float(film['precio']):
                         saldo = saldo - film['precio']
                         
@@ -290,8 +297,25 @@ def realizar_compra():
 
                         f.write(data[0]+" "+data[1]+" " +data[2]+" "+data[3]+" "+str(saldo))
                         f.close()
-                        f = open(dir_path+"/historial.json", "a")
-                        json.dump(film, f)
+                        f = open(dir_path+"/historial.json", "r+")
+                        historial_data = f.read()
+
+                        if historial_data != '':
+                            historial = json.loads(historial_data)
+                        else:
+                            historial = []
+                       
+                        historial.append(film)
+                        now = datetime.datetime.now()
+                        historial[-1]['time'] = now.strftime("%Y-%m-%d %H:%M:%S")
+                        if len(historial) > 1:
+                            movement_id = historial[-2]['movement_id']+1
+                            historial[-1]['movement_id'] = movement_id
+                        else:
+                            historial[-1]['movement_id'] = 1
+                        f.seek(0)
+                        f.truncate()
+                        json.dump(historial, f)
                         f.close()
 
                         if str(film['id']) in session:
@@ -324,14 +348,42 @@ def cargar_films():
 
 @app.route("/index/cargar_categoria/<string:categoria>", methods=['GET'])
 @app.route("/cargar_categoria/cargar_categoria/<string:categoria>", methods=['GET'])
+@app.route("/realizar_compra/cargar_categoria/<string:categoria>", methods=['POST'])
 def redirect_category(categoria):
     return redirect(url_for('category', categoria=categoria))
 
 @app.route("/index/busqueda", methods=['POST'])
 def redirect_busqueda():
     global catalogue
+    busqueda = request.form['search']
     peliculas = []
     for film in catalogue['peliculas']:
-        if str_busqueda in film['titulo']:
+        if busqueda in film['titulo']:
             peliculas.append(film)
     return redirect(url_for('busqueda', movies=peliculas))
+
+@app.route("/realizar_compra/realizar_compra/<string:id>", methods=['POST'])
+def redirect_realizar_compra(id):
+    return redirect(url_for('realizar_compra', id=id))
+
+@app.route("/introducir_saldo", methods=['POST'])
+def introducir_saldo():
+    if logged:
+        saldo_a_introducir = request.form['input_saldo']
+        dir_path = homedir = os.path.expanduser("~")
+        dir_path += "/public_html/usuarios/"+username_logged
+        f = open(dir_path+"/datos.dat", "r+")
+        data = f.read()
+        data = data.split(' ')
+        saldo = data[4]
+        saldo_actual = float(saldo)
+        saldo = float(saldo_a_introducir)+float(saldo_actual)
+
+        f.seek(0)
+        f.truncate()
+
+        f.write(data[0]+" "+data[1]+" "+data[2]+" "+data[3]+" "+str(saldo))
+        f.close()
+        return redirect(url_for('historial'))
+    else:
+        return redirect(url_for('index'))

@@ -18,11 +18,12 @@
         <a href="index/{{articulo.id}}">
           <img src="{{articulo.poster}}" alt="{{articulo.titulo}}" class="images">
         </a><br />
+        <p id="titulo_peli" name="titulo_peli">{{articulo.titulo}}</p><br>
         <p class="price">{{articulo.precio}}</p>
         <form action="eliminar_carrito/{{articulo.id}}" method="POST">
           <button type=submit class="buttonP">Eliminar</button>
         </form>
-        <form action="realizar_compra" method="POST">
+        <form action="realizar_compra/{{articulo.id}}" method="POST">
           <button type=submit class="buttonP">Comprar</button>
         </form>
       </div>
