@@ -10,11 +10,21 @@ function validation() {
 }
 
 function openNav() {
-    document.getElementById("el1").style.visibility = "visible";
+    document.getElementById("sidevalues1").style.opacity = "1";
+    document.getElementById("sidevalues2").style.opacity = "1";
+    document.getElementById("sidevalues3").style.opacity = "1";
+    document.getElementById("sidevalues4").style.opacity = "1";
+    document.getElementById("sidevalues5").style.opacity = "1";
+    document.getElementById("sidevalues6").style.opacity = "1";
     document.body.style.backgroundColor = "rgba(0,0,0,0.4)";
 }
 
 function closeNav() {
-    document.getElementById("sidenav").style.visibility = "hidden";
+    document.getElementById("sidevalues1").style.opacity = "0";
+    document.getElementById("sidevalues2").style.opacity = "0";
+    document.getElementById("sidevalues3").style.opacity = "0";
+    document.getElementById("sidevalues4").style.opacity = "0";
+    document.getElementById("sidevalues5").style.opacity = "0";
+    document.getElementById("sidevalues6").style.opacity = "0";
     document.body.style.backgroundColor = "white";
 }
