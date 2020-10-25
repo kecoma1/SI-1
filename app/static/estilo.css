@@ -102,6 +102,16 @@ input:focus {
   background-color: #111;
 }
 
+.buttonS{
+  font-size: 15px;
+  border-radius: 2px;
+  transition: 500ms;
+}
+
+.buttonS:hover{
+  font-size: 23px;
+}
+
 .info {
   text-align: center;
   position: relative;
