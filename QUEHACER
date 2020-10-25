@@ -7,7 +7,7 @@
 5. Validar datos introducidos en signup con javascript
 ---------------------------6. Implementar el carrito de la compra usando flask sesions
 ---------------------------7. En la página de carrito poder borrar peliculas
-¿¿¿???8. Finalizar compra si el usuario esta registrado y logeado
-¿¿¿???9. Por cada compra actualizar el archivo historial.json con este moviento
+---------------------------8. Finalizar compra si el usuario esta registrado y logeado
+------9. Por cada compra actualizar el archivo historial.json con este moviento
 10. JQuery para desplegar detalles en el historial de un pedido
 11. AJAX para mostrar un numero aleatorio de usuarios en una pagina 

@@ -3,35 +3,48 @@
 {% block titleHead %}Registro{% endblock %}
 
 {% block body %}
+
 <body>
     <div class="info">
         <header>
             <h1>Página de registro</h1>
         </header>
         <main>
-            <form action="/signup.html" method="POST">
+            <form action="/signup.html" method="POST" onsubmit="return(validation())"> 
                 <label>Nombre de usuario</label><br>
                 <input id="username" name="username" type="text" placeholder="Introduzca el nombre" required>
                 <br><br>
                 <label>Contraseña</label><br>
-                <input id="password_input" name="password_input" type="password" placeholder="Introduzca la contraseña" required><br>
+                <input id="password_input" name="password_input" type="password" onsubmit="return fortaleza()"
+                    placeholder="Introduzca la contraseña" required><br>
                 <meter max="4" id="password_strength_meter" min="0" max="4" low="3" high="4"></meter>
                 <script>
-                    $(document).ready(function(){
-                        $("#password_input").keypress(function(key){
+                    $(document).ready(function () {
+                        $("#password_input").on('hover keydown keypress keyup', function (key) {
                             var password = document.getElementById('password_input').value;
                             var fortaleza = 4;
                             var keypressed = key.key;
                             var meter = document.getElementById('password_strength_meter');
-                            password += keypressed;
+                            if (keypressed == "Backspace") password.slice(0,-1);
+                            else if (keypressed == "Shift") password = password;
+                            else if (keypressed == "CapsLock") password = password;
+                            else if (keypressed == "Alt") password = password;
+                            else if (keypressed == "Control") password = password;
+                            else if (keypressed == "ArrowUp") password = password;
+                            else if (keypressed == "ArrowDown") password = password;
+                            else if (keypressed == "ArrowLeft") password = password;
+                            else if (keypressed == "ArrowRight") password = password;
+                            
+                            else password += keypressed;
+        
                             if (password.length < 6) {
                                 document.getElementById('errMSG').innerHTML = "6 caracteres mínimo";
-                               fortaleza -= 1;
+                                fortaleza -= 1;
                             }
                             if (/[A-Z]/.test(password) == false) {
                                 document.getElementById('errMSG').innerHTML = "1 mayúscula mínimo";
                                 fortaleza -= 1;
-                            } 
+                            }
                             if (/[a-z]/.test(password) == false) {
                                 document.getElementById('errMSG').innerHTML = "1 minúscula mínimo";
                                 fortaleza -= 1;
@@ -40,38 +53,26 @@
                                 document.getElementById('errMSG').innerHTML = "1 dígito mínimo";
                                 fortaleza -= 1;
                             }
-            
+
                             if (fortaleza == 4) {
                                 document.getElementById('errMSG').innerHTML = "";
                             }
-            
+
                             meter.value = fortaleza;
                         });
-                      }); 
+                    });
                 </script>
                 <br><br>
                 <label>Repetir contraseña</label><br>
-                <input id="password_input_repeat" name="Contraseña" type="password" placeholder="Introduzca la contraseña" required>
-                <script>
-                    $(document).ready(function(){
-                        $("#password_input_repeat").keypress(function(key){
-                            var password = document.getElementById('password_input').value;
-                            var password_repeat = document.getElementById('password_input_repeat').value;
-                            password_repeat += key.key;
-                            if (password.localeCompare(password_repeat) == 0) {
-                                document.getElementById('errMSG').innerHTML = "";
-                            } else {
-                                document.getElementById('errMSG').innerHTML = "Contraseñas diferentes";
-                            }
-                        });
-                      }); 
-                </script>
+                <input id="password_input_repeat" name="Contraseña" type="password"
+                    placeholder="Introduzca la contraseña" required>
                 <br><br>
                 <label>Email</label><br>
                 <input id="email" name="email" type="email" placeholder="Introduzca email" required>
                 <br><br>
                 <label>Credit card</label><br>
-                <input id="card" name="card" type="tel" inputmode="numeric" pattern="[0-9\s]{13,19}" autocomplete="cc-number" maxlength="19" placeholder="xxxx xxxx xxxx xxxx" required>
+                <input id="card" name="card" type="tel" inputmode="numeric" pattern="[0-9\s]{13,19}"
+                    autocomplete="cc-number" maxlength="19" placeholder="xxxx xxxx xxxx xxxx" required>
                 <br>
                 <button id="button" type="submit" class="buttonP">Registrarse</button>
             </form>

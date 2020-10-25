@@ -93,7 +93,7 @@ def login_page_GET():
 
 @app.route("/signup.html", methods=['POST'])
 def signup_page():
-    global logged
+    global logged, username_logged
     if logged == True:
         return render_template('signup.html', title='signup', logged=logged, error="Cierre sesión por favor")
 
@@ -183,10 +183,19 @@ def film_detail(id):
     return render_template('filmDetail.html', film=catalogue['peliculas'][int(id)-1], logged=logged)
 
 @app.route("/cargar_categoria/<string:categoria>", methods=['GET'])
-@app.route("/index/cargar_categoria/<string:categoria>", methods=['GET'])
 def category(categoria):
     global catalogue
     return render_template('category.html', movies=catalogue['peliculas'], categoria=categoria)
+
+@app.route("/busqueda", methods=['POST'])
+def busqueda():
+    global catalogue
+    busqueda = request.form['search']
+    peliculas = []
+    for film in catalogue['peliculas']:
+        if busqueda in film['titulo']:
+            peliculas.append(film)
+    return render_template('busqueda.html', movies=peliculas)
 
 # Redirects desde index/<id>
 
@@ -197,6 +206,9 @@ def category(categoria):
 def redirect_index():
     return redirect(url_for('index'))
 
+@app.route("/cargar_categoria/index/<id>", methods=['GET'])
+def redirect_filmDetail(id):
+    return redirect(url_for('film_detail', id= id))
 
 @app.route("/index/login.html", methods=['GET'])
 def redirect_login_page():
@@ -314,3 +326,12 @@ def cargar_films():
 @app.route("/cargar_categoria/cargar_categoria/<string:categoria>", methods=['GET'])
 def redirect_category(categoria):
     return redirect(url_for('category', categoria=categoria))
+
+@app.route("/index/busqueda", methods=['POST'])
+def redirect_busqueda():
+    global catalogue
+    peliculas = []
+    for film in catalogue['peliculas']:
+        if str_busqueda in film['titulo']:
+            peliculas.append(film)
+    return redirect(url_for('busqueda', movies=peliculas))
