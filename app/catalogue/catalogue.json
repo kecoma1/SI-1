@@ -65,7 +65,7 @@
         "poster": "../static/imagenes/peliculas/pulp_fiction.jpg",
         "director": "Quentin Tarantino",
         "precio": 18.99,
-        "categoria": "Comedia negra",
+        "categoria": "Comedia",
         "descripcion": "Pulp Fiction (en Hispanoamérica Tiempos violentos) es una película estadounidense de 19944​ escrita y dirigida por Quentin Tarantino. El guion está basado en historias que el mismo Tarantino desarrolló en colaboración con Roger Avary durante los años 1992 y 1993, incluyendo escenas que originalmente habían sido escritas para True Romance.",
         "anno": 1994,
         "actores": [{

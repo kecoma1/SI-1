@@ -22,15 +22,15 @@
         <form action="eliminar_carrito/{{articulo.id}}" method="POST">
           <button type=submit class="buttonP">Eliminar</button>
         </form>
-        <form action="realizar_compra" metod="POST">
+        <form action="realizar_compra" method="POST">
           <button type=submit class="buttonP">Comprar</button>
         </form>
       </div>
       {% endfor %}
     </div>
-    <div class="errorMsg">
-      <p id="errMSG">{{error}}</p>
-    </div>
   </main>
 </body>
+<div class="errorMsg">
+  <p id="errMSG">{{error}}</p>
+</div>
 {% endblock %}

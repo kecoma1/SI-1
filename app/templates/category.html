@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block titleHead %}Inicio{% endblock %}
+
+{% block title %}
+    <div class="pageTitle">
+        <h1>{{category}}</h1>
+    </div>
+{% endblock %}
+{% block content %}
+    <div class="mainSection">
+        {% for film in movies %}
+            {% if film.categoria == categoria %}
+            <div class="movie">
+                <a href="index/{{film.id}}" alt="página filmDetail">
+                <img src="{{film.poster}}" alt="{{film.titulo}}" class="images"></a><br>
+                <h3>{{film.titulo}}</h3>
+                <p class="price">{{film.precio}}</p>
+                <p class="desccategory">{{film.descripcion}}</p>
+            </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+{% endblock %}

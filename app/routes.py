@@ -182,11 +182,18 @@ def film_detail(id):
     global catalogue, logged
     return render_template('filmDetail.html', film=catalogue['peliculas'][int(id)-1], logged=logged)
 
+@app.route("/cargar_categoria/<string:categoria>", methods=['GET'])
+@app.route("/index/cargar_categoria/<string:categoria>", methods=['GET'])
+def category(categoria):
+    global catalogue
+    return render_template('category.html', movies=catalogue['peliculas'], categoria=categoria)
+
 # Redirects desde index/<id>
 
 
 @app.route("/index.html", methods=['GET', 'POST'])
 @app.route("/index/index", methods=['GET'])
+@app.route("/cargar_categoria/index", methods=['GET'])
 def redirect_index():
     return redirect(url_for('index'))
 
@@ -200,17 +207,17 @@ def redirect_login_page():
 def redirect_signup_page():
     return render_template('signup.html', title='signup', logged=logged)
 
-
+@app.route("/cargar_categoria/topnav.html", methods=['GET'])
 @app.route("/index/topnav.html", methods=['GET'])
 def redirect_topnav():
     return render_template('topnav.html', logged=logged)
 
-
+@app.route("/cargar_categoria/sidenav.html", methods=['GET'])
 @app.route("/index/sidenav.html", methods=['GET'])
 def redirect_sidenav():
     return render_template('sidenav.html', logged=logged)
 
-
+@app.route("/cargar_categoria/bottonnav.html", methods=['GET'])
 @app.route("/index/bottonnav.html", methods=['GET'])
 def redirect_bottonnav():
     return render_template('bottonnav.html')
@@ -249,35 +256,61 @@ def eliminar_carrito(id):
 
 @app.route("/realizar_compra", methods=['POST'])
 def realizar_compra():
-    # Cargando el archivo del usuario
-    dir_path = homedir = os.path.expanduser("~")
-    dir_path += "/public_html/usuarios/"+username_logged
-    f = open(dir_path+"/datos.dat", "w")
-    data = f.read()
-    data = data.split(' ')
-    username = data[0]
-    password = data[1]
-    email = data[2]
-    card = data[3]
-    saldo = data[4]
+    global catalogue, username_logged
+    if logged:
+        # Cargando el archivo del usuario
+        dir_path = homedir = os.path.expanduser("~")
+        dir_path += "/public_html/usuarios/"+username_logged
+        f = open(dir_path+"/datos.dat", "r+")
+        data = f.read()
+        data = data.split(' ')
+        saldo = float(data[4])
 
-    if logged == True:
-        for film in catalogue['peliculas']:
-            if str(film['id']) in session:
-                saldo = saldo - film['precio']
-                f.write(username+" "+password+" " +
-                        email+" "+card+" "+str(saldo))
-                f.close()
-                f = open(dir_path+"/historial.json", "a")
-                json.dump(film, f)
-                f.close()
-                break
+        if logged == True:
+            for film in catalogue['peliculas']:
+                if str(film['id']) in session:
+                    if saldo > float(film['precio']):
+                        saldo = saldo - film['precio']
+                        
+                        # Eliminando información anterior del archivo
+                        f.seek(0)  
+                        f.truncate()  
 
-    if id in session:
-        session[id] -= 1
+                        f.write(data[0]+" "+data[1]+" " +data[2]+" "+data[3]+" "+str(saldo))
+                        f.close()
+                        f = open(dir_path+"/historial.json", "a")
+                        json.dump(film, f)
+                        f.close()
 
-    if session[id] == 0:
-        session.pop(id, None)  
-    else:
-        pass
-    return redirect(url_for('carrito'))
+                        if str(film['id']) in session:
+                            session[str(film['id'])] -= 1
+                            if session[str(film['id'])] == 0:
+                                session.pop(str(film['id']), None)  
+                            else:
+                                pass
+
+                        carrito_films = cargar_films()
+                        return render_template('carrito.html', logged=logged, carrito_films=carrito_films, error="Compra realizada con exito")
+                        
+                    else:
+                        carrito_films = cargar_films()
+                        return render_template('carrito.html', logged=logged, carrito_films=carrito_films, error="No hay suficiente saldo")
+    
+    carrito_films = cargar_films()
+    return render_template('carrito.html', logged=logged, carrito_films=carrito_films, error="Haga login para comprar")
+
+def cargar_films():
+    global catalogue
+    carrito_films = []
+    for film in catalogue['peliculas']:
+        if str(film['id']) in session:
+            i = 0
+            while i < session[str(film['id'])]:
+                carrito_films.append(film)
+                i += 1
+    return carrito_films
+
+@app.route("/index/cargar_categoria/<string:categoria>", methods=['GET'])
+@app.route("/cargar_categoria/cargar_categoria/<string:categoria>", methods=['GET'])
+def redirect_category(categoria):
+    return redirect(url_for('category', categoria=categoria))
