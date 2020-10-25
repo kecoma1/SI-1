@@ -1,8 +1,9 @@
 {% extends "base.html" %}
 
+{% block titleHead %}Historial{% endblock %}
+
 {% block body %}
 
-<body onload="hide();">
   <main>
     <div class="mainHistorial">
       <div>
@@ -43,12 +44,11 @@
       <br>
       <div>
         <form action="introducir_saldo" method="POST">
-          <input id="Saldo a introducir" name="input_saldo" type="text" placeholder="Introduzca la cantidad"
+          <input id="Saldo_a_introducir" name="input_saldo" type="text" placeholder="Introduzca la cantidad"
             required><br>
           <button type="submit" name="button" class="opciones">Añadir saldo</button>
         </form>
       </div>
     </div>
   </main>
-</body>
 {% endblock %}

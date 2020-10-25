@@ -87,6 +87,11 @@ def login_page_GET():
         username_logged = None
         if 'usuario' in session:
             session.pop('usuario', None)
+        
+        #Eliminando el carrito de la sesión
+        for id in session:
+            if id != 'usuario':
+                session[id] = 0
         return redirect(url_for('index'))
     else:
         return render_template('login.html', title='login', logged=logged)

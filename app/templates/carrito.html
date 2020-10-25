@@ -2,35 +2,32 @@
 
 {% block titleHead %}Carrito{% endblock %}</title>
 
-{% block title %}
-<div class="pageTitle">
-  <h1>Tu Carrito</h1>
-</div>
-{% endblock %}
-
 {% block body %}
 
-<body>
-  <main>
-    <div class="mainSection">
-      {% for articulo in carrito_films %}
-      <div class="movie">
-        <a href="index/{{articulo.id}}">
-          <img src="{{articulo.poster}}" alt="{{articulo.titulo}}" class="images">
-        </a><br />
-        <p id="titulo_peli" name="titulo_peli">{{articulo.titulo}}</p><br>
-        <p class="price">{{articulo.precio}}</p>
-        <form action="eliminar_carrito/{{articulo.id}}" method="POST">
-          <button type=submit class="buttonP">Eliminar</button>
-        </form>
-        <form action="realizar_compra/{{articulo.id}}" method="POST">
-          <button type=submit class="buttonP">Comprar</button>
-        </form>
-      </div>
-      {% endfor %}
+<main>
+  {% block title %}
+  <div class="pageTitle">
+    <h1>Tu Carrito</h1>
+  </div>
+  {% endblock %}
+  <div class="mainSection">
+    {% for articulo in carrito_films %}
+    <div class="movie">
+      <a href="index/{{articulo.id}}">
+        <img src="{{articulo.poster}}" alt="{{articulo.titulo}}" class="images">
+      </a><br />
+      <p>{{articulo.titulo}}</p><br>
+      <p class="price">{{articulo.precio}}</p>
+      <form action="eliminar_carrito/{{articulo.id}}" method="POST">
+        <button type=submit class="buttonP">Eliminar</button>
+      </form>
+      <form action="realizar_compra/{{articulo.id}}" method="POST">
+        <button type=submit class="buttonP">Comprar</button>
+      </form>
     </div>
-  </main>
-</body>
+    {% endfor %}
+  </div>
+</main>
 <div class="errorMsg2">
   <p id="errMSG">{{error}}</p>
 </div>
