@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block titleHead %}Registro{% endblock %}
+{% block titleHead %} Registro {% endblock %}
 
 {% block body %}
 
@@ -10,14 +10,14 @@
             <h1>Página de registro</h1>
         </header>
         <main>
-            <form action="/signup.html" method="POST" onsubmit="return(validation())"> 
+            <form action="/signup.html" method="POST" onsubmit="return(validation())">
                 <label>Nombre de usuario</label><br>
                 <input id="username" name="username" type="text" placeholder="Introduzca el nombre" required>
                 <br><br>
                 <label>Contraseña</label><br>
                 <input id="password_input" name="password_input" type="password" onsubmit="return fortaleza()"
                     placeholder="Introduzca la contraseña" required><br>
-                <meter max="4" id="password_strength_meter" min="0" max="4" low="3" high="4"></meter>
+                <meter id="password_strength_meter" min="0" max="4" low="3" high="4" value="0"></meter>
                 <script>
                     $(document).ready(function () {
                         $("#password_input").on('hover keydown keypress keyup', function (key) {
@@ -25,7 +25,7 @@
                             var fortaleza = 4;
                             var keypressed = key.key;
                             var meter = document.getElementById('password_strength_meter');
-                            if (keypressed == "Backspace") password.slice(0,-1);
+                            if (keypressed == "Backspace") password.slice(0, -1);
                             else if (keypressed == "Shift") password = password;
                             else if (keypressed == "CapsLock") password = password;
                             else if (keypressed == "Alt") password = password;
@@ -34,9 +34,9 @@
                             else if (keypressed == "ArrowDown") password = password;
                             else if (keypressed == "ArrowLeft") password = password;
                             else if (keypressed == "ArrowRight") password = password;
-                            
+
                             else password += keypressed;
-        
+
                             if (password.length < 6) {
                                 document.getElementById('errMSG').innerHTML = "6 caracteres mínimo";
                                 fortaleza -= 1;
@@ -71,8 +71,8 @@
                 <input id="email" name="email" type="email" placeholder="Introduzca email" required>
                 <br><br>
                 <label>Credit card</label><br>
-                <input id="card" name="card" type="tel" inputmode="numeric" pattern="[0-9\s]{13,19}"
-                    autocomplete="cc-number" maxlength="19" placeholder="xxxx xxxx xxxx xxxx" required>
+                <input id="card" name="card" type="tel" inputmode="numeric" pattern="[0-9\s]{13,19}" maxlength="19"
+                    placeholder="xxxx xxxx xxxx xxxx" required>
                 <br>
                 <button id="button" type="submit" class="buttonP">Registrarse</button>
             </form>
@@ -83,4 +83,5 @@
         </main>
     </div>
 </body>
+
 {% endblock %}

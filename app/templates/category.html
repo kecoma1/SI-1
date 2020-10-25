@@ -12,7 +12,7 @@
         {% for film in movies %}
             {% if film.categoria == categoria %}
             <div class="movie">
-                <a href="index/{{film.id}}" alt="página filmDetail">
+                <a href="index/{{film.id}}">
                 <img src="{{film.poster}}" alt="{{film.titulo}}" class="images"></a><br>
                 <h3>{{film.titulo}}</h3>
                 <p class="price">{{film.precio}}</p>
