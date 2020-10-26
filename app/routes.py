@@ -71,9 +71,9 @@ def login_page_POST():
                 username_logged = username
                 return redirect(url_for('index'))
             else:
-                return render_template('login.html', title='login', logged=logged, error="El usuario o contraseña incorrectos")
+                return render_template('login.html', title='login', logged=logged, error="El usuario o la contraseña son incorrectos")
         else:
-            return render_template('login.html', title='login', logged=logged, error="El usuario o contraseña incorrectos")
+            return render_template('login.html', title='login', logged=logged, error="El usuario o la contraseña son incorrectos")
     else:
         return render_template('signup.html', title='signup', logged=logged, error="Los datos no fueron introducidos correctamente")
 
@@ -201,7 +201,7 @@ def category(categoria):
     global catalogue
     return render_template('category.html', movies=catalogue['peliculas'], categoria=categoria)
 
-@app.route("/busqueda", methods=['POST'])
+@app.route("/busqueda", methods=['POST', 'GET'])
 def busqueda():
     global catalogue
     busqueda = request.form['search']
@@ -225,11 +225,13 @@ def redirect_index():
 def redirect_filmDetail(id):
     return redirect(url_for('film_detail', id= id))
 
+@app.route("/cargar_categoria/login.html", methods=['GET'])
 @app.route("/realizar_compra/login.html", methods=['GET'])
 @app.route("/index/login.html", methods=['GET'])
 def redirect_login_page():
     return redirect(url_for('login_page_GET'))
 
+@app.route("/cargar_categoria/signup.html", methods=['GET'])
 @app.route("/realizar_compra/signup.html", methods=['GET'])
 @app.route("/index/signup.html", methods=['GET'])
 def redirect_signup_page():
@@ -247,11 +249,13 @@ def redirect_topnav():
 def redirect_sidenav():
     return render_template('sidenav.html', logged=logged)
 
+@app.route("/cargar_categoria/historial.html", methods=['GET'])
 @app.route("/realizar_compra/historial.html", methods=['GET'])
 @app.route("/index/historial.html", methods=['GET'])
 def redirect_historial():
     return redirect(url_for('historial'))
 
+@app.route("/cargar_categoria/carrito.html", methods=['GET'])
 @app.route("/realizar_compra/carrito.html", methods=['GET'])
 @app.route("/index/carrito.html", methods=['GET'])
 def redirect_carrito():
@@ -259,8 +263,8 @@ def redirect_carrito():
 
 # Rutas para el carrito
 
-@app.route("/index/añadir_carrito/<string:id>", methods=['POST'])
-def añadir_carrito(id):
+@app.route("/index/anhadir_carrito/<string:id>", methods=['POST'])
+def anhadir_carrito(id):
     if id in session:
         session[id] += 1
     else:
