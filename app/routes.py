@@ -164,11 +164,13 @@ def historial():
         f.close()
         
         f = open(dir_path+"/historial.json", "r")
-        historial_data = f.read()
-        if historial_data != '':
-            historial = json.loads(historial_data)
-        else:
-            historial = []
+        if f is not None:
+            historial_data = f.read()
+            if historial_data != '':
+                historial = json.loads(historial_data)
+            else:
+                historial = []
+            f.close()
         return render_template('historial.html', logged=logged, saldo=saldo, historial=historial)
     else:
         return redirect(url_for('index'))
