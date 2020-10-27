@@ -1,0 +1,5 @@
+La pagina funciona perfectamente pero unica mente usando el servidor flask (me refiero a python3 -m app).
+No sabemos porque al usar apache2 a veces no se cargan los estilos, 
+quiero recalcar lo de a veces porque si actualizamos la pagina varias veces, hay veces que esta se carga perfectamente.
+Hemos probado a cambiar los paths de los estilos, a ejecutar chmod 777 en todas las carpetas de nuestra práctica.
+Como dije al principio con flask funciona todo perfectamente.
