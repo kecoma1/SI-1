@@ -9,7 +9,7 @@
             <h1>Login Usuario</h1>
         </header>
         <main>
-            <form action="login.html" method="POST">
+            <form action={{ url_for('login_page_POST') }} method="POST">
                 <label>Nombre de usuario</label><br>
                 <input id="username" name="username" type="text" placeholder="Introduzca el nombre" required>
                 <br><br>

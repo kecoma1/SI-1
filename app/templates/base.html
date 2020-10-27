@@ -6,9 +6,9 @@
     <meta name="viewport" content="width=device-width, intial-scale=1.0">
     <title>{% block titleHead %}{% endblock %}</title>
     <meta charset="UTF-8" />
-    <link rel="stylesheet" href="../static/estilo.css">
+    <link rel="stylesheet" href={{ url_for('static', filename="estilo.css") }}>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="../static/javascript/javascript.js"></script>
+    <script src={{ url_for('static', filename="javascript/javascript.js") }}></script>
 </head>
 
 <body>

@@ -9,7 +9,7 @@
             <h1>Página de registro</h1>
         </header>
         <main>
-            <form action="/signup.html" method="POST" onsubmit="return(validation())">
+            <form action={{ url_for('signup_page') }} method="POST" onsubmit="return(validation())">
                 <label>Nombre de usuario</label><br>
                 <input id="username" name="username" type="text" placeholder="Introduzca el nombre" required>
                 <br><br>

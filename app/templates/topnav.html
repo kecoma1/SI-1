@@ -4,8 +4,8 @@
         <title>Topnav</title>
         <meta name="viewport" content="width=device-width, intial-scale=1.0">
         <meta charset="UTF-8"/>
-        <link rel="stylesheet" href="../static/estilo.css">
-        <script src="../static/javascript/javascript.js"></script>
+        <link rel="stylesheet" href={{ url_for('static', filename="estilo.css") }}>
+        <script src={{ url_for('static', filename="javascript/javascript.js") }}></script>
     </head>
     <div class="topnav">
         <a href="index" target="_parent">Inicio</a>
@@ -18,9 +18,9 @@
         </a>
         <a href="signup.html" target="_parent">Registrarse</a>
         <a href="historial.html" target="_parent">Historial</a>
-        <a href="carrito.html" target="_parent"><img src="../static/imagenes/utils/carrito5.png" alt="Carrito" class="small_img"></a>
+        <a href="carrito.html" target="_parent"><img src={{ url_for('static', filename="imagenes/utils/carrito5.png") }} alt="Carrito" class="small_img"></a>
         <div class="searchbar">
-            <form action="/busqueda" method="POST" target="_parent">
+            <form action={{ url_for('busqueda') }} method="POST" target="_parent">
                 <input id="valor" name ="search" type="text" placeholder="¿Qué buscas? (Nombre película)">
                 <button class="buttonS" type="submit" id="search">Search</button>
             </form>
