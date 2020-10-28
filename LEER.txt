@@ -1,2 +1,3 @@
 La pagina funciona perfectamente pero unicamente usando el servidor flask (me refiero a python3 -m app).
 No sabemos porque al usar apache2 a veces cierra sesión solo.
+Y creamos la carpeta, /var/www/public_html/usuarios, es la que usa apache2.
