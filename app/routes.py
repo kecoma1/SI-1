@@ -17,11 +17,13 @@ catalogue_data = open(os.path.join(
 catalogue = json.loads(catalogue_data)
 
 # Variables para guardar el usuario logeado
-logged = False
-username_logged = None
 loaded_posters = False
 
+
 def load_url_posters():
+    """
+        Función que carga la url correcta de las imagenes 
+    """
     global loaded_posters
     if loaded_posters == False:
         for film in catalogue['peliculas']:
@@ -33,30 +35,53 @@ def load_url_posters():
         loaded_posters = True
 
 
+def cargar_films():
+    """
+        Función que carga las peliculas en una lista usada en el carrito 
+    """
+    global catalogue
+    carrito_films = []
+    for film in catalogue['peliculas']:
+        if str(film['id']) in session:
+            i = 0
+            while i < session[str(film['id'])]:
+                carrito_films.append(film)
+                i += 1
+    return carrito_films
+
+
+def logged():
+    """
+        Función para comprobar si alguien ha hecho login 
+    """
+    if 'usuario' in session:
+        return True
+    else:
+        return False
+
+
 @app.route('/')
 @app.route('/index')
 def index():
-    global catalogue, logged
-    return render_template('index.html', movies=catalogue['peliculas'], logged=logged)
+    global catalogue
+    load_url_posters()
+    return render_template('index.html', movies=catalogue['peliculas'], logged=logged())
+
 
 # Rutas a las diferentes páginas
-
-
 @app.route("/sidenav.html", methods=['GET'])
 def sidenav():
-    global logged
     load_url_posters()
-    return render_template('sidenav.html', logged=logged)
+    return render_template('sidenav.html', logged=logged())
 
 
 @app.route("/topnav.html", methods=['GET'])
 def topnav():
-    global logged
-    return render_template('topnav.html', logged=logged)
+    return render_template('topnav.html', logged=logged())
+
 
 @app.route("/login.html", methods=['POST'])
 def login_page_POST():
-    global logged, username_logged
     if request.form['username']:
         username = request.form['username']
         password = hashlib.sha512(
@@ -74,24 +99,19 @@ def login_page_POST():
             if users_password == password:
                 session.permanent = False
                 session['usuario'] = username
-                logged = True
-                username_logged = username
                 return redirect(url_for('index'))
             else:
-                return render_template('login.html', title='login', logged=logged, error="El usuario o la contrasenha son incorrectos")
+                return render_template('login.html', title='login', logged=logged(), error="El usuario o la contrasenha son incorrectos")
         else:
-            return render_template('login.html', title='login', logged=logged, error="El usuario o la contrasenha son incorrectos")
+            return render_template('login.html', title='login', logged=logged(), error="El usuario o la contrasenha son incorrectos")
     else:
-        return render_template('signup.html', title='signup', logged=logged, error="Los datos no fueron introducidos correctamente")
+        return render_template('signup.html', title='signup', logged=logged(), error="Los datos no fueron introducidos correctamente")
 
 
 @app.route("/login.html", methods=['GET'])
 def login_page_GET():
-    global logged
-    if logged:
+    if logged():
         # Cerrando sesión
-        logged = False
-        username_logged = None
         if 'usuario' in session:
             session.pop('usuario', None)
 
@@ -101,14 +121,13 @@ def login_page_GET():
                 session[id] = 0
         return redirect(url_for('index'))
     else:
-        return render_template('login.html', title='login', logged=logged)
+        return render_template('login.html', title='login', logged=logged())
 
 
 @app.route("/signup.html", methods=['POST'])
 def signup_page():
-    global logged, username_logged
-    if logged == True:
-        return render_template('signup.html', title='signup', logged=logged, error="Cierre sesión por favor")
+    if logged() == True:
+        return render_template('signup.html', title='signup', logged=logged(), error="Cierre sesion por favor")
 
     if request.form['username']:
         username = request.form['username']
@@ -118,15 +137,13 @@ def signup_page():
         card = card.replace(' ', '')
         wallet = random.randrange(0, 100)
 
-        session.permanent = False
-        session['usuario'] = username
-
         # Comprobamos si existe el usuario
         dir_path = os.path.expanduser("~")
         dir_path += "/public_html/usuarios/"+username
         if os.path.exists(dir_path):
-            return render_template('signup.html', title='signup', logged=logged, error="El usuario ya existe")
+            return render_template('signup.html', title='signup', logged=logged(), error="El usuario ya existe")
         else:
+            # Creamos el usuario e iniciamos sesión
             os.mkdir(dir_path)
 
             # Creando historial
@@ -138,31 +155,29 @@ def signup_page():
             f.write(username+" "+password+" " +
                     request.form['email']+" "+card+" "+str(wallet))
             f.close()
+    
+            session.permanent = False
+            session['usuario'] = username
 
-            logged = True
-            username_logged = username
             return redirect(url_for('index'))
     else:
-        return render_template('signup.html', title='signup', logged=logged, error="Los datos no fueron introducidos correctamente")
+        return render_template('signup.html', title='signup', logged=logged(), error="Los datos no fueron introducidos correctamente")
 
 
 @app.route("/signup.html", methods=['GET'])
 def signup_page_get():
-    global logged
-    if logged == True:
-        return render_template('signup.html', title='signup', logged=logged, error="Cierre sesión por favor")
+    if logged() == True:
+        return render_template('signup.html', title='signup', logged=logged(), error="Cierre sesión por favor")
     else:
-        return render_template('signup.html', title='signup', logged=logged)
+        return render_template('signup.html', title='signup', logged=logged())
 
 
 @app.route("/historial.html", methods=['GET'])
 def historial():
-    global logged, username_logged
-
-    if logged:
+    if logged():
         # Cargando el archivo del usuario
         dir_path = homedir = os.path.expanduser("~")
-        dir_path += "/public_html/usuarios/"+username_logged
+        dir_path += "/public_html/usuarios/"+session['usuario']
         f = open(dir_path+"/datos.dat", "r")
         data = f.read()
         f.close()
@@ -178,7 +193,7 @@ def historial():
             else:
                 historial = []
             f.close()
-        return render_template('historial.html', logged=logged, saldo=saldo, historial=historial)
+        return render_template('historial.html', logged=logged(), saldo=saldo, historial=historial)
     else:
         return redirect(url_for('index'))
 
@@ -195,7 +210,7 @@ def carrito():
                     carrito_films.append(film)
                     i += 1
         load_url_posters()
-        return render_template('carrito.html', logged=logged, carrito_films=carrito_films)
+        return render_template('carrito.html', logged=logged(), carrito_films=carrito_films)
     else:
         pass
     load_url_posters()
@@ -204,9 +219,9 @@ def carrito():
 
 @app.route("/index/<id>", methods=['GET'])
 def film_detail(id):
-    global catalogue, logged
+    global catalogue
     load_url_posters()
-    return render_template('filmDetail.html', film=catalogue['peliculas'][int(id)-1], logged=logged)
+    return render_template('filmDetail.html', film=catalogue['peliculas'][int(id)-1], logged=logged())
 
 
 @app.route("/cargar_categoria/<string:categoria>", methods=['GET'])
@@ -227,9 +242,8 @@ def busqueda():
     load_url_posters()
     return render_template('busqueda.html', movies=peliculas)
 
+
 # Redirects desde index/<id>
-
-
 @app.route("/index.html", methods=['GET', 'POST'])
 @app.route("/index/index", methods=['GET'])
 @app.route("/cargar_categoria/index", methods=['GET'])
@@ -262,14 +276,14 @@ def redirect_signup_page():
 @app.route("/cargar_categoria/topnav.html", methods=['GET'])
 @app.route("/index/topnav.html", methods=['GET'])
 def redirect_topnav():
-    return render_template('topnav.html', logged=logged)
+    return render_template('topnav.html', logged=logged())
 
 
 @app.route("/realizar_compra/sidenav.html", methods=['GET'])
 @app.route("/cargar_categoria/sidenav.html", methods=['GET'])
 @app.route("/index/sidenav.html", methods=['GET'])
 def redirect_sidenav():
-    return render_template('sidenav.html', logged=logged)
+    return render_template('sidenav.html', logged=logged())
 
 
 @app.route("/cargar_categoria/historial.html", methods=['GET'])
@@ -285,9 +299,8 @@ def redirect_historial():
 def redirect_carrito():
     return redirect(url_for('carrito'))
 
+
 # Rutas para el carrito
-
-
 @app.route("/index/anhadir_carrito/<string:id>", methods=['POST'])
 def anhadir_carrito(id):
     if id in session:
@@ -297,6 +310,7 @@ def anhadir_carrito(id):
     return redirect(url_for('film_detail', id=id))
 
 
+@app.route("/realizar_compra/eliminar_carrito/<string:id>", methods=['POST'])
 @app.route("/eliminar_carrito/<string:id>", methods=['POST'])
 def eliminar_carrito(id):
     if id in session:
@@ -309,17 +323,17 @@ def eliminar_carrito(id):
 
 @app.route("/realizar_compra/<string:id>", methods=['POST', 'GET'])
 def realizar_compra(id):
-    global catalogue, username_logged
-    if logged:
+    global catalogue
+    if logged():
         # Cargando el archivo del usuario
         dir_path = homedir = os.path.expanduser("~")
-        dir_path += "/public_html/usuarios/"+username_logged
+        dir_path += "/public_html/usuarios/"+session['usuario']
         f = open(dir_path+"/datos.dat", "r+")
         data = f.read()
         data = data.split(' ')
         saldo = float(data[4])
 
-        if logged == True:
+        if logged() == True:
             for film in catalogue['peliculas']:
                 if id in session and str(film['id']) == id:
                     if saldo > float(film['precio']):
@@ -363,28 +377,16 @@ def realizar_compra(id):
 
                         carrito_films = cargar_films()
                         load_url_posters()
-                        return render_template('carrito.html', logged=logged, carrito_films=carrito_films, error="Compra realizada con exito")
+                        return render_template('carrito.html', logged=logged(), carrito_films=carrito_films, error="Compra realizada con exito")
 
                     else:
                         carrito_films = cargar_films()
                         load_url_posters()
-                        return render_template('carrito.html', logged=logged, carrito_films=carrito_films, error="No hay suficiente saldo")
+                        return render_template('carrito.html', logged=logged(), carrito_films=carrito_films, error="No hay suficiente saldo")
 
     carrito_films = cargar_films()
     load_url_posters()
-    return render_template('carrito.html', logged=logged, carrito_films=carrito_films, error="Haga login para comprar")
-
-
-def cargar_films():
-    global catalogue
-    carrito_films = []
-    for film in catalogue['peliculas']:
-        if str(film['id']) in session:
-            i = 0
-            while i < session[str(film['id'])]:
-                carrito_films.append(film)
-                i += 1
-    return carrito_films
+    return render_template('carrito.html', logged=logged(), carrito_films=carrito_films, error="Haga login para comprar")
 
 
 @app.route("/index/cargar_categoria/<string:categoria>", methods=['GET'])
@@ -413,10 +415,10 @@ def redirect_realizar_compra(id):
 
 @app.route("/introducir_saldo", methods=['POST'])
 def introducir_saldo():
-    if logged:
+    if logged():
         saldo_a_introducir = request.form['input_saldo']
         dir_path = homedir = os.path.expanduser("~")
-        dir_path += "/public_html/usuarios/"+username_logged
+        dir_path += "/public_html/usuarios/"+session['usuario']
         f = open(dir_path+"/datos.dat", "r+")
         data = f.read()
         data = data.split(' ')

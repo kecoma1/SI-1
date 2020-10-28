@@ -1,5 +1,2 @@
-La pagina funciona perfectamente pero unica mente usando el servidor flask (me refiero a python3 -m app).
-No sabemos porque al usar apache2 a veces no se cargan las imágenes.
-Otra cosa que nos pasa es que como nosotros usamos una variable global para saber si hay un usario
-logeado, al parecer, esa variable no toma el valor correcto y no deja ejecutar las funciones de un 
-usuario logeado.
+La pagina funciona perfectamente pero unicamente usando el servidor flask (me refiero a python3 -m app).
+No sabemos porque al usar apache2 a veces cierra sesión solo.
