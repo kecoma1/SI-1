@@ -1,1 +1,4 @@
 En el usuario, ¿el username es único?
+En imdb_actormovies, ¿a que se refieren character y ascaracter?
+En imdb_directormovies, ¿Cuál es la diferencia entre numpartitipation y paticipation?
+Se pueden eliminar las tabla imdb_moviecountries, imdb_moviegenre,  imdb_movielanguage y simplementa añadir atributos country, genre, language a las peliculas
