@@ -1,5 +1,8 @@
 ------- FIXING MISTAKES RELATED TO MISSING KEYS AND DUPLICATES --------
 
+-- To avoid problems in setPrice.sql
+update imdb_movies set year = '1999' where year = '1998-1999';
+
 -- Add foreign key in orders
 alter table orders add foreign key (customerid) references customers(customerid) on delete set null on update cascade;
 
@@ -94,4 +97,11 @@ alter table imdb_movielanguages add foreign key (language) references imdb_langu
 alter table imdb_moviecountries add foreign key (country) references imdb_country(country) on delete cascade on update cascade;
 
 alter table imdb_moviegenres add foreign key (genre) references imdb_genre(genre) on delete cascade on update cascade;
+
+-- Creating the table alert
+create table alerta(
+    prod_id int references products(prod_id),
+    description text not null,
+    fecha date not null
+);
 
