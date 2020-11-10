@@ -58,3 +58,40 @@ alter table imdb_moviegenres add foreign key (movieid) references imdb_movies(mo
 alter table imdb_directormovies drop constraint imdb_directormovies_movieid_fkey;
 alter table imdb_directormovies add foreign key (movieid) references imdb_movies(movieid) on delete cascade on update cascade;
 
+----------- SOLUCIONANDO INTEGRIDAD DEL DISEÑO --------------
+
+create table imdb_language(
+    language varchar primary key
+);
+
+insert into imdb_language(
+    select distinct language
+    from imdb_movielanguages
+);
+
+create table imdb_genre(
+    genre varchar primary key
+);
+
+insert into imdb_genre(
+    select distinct genre
+    from imdb_moviegenres
+);
+
+create table imdb_country(
+    country varchar primary key
+);
+
+insert into imdb_country(
+    select distinct country
+    from imdb_moviecountries
+);
+
+-- Setting all the needed foreign keys
+
+alter table imdb_movielanguages add foreign key (language) references imdb_language(language) on delete cascade on update cascade;
+
+alter table imdb_moviecountries add foreign key (country) references imdb_country(country) on delete cascade on update cascade;
+
+alter table imdb_moviegenres add foreign key (genre) references imdb_genre(genre) on delete cascade on update cascade;
+
