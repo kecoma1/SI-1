@@ -1,0 +1,2 @@
+Creemos que para implementar los triggers es necesario el uso de sqlalchemy en el portal web.
+Es por eso que pueden no estar completamente bien.
