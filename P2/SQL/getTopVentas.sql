@@ -19,7 +19,6 @@ ELSE
 	i := year_2;
 END IF;
 
-
 WHILE i<=year_2 LOOP
 	RETURN QUERY
 	SELECT a.year as ano, MAX(c.sales) as max_sales, a.movietitle as titulo
@@ -35,5 +34,5 @@ END; $$
 
 LANGUAGE 'plpgsql';
 
-SELECT getTopVentas(1980, 2000)
+SELECT * FROM getTopVentas(1995, 2000) as v ORDER BY v.ventas DESC
 
