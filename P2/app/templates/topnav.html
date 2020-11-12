@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <title>Topnav</title>
+        <meta name="viewport" content="width=device-width, intial-scale=1.0">
+        <meta charset="UTF-8"/>
+        <link rel="stylesheet" href={{ url_for('static', filename="estilo.css") }}>
+        <script src={{ url_for('static', filename="javascript/javascript.js") }}></script>
+    </head>
+    <div class="topnav">
+        <a href="index" target="_parent">Inicio</a>
+        <a href="login.html" target="_parent">
+            {% if logged %}
+                Cerrar sesión
+            {% else %}
+                Iniciar sesión
+            {% endif %}
+        </a>
+        <a href={{ url_for('signup_page') }} target="_parent">Registrarse</a>
+        <a href={{ url_for('historial') }} target="_parent">Historial</a>
+        <a href={{ url_for('carrito') }} target="_parent"><img src={{ url_for('static', filename="imagenes/utils/carrito5.png") }} alt="Carrito" class="small_img"></a>
+        <div class="searchbar">
+            <form action={{ url_for('busqueda') }} method="POST" target="_parent">
+                <input id="valor" name ="search" type="text" placeholder="¿Qué buscas? (Nombre película)">
+                <button class="buttonS" type="submit" id="search">Search</button>
+            </form>
+        </div>
+    </div>
+</html>

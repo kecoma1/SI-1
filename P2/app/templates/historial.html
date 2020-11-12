@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block titleHead %}Historial{% endblock %}
+
+{% block body %}
+
+  <main>
+    <div class="mainHistorial">
+      <div>
+        <h1>Historial</h1>
+      </div>
+      <div>
+        <table id="table_historial" class="tableHistorial">
+          <tr>
+            <th colspan="3" class="tableHistorial">Tus movimientos:</th>
+          </tr>
+          {% for movimiento in historial %}
+          <tr>
+            <td class="tableHistorial">{{movimiento.titulo}}</td>
+            <td class="tableHistorial">{{movimiento.precio}}</td>
+            <td id="detail_{{movimiento.movement_id}}" class="details">{{movimiento.time}}</td>
+            <script>
+              $("#detail_{{movimiento.movement_id}}").click(function(){
+                $("#detail_{{movimiento.movement_id}}").css("font-size", "25px");
+              });
+            </script>
+          </tr>
+          {% endfor %}
+        </table>
+      </div>
+      <br>
+      <div>
+        <table class="tableHistorial">
+          <tr>
+            <th class="tableHistorial">
+              Tu saldo:
+            </th>
+          </tr>
+          <tr>
+            <td class="tableHistorial">{{saldo}}</td>
+          </tr>
+        </table>
+      </div>
+      <br>
+      <div>
+        <form action="introducir_saldo" method="POST">
+          <input id="Saldo_a_introducir" name="input_saldo" type="text" placeholder="Introduzca la cantidad"
+            required><br>
+          <button type="submit" name="button" class="opciones">Añadir saldo</button>
+        </form>
+      </div>
+    </div>
+  </main>
+{% endblock %}

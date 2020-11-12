@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block titleHead %}{{film.titulo}}{% endblock %}
+
+{% block content %}
+<div class="info">
+  <header>
+  </header>
+  <div class="mainFilmDetail">
+    <img src={{film.poster}} alt="{{film.titulo}}" class="imagesFilmDetail"><br />
+    <div class="venta">
+      <form action="anhadir_carrito/{{film.id}}" method="POST">
+        <button type=submit class="buttonP">Comprar</button>
+      </form>
+      <p class="price">{{film.precio}}</p>
+      <form action="anhadir_carrito/{{film.id}}" method="POST">
+        <button type=submit class="buttonP">Alquilar</button>
+      </form>
+    </div>
+    <p class="subsecciones">Descripción:</p>
+    <p class="descmovieFilmDetail">
+      {{film.descripcion}}
+    </p>
+    <p class="subsecciones">Director:</p>
+    <div>
+      <p class="descmovieFilmDetail">
+        {{film.director}}<br>
+        {{film.categoria}}
+      </p>
+    </div>
+    <p class="subsecciones">Actores principales:</p>
+    <div class="actores">
+      {% for actor in film.actores %}
+      <div class=actor>
+        <img src="{{actor.foto}}" alt="Foto {{actor.nombre}}" class="images">
+        <p class="descActor">
+          {{actor.nombre}}<br>{{actor.personaje}}
+        </p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endblock %}
