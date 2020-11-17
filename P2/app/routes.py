@@ -335,12 +335,18 @@ def comprar_todo():
         saldo = float(data[4])
 
         if logged() == True:
+            # Buscamos las peliculas del carrito
             for film in catalogue['peliculas']:
-                if film['id'] in session:
-                    precio += float(film['precio'])*int(session[film['id']])
-                    lista_pelis.append(film)
 
-            # Comprobamos si hay saldo suficionete
+                # Si la pelicula esta en el carrito calcular precio total
+                if str(film['id']) in session:
+                    precio += film['precio']*int(session[str(film['id'])])
+
+                    # Anadir la cantidad adecuada de peliculas
+                    for i in range(session[str(film['id'])]):
+                        lista_pelis.append(film)
+
+            # Comprobamos si hay saldo suficiente
             if saldo > precio:
 
                 # Eliminando información anterior del archivo
@@ -360,6 +366,7 @@ def comprar_todo():
 
                 for film in lista_pelis:
                     now = datetime.datetime.now()
+                    historial.append(film)
                     historial[-1]['time'] = now.strftime(
                         "%Y-%m-%d %H:%M:%S")
                     if len(historial) > 1:
