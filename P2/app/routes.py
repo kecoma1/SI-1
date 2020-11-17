@@ -341,10 +341,7 @@ def comprar_todo():
                 # Si la pelicula esta en el carrito calcular precio total
                 if str(film['id']) in session:
                     precio += film['precio']*int(session[str(film['id'])])
-
-                    # Anadir la cantidad adecuada de peliculas
-                    for i in range(session[str(film['id'])]):
-                        lista_pelis.append(film)
+                    lista_pelis.append(film)
 
             # Comprobamos si hay saldo suficiente
             if saldo > precio:
@@ -364,16 +361,13 @@ def comprar_todo():
                 else:
                     historial = []
 
+                now = datetime.datetime.now()
                 for film in lista_pelis:
-                    now = datetime.datetime.now()
                     historial.append(film)
                     historial[-1]['time'] = now.strftime(
                         "%Y-%m-%d %H:%M:%S")
-                    if len(historial) > 1:
-                        movement_id = historial[-2]['movement_id']+1
-                        historial[-1]['movement_id'] = movement_id
-                    else:
-                        historial[-1]['movement_id'] = 1
+                    historial[len(historial)-1]['movement_id'] = len(historial)
+                    historial[len(historial)-1]['quantity'] = session[str(film['id'])]
                 
                 f.seek(0)
                 f.truncate()
@@ -437,11 +431,8 @@ def realizar_compra(id):
                         now = datetime.datetime.now()
                         historial[-1]['time'] = now.strftime(
                             "%Y-%m-%d %H:%M:%S")
-                        if len(historial) > 1:
-                            movement_id = historial[-2]['movement_id']+1
-                            historial[-1]['movement_id'] = movement_id
-                        else:
-                            historial[-1]['movement_id'] = 1
+                        historial[-1]['movement_id'] = len(historial)
+                        historial[len(historial)-1]['quantity'] = 1
                         f.seek(0)
                         f.truncate()
                         json.dump(historial, f)

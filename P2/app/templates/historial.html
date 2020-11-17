@@ -18,7 +18,7 @@
           <tr>
             <td class="tableHistorial">{{movimiento.titulo}}</td>
             <td class="tableHistorial">{{movimiento.precio}}</td>
-            <td id="detail_{{movimiento.movement_id}}" class="details">{{movimiento.time}}</td>
+            <td id="detail_{{movimiento.movement_id}}" class="details">{{movimiento.time}} - Cantidad: {{movimiento.quantity}}</td>
             <script>
               $("#detail_{{movimiento.movement_id}}").click(function(){
                 $("#detail_{{movimiento.movement_id}}").css("font-size", "25px");
