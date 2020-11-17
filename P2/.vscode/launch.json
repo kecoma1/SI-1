@@ -5,12 +5,15 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Python: Archivo actual",
+            "name": "Python: Flask",
             "type": "python",
             "request": "launch",
-            "program": "app",
-            "console": "integratedTerminal",
-            "env": "si1pyenv"
+            "module": "app",
+            "env": {
+                "FLASK_APP": "app.py",
+                "FLASK_ENV": "si1pyenv",
+                "FLASK_DEBUG": "0"
+            }
         }
     ]
 }
