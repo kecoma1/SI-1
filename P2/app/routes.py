@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from app import app
+from app import database
 from flask import render_template, request, url_for, redirect, session
 import json
 import os
