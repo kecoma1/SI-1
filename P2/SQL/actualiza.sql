@@ -36,7 +36,7 @@ alter table imdb_movielanguages add primary key (movieid, language);
 
 -- Set the primary key and foreign keys of imdb_actormovies
 alter table imdb_actormovies add primary key (actorid, movieid);
-alter table imdb_actormovies add foreign key (actorid) references imdb_actor(actorid) on delete cascade on update cascade;
+alter table imdb_actormovies add foreign key (actorid) references imdb_actors(actorid) on delete cascade on update cascade;
 alter table imdb_actormovies add foreign key (movieid) references imdb_movies(movieid) on delete cascade on update cascade;
 
 ------ SETTING TO CASCADE ALL THE FOREIGN KEYS THAT WEREN'T AND MUST BE -------
@@ -60,6 +60,7 @@ alter table imdb_moviegenres add foreign key (movieid) references imdb_movies(mo
 -- Set the foreign key of imdb_directormovies on cascade
 alter table imdb_directormovies drop constraint imdb_directormovies_movieid_fkey;
 alter table imdb_directormovies add foreign key (movieid) references imdb_movies(movieid) on delete cascade on update cascade;
+alter table imdb_directormovies add foreign key (directorid) references imdb_directors(directorid) on delete cascade on update cascade;
 
 ----------- SOLUCIONANDO INTEGRIDAD DEL DISEÑO --------------
 
@@ -100,8 +101,16 @@ alter table imdb_moviegenres add foreign key (genre) references imdb_genre(genre
 
 -- Creating the table alert
 create table alerta(
-    prod_id int references products(prod_id),
+    prod_id int references products(prod_id) on delete cascade on update cascade,
     description text not null,
     fecha date not null
 );
+
+--
+--
+-- customerid en orders no tiene la foreign key establecida en cascade para cuando se 
+-- elimine ni cuando se actualice porque no tenemos opción de borrar usuario y aun así
+-- en tal caso querríamos mantener las orders que haya hecho este usuario.
+--
+--
 
