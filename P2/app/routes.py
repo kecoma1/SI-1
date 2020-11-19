@@ -65,8 +65,9 @@ def logged():
 @app.route('/index')
 def index():
     global catalogue
+    top_films = database.db_top_films()
     load_url_posters()
-    return render_template('index.html', movies=catalogue['peliculas'], logged=logged())
+    return render_template('index.html', movies=top_films, logged=logged())
 
 
 # Rutas a las diferentes páginas
