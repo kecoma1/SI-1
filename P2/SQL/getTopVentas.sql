@@ -14,8 +14,10 @@ i integer:= 0;
 BEGIN
 
 	RETURN QUERY
+	-- De los años establecidos, coger la pelicula 1 de cada año y hacer print de mayor a menor
 	SELECT t.ano, t.titulo as pelicula, MAX(t.max_sales) as ventas
 		FROM 	(	
+			-- Obtenemos las ventas de cada año y las enumeramos de mayor a menor (la que más ventas tiene es la 1) 
 			SELECT a.year as ano, MAX(c.sales) as max_sales, a.movietitle as titulo,
 			ROW_NUMBER() OVER(PARTITION BY a.year ORDER BY MAX(c.sales) DESC) AS rk
 				FROM imdb_movies as a, products as b, inventory as c
