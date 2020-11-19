@@ -19,7 +19,11 @@ BEGIN
 		FROM 	(	
 			-- Obtenemos las ventas de cada año y las enumeramos de mayor a menor (la que más ventas tiene es la 1) 
 			SELECT a.year as ano, MAX(c.sales) as max_sales, a.movietitle as titulo,
+			
+			-- Creditos a https://stackoverflow.com/questions/6841605/get-top-1-row-of-each-group, para numerar cada fila, y despues coger el mayor (el 1)
 			ROW_NUMBER() OVER(PARTITION BY a.year ORDER BY MAX(c.sales) DESC) AS rk
+			
+			
 				FROM imdb_movies as a, products as b, inventory as c
 				WHERE a.movieid = b.movieid AND c.prod_id = b.prod_id AND CAST(a.year AS INTEGER) BETWEEN year_1 AND year_2
 				GROUP BY a.year, a.movietitle
