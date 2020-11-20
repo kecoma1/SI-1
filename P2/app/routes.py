@@ -94,7 +94,7 @@ def login_page_POST():
             session['usuario'] = username
             return redirect(url_for('index'))
         else:
-            return render_template('login.html', title='login', logged=logged(), error="El usuario o la contrasenha son incorrectos")
+            return render_template('login.htailml', title='login', logged=logged(), error="El usuario o la contrasenha son incorrectos")
     else:
         return render_template('signup.html', title='signup', logged=logged(), error="Los datos no fueron introducidos correctamente")
 
@@ -121,39 +121,39 @@ def signup_page():
         return render_template('signup.html', title='signup', logged=logged(), error="Cierre sesion por favor")
 
     if request.form['username']:
+        firstname = request.form['firstname']
+        lastname = request.form['lastname']
+        address1 = request.form['direccion1']
+        address2 = request.form['direccion2']
+        city = request.form['city']
+        state = request.form['state']
+        zipcode = request.form['zipcode']
+        country = request.form['country']
+        region = request.form['region']
+        email = request.form['email']
+        phone = request.form['phone']
+        creditcardType = request.form['creditcardtype']
+        creditcard = request.form['card']
+        creditcardexpiration = request.form['creditcardexpiration']
         username = request.form['username']
-        password = hashlib.sha512(
-            (request.form['password_input']).encode('utf-8')).hexdigest()
-        card = request.form['card']
-        card = card.replace(' ', '')
-        wallet = random.randrange(0, 100)
+        password = request.form['password_input']
+        age = request.form['age']
+        income = request.form['income']
+        gender = request.form['gender']
+        creditcard = creditcard.replace(' ', '')
+        # TODO Comprobar si hay cartera o no, wallet = random.randrange(0, 100)
 
-        # Comprobamos si existe el usuario
-        dir_path = os.path.expanduser("~")
-        dir_path += "/public_html/usuarios/"+username
-        if os.path.exists(dir_path):
-            return render_template('signup.html', title='signup', logged=logged(), error="El usuario ya existe")
+        if database.registrar(firstname, lastname, address1, address2, 
+                           city, state, zipcode, country, region, email, 
+                           phone, creditcardType, creditcard, creditcardexpiration, 
+                           username, password, age, income, gender) == False:
+            return render_template('signup.html', title='signup', logged=logged(), error="Los datos no fueron introducidos correctamente")
         else:
-            # Creamos el usuario e iniciamos sesión
-            os.mkdir(dir_path)
-
-            # Creando historial
-            f = open(dir_path+"/historial.json", "w")
-            f.close()
-
-            # Escribiendo los datos
-            f = open(dir_path+"/datos.dat", "w")
-            f.write(username+" "+password+" " +
-                    request.form['email']+" "+card+" "+str(wallet))
-            f.close()
-    
             session.permanent = False
             session['usuario'] = username
 
             return redirect(url_for('index'))
-    else:
-        return render_template('signup.html', title='signup', logged=logged(), error="Los datos no fueron introducidos correctamente")
-
+            
 
 @app.route("/signup.html", methods=['GET'])
 def signup_page_get():

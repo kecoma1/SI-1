@@ -247,6 +247,7 @@ def validar(username, password):
         db_conn.close()
 
         resultado = list(db_result)[0]
+        # Comprobamos que el resultado de la query es correcto
         if resultado[15] == username and resultado[16] == password:
             return True
         else:
@@ -260,3 +261,49 @@ def validar(username, password):
         print("-"*60)
 
         return False
+
+
+def registrar(firstname, lastname, address1, address2, 
+                           city, state, zipcode, country, region, email, 
+                           phone, creditcardType, creditcard, creditcardexpiration, 
+                           username, password, age, income, gender):
+    # Comprobamos los campos requeridos
+    if firstname == "" or lastname == "" or city == "" or zipcode == "" or state == ""\
+        or  zipcode == "" or country == "" or creditcard == "" or creditcardexpiration == ""\
+        or username == "" or password == "":
+            return
+
+    try:
+        # Comprobar que el username no existe
+        # conexion a la base de datos
+        db_conn = None
+        db_conn = db_engine.connect()
+
+        db_result = db_conn.execute("select * from customers where username='"+username+"'")
+
+        # Si hay alguien con el mismo username retornar
+        if len(list(db_result)) > 0:
+            return False
+
+        # Obtenemos el último customerid para asignar el siguiente
+        db_result = db_conn.execute("select customerid from customers order by customerid desc limit 1")
+        customerid = list(db_result)[0][0]
+        customerid+=1
+
+        # Insertamos en la tabla el usuario
+        db_result = db_conn.execute("insert into customers (customerid, firstname, lastname, address1, address2,\
+                                    city, state, zip, country, region, email,\
+                                    phone, creditcardType, creditcard, creditcardexpiration,\
+                                    username, password, age, income, gender)\
+                                    values ("+customerid+", '"+firstname+"', '"+lastname+"', '"+address1+"', '"+address2+"',\
+                                    '"+city+"', '"+state+"', "+zipcode+", '"+country+"', '"+region+"', '"+email+"',\
+                                    '"+phone+"', "+creditcardType+", "+creditcard+", "+creditcardexpiration+", '"+username+"', '"+password+"',\
+                                    "+age+", "+income+", '"+gender+"')")
+        db_conn.close()
+    except:
+        if db_conn is not None:
+            db_conn.close()
+        print("Exception in DB access:")
+        print("-"*60)
+        traceback.print_exc(file=sys.stderr)
+        print("-"*60)

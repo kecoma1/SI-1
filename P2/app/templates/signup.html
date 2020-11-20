@@ -10,8 +10,61 @@
         </header>
         <main>
             <form action={{ url_for('signup_page') }} method="POST" onsubmit="return(validation())">
+                <label>Nombre</label><br>
+                <input id="firstname" name="firstname" type="text" placeholder="Introduzca el nombre" required>
+                <br><br>
+                <label>Apellidos</label><br>
+                <input id="lastname" name="lastname" type="text" placeholder="Introduzca el apellido" required>
+                <br><br>
+                <label>Dirección 1</label><br>
+                <input id="direccion1" name="direccion1" type="text" placeholder="Introduzca la dirección (No requerida)">
+                <br><br>
+                <label>Dirección 2</label><br>
+                <input id="direccion2" name="direccion2" type="text" placeholder="Introduzca el nombre  (No requerida)" >
+                <br><br>
+                <label>Ciudad</label><br>
+                <input id="city" name="city" type="text" placeholder="Introduzca el nombre" required>
+                <br><br>
+                <label>Estado</label><br>
+                <input id="state" name="state" type="text" placeholder="Introduzca el estado  (No requerida)">
+                <br><br>
+                <label>Código postal</label><br>
+                <input id="zipcode" name="zipcode" type="text" placeholder="Introduzca el código postal" required>
+                <br><br>
+                <label>País</label><br>
+                <input id="country" name="country" type="text" placeholder="Introduzca el País" required>
+                <br><br>
+                <label>Región</label><br>
+                <input id="region" name="region" type="text" placeholder="Introduzca la región  (No requerida)">
+                <br><br>
+                <label>Email</label><br>
+                <input id="email" name="email" type="text" placeholder="Introduzca el Email  (No requerida)">
+                <br><br>
+                <label>Phone</label><br>
+                <input id="phone" name="phone" type="text" placeholder="Introduzca el número de teléfono  (No requerida)">
+                <br><br>
+                <label>Tipo de tarjeta de crédito</label><br>
+                <input id="creditcardtype" name="creditcardtype" type="text" placeholder="Introduzca el tipo de tarjeta" required>
+                <br><br>
+                <label>Credit card</label><br>
+                <input id="card" name="card" type="tel" inputmode="numeric" pattern="[0-9\s]{13,19}" maxlength="19"
+                    placeholder="xxxx xxxx xxxx xxxx" required>
+                <br>
+                <label>Fecha de caducidad de la tarjeta de crédito</label><br>
+                <input id="creditcardexpiration" name="creditcardexpiration" type="text" placeholder="Introduzca la fecha de caducidad de la tarjeta" required>
+                <br><br>
+                <label>Edad</label><br>
+                <input id="age" name="age" type="text" placeholder="Introduzca su edad  (No requerida)">
+                <br><br>
+                <label>Salario</label><br>
+                <input id="income" name="income" type="text" placeholder="Introduzca su salario  (No requerido)">
+                <br><br>
+                <label>Género</label><br>
+                <input id="gender" name="gender" type="text" placeholder="Introduzca su género  (No requerido)">
+                <br><br>
+
                 <label>Nombre de usuario</label><br>
-                <input id="username" name="username" type="text" placeholder="Introduzca el nombre" required>
+                <input id="username" name="username" type="text" placeholder="Introduzca el nombre de usuario" required>
                 <br><br>
                 <label>Contrasena</label><br>
                 <input id="password_input" name="password_input" type="password" onsubmit="return fortaleza()"
@@ -69,10 +122,6 @@
                 <label>Email</label><br>
                 <input id="email" name="email" type="email" placeholder="Introduzca email" required>
                 <br><br>
-                <label>Credit card</label><br>
-                <input id="card" name="card" type="tel" inputmode="numeric" pattern="[0-9\s]{13,19}" maxlength="19"
-                    placeholder="xxxx xxxx xxxx xxxx" required>
-                <br>
                 <button id="button" type="submit" class="buttonP">Registrarse</button>
             </form>
             <br><br>
