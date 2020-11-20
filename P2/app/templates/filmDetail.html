@@ -1,26 +1,22 @@
 {% extends "base.html" %}
 
-{% block titleHead %}{{film.titulo}}{% endblock %}
+{% block titleHead %}{{film[1]}}{% endblock %}
 
 {% block content %}
 <div class="info">
   <header>
   </header>
   <div class="mainFilmDetail">
-    <img src={{film.poster}} alt="{{film.titulo}}" class="imagesFilmDetail"><br />
+    <img alt="{{film[1]}}" class="imagesFilmDetail"><br />
     <div class="venta">
-      <form action="anhadir_carrito/{{film.id}}" method="POST">
+      <form action="anhadir_carrito/{{film[0]}}" method="POST">
         <button type=submit class="buttonP">Comprar</button>
       </form>
       <p class="price">{{film.precio}}</p>
-      <form action="anhadir_carrito/{{film.id}}" method="POST">
+      <form action="anhadir_carrito/{{film[0]}}" method="POST">
         <button type=submit class="buttonP">Alquilar</button>
       </form>
     </div>
-    <p class="subsecciones">Descripción:</p>
-    <p class="descmovieFilmDetail">
-      {{film.descripcion}}
-    </p>
     <p class="subsecciones">Director:</p>
     <div>
       <p class="descmovieFilmDetail">

@@ -222,7 +222,11 @@ def carrito():
 @app.route("/index/<id>", methods=['GET'])
 def film_detail(id):
     global catalogue
-    load_url_posters()
+    pelicula = database.getPelicula(id)
+    actores = database.getActores(id)
+    directores = database.getDirectores(id)
+    precio = database.getPrecio(id)
+    load_url_posters() # TODO Cambiar esta función
     return render_template('filmDetail.html', film=catalogue['peliculas'][int(id)-1], logged=logged())
 
 
