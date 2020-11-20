@@ -291,15 +291,24 @@ def registrar(firstname, lastname, address1, address2,
         customerid+=1
 
         # Insertamos en la tabla el usuario
+        print("insert into customers (customerid, firstname, lastname, address1, address2,\
+                                    city, state, zip, country, region, email,\
+                                    phone, creditcardType, creditcard, creditcardexpiration,\
+                                    username, password, age, income, gender)\
+                                    values ("+str(customerid)+", '"+firstname+"', '"+lastname+"', "+address1+", "+address2+",\
+                                    '"+city+"', "+state+", '"+zipcode+"', '"+country+"', '"+region+"', "+email+",\
+                                    "+phone+", '"+creditcardType+"', '"+creditcard+"', '"+creditcardexpiration+"', '"+username+"', '"+password+"',\
+                                    "+str(age)+", "+str(income)+", "+gender+")")
         db_result = db_conn.execute("insert into customers (customerid, firstname, lastname, address1, address2,\
                                     city, state, zip, country, region, email,\
                                     phone, creditcardType, creditcard, creditcardexpiration,\
                                     username, password, age, income, gender)\
-                                    values ("+customerid+", '"+firstname+"', '"+lastname+"', '"+address1+"', '"+address2+"',\
-                                    '"+city+"', '"+state+"', "+zipcode+", '"+country+"', '"+region+"', '"+email+"',\
-                                    '"+phone+"', "+creditcardType+", "+creditcard+", "+creditcardexpiration+", '"+username+"', '"+password+"',\
-                                    "+age+", "+income+", '"+gender+"')")
+                                    values ("+str(customerid)+", '"+firstname+"', '"+lastname+"', "+address1+", "+address2+",\
+                                    '"+city+"', "+state+", '"+zipcode+"', '"+country+"', '"+region+"', "+email+",\
+                                    "+phone+", '"+creditcardType+"', '"+creditcard+"', '"+creditcardexpiration+"', '"+username+"', '"+password+"',\
+                                    "+age+", "+income+", "+gender+")")
         db_conn.close()
+        return True
     except:
         if db_conn is not None:
             db_conn.close()
@@ -307,3 +316,4 @@ def registrar(firstname, lastname, address1, address2,
         print("-"*60)
         traceback.print_exc(file=sys.stderr)
         print("-"*60)
+        return False

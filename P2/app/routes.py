@@ -123,23 +123,61 @@ def signup_page():
     if request.form['username']:
         firstname = request.form['firstname']
         lastname = request.form['lastname']
+
+        # Los campos que pueden ser null y no tienen información, los cambiamos
         address1 = request.form['direccion1']
+        if address1 == '':
+            address1 = 'null'
+        else:
+            address1 = "'"+address1+"'"
+            
         address2 = request.form['direccion2']
+        if address2 == '':
+            address2 = 'null' 
+        else:
+            address2 = "'"+address2+"'"
+
         city = request.form['city']
         state = request.form['state']
+        if state == '':
+            state = 'null'
+        else:
+            state = "'"+state+"'"
+
         zipcode = request.form['zipcode']
         country = request.form['country']
-        region = request.form['region']
+        region = request.form['region'] # TODO MAXIMO 6 CHAR
         email = request.form['email']
+        if email == '':
+            email = 'null'
+        else:
+            email = "'"+email+"'"
+
         phone = request.form['phone']
+        if phone == '':
+            phone = 'null'
+        else:
+            phone = "'"+phone+"'"
+
         creditcardType = request.form['creditcardtype']
         creditcard = request.form['card']
         creditcardexpiration = request.form['creditcardexpiration']
         username = request.form['username']
         password = request.form['password_input']
         age = request.form['age']
+        if age == '':
+            age = 'null'
+
         income = request.form['income']
+        if income == '':
+            income = 'null'
+
         gender = request.form['gender']
+        if gender == '':
+            gender = 'null'
+        else:
+            gender = "'"+gender+"'"
+
         creditcard = creditcard.replace(' ', '')
         # TODO Comprobar si hay cartera o no, wallet = random.randrange(0, 100)
 
@@ -151,9 +189,8 @@ def signup_page():
         else:
             session.permanent = False
             session['usuario'] = username
-
             return redirect(url_for('index'))
-            
+
 
 @app.route("/signup.html", methods=['GET'])
 def signup_page_get():
