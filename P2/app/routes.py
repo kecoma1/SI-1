@@ -267,7 +267,9 @@ def category(categoria):
 def busqueda():
     global catalogue
     busqueda = request.form['search']
-    peliculas = []
+
+    # Buscamos la pelicula en la base de datos
+    peliculas = database.buscarPeliculas(busqueda)
     for film in catalogue['peliculas']:
         if busqueda in film['titulo']:
             peliculas.append(film)

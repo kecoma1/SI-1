@@ -317,3 +317,14 @@ def registrar(firstname, lastname, address1, address2,
         traceback.print_exc(file=sys.stderr)
         print("-"*60)
         return False
+
+
+def buscarPeliculas(busqueda):
+    """Buscamos las peliculas en las bases de datos dada una string
+
+    Args:
+        busqueda (String): String con los nombres a buscar
+    """
+    if len(busqueda) > 0:
+        pass
+    
