@@ -12,7 +12,7 @@
       <form action="anhadir_carrito/{{film[0]}}" method="POST">
         <button type=submit class="buttonP">Comprar</button>
       </form>
-      <p class="price">{{film.precio}}</p>
+      <p class="price">{{precio}}</p>
       <form action="anhadir_carrito/{{film[0]}}" method="POST">
         <button type=submit class="buttonP">Alquilar</button>
       </form>
@@ -20,17 +20,17 @@
     <p class="subsecciones">Director:</p>
     <div>
       <p class="descmovieFilmDetail">
-        {{film.director}}<br>
-        {{film.categoria}}
+        {{directores}}<br>
+        <!-- {{film.categoria}} no mostramos ya la categoria-->
       </p>
     </div>
     <p class="subsecciones">Actores principales:</p>
     <div class="actores">
-      {% for actor in film.actores %}
+      {% for actor in actores %}
       <div class=actor>
-        <img src="{{actor.foto}}" alt="Foto {{actor.nombre}}" class="images">
+        <!-- <img src="{{actor.foto}}" alt="Foto {{actor.nombre}}" class="images"> -->
         <p class="descActor">
-          {{actor.nombre}}<br>{{actor.personaje}}
+          {{actor}}<br><!-- No se muestra el personaje {{actor.personaje}} -->
         </p>
       </div>
       {% endfor %}
