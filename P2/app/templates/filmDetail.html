@@ -7,32 +7,40 @@
   <header>
   </header>
   <div class="mainFilmDetail">
-    <img alt="{{film[1]}}" class="imagesFilmDetail"><br />
+    <h1>{{film[1]}}</h1>
+    <!--<img alt="{{film[1]}}" class="imagesFilmDetail"><br /> -->
     <div class="venta">
+      {% for precio in precios %}
+      <p class="price">{{precio[0]}}</p>versión: {{precio[1]}}<br><br><br>
+      {% endfor %}
       <form action="anhadir_carrito/{{film[0]}}" method="POST">
         <button type=submit class="buttonP">Comprar</button>
       </form>
-      <p class="price">{{precio}}</p>
-      <form action="anhadir_carrito/{{film[0]}}" method="POST">
-        <button type=submit class="buttonP">Alquilar</button>
-      </form>
     </div>
-    <p class="subsecciones">Director:</p>
+    <p class="subsecciones">Directores:</p>
     <div>
       <p class="descmovieFilmDetail">
-        {{directores}}<br>
+        {% for director in directores %}
+          {{director}}<br>
+        {% endfor %}
         <!-- {{film.categoria}} no mostramos ya la categoria-->
       </p>
     </div>
     <p class="subsecciones">Actores principales:</p>
     <div class="actores">
+      {% set counter = 0 %}
       {% for actor in actores %}
-      <div class=actor>
-        <!-- <img src="{{actor.foto}}" alt="Foto {{actor.nombre}}" class="images"> -->
+      <div class="actor">
+        <!-- <img src="" alt="Foto " class="images"> -->
         <p class="descActor">
-          {{actor}}<br><!-- No se muestra el personaje {{actor.personaje}} -->
+          Nombre: {{actor[0]}}<br>
+          Personaje: {{actor[1]}}
         </p>
       </div>
+      {% set counter = counter+1 %}
+      <br>
+      {% if counter%3 == 0 %}
+      {% endif %}
       {% endfor %}
     </div>
   </div>

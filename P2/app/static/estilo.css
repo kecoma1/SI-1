@@ -192,8 +192,7 @@ input:focus {
 .buyallButton {
   top: 700px;
   position: fixed;
-  left: 380px;
-  margin-left: 20%;
+  margin-left: 40%;
 }
 
 .movie {
@@ -297,7 +296,7 @@ meter {
 .actor {
   width: 250px;
   margin: 5px;
-  height: 320px;
+  height: 70px;
   border-radius: 5px;
   align-items: center;
   text-align: center;
@@ -306,7 +305,7 @@ meter {
 
 .actores {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   text-align: center;
   align-items: center;
   position: relative;
@@ -318,8 +317,6 @@ meter {
 }
 
 .venta {
-  display: flex;
-  flex-direction: row;
   text-align: center;
   align-items: center;
   position: relative;

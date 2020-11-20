@@ -225,9 +225,9 @@ def film_detail(id):
     pelicula = database.getPelicula(id)
     actores = database.getActores(id)
     directores = database.getDirectores(id)
-    precio = database.getPrecio(id)
+    precios = database.getPrecio(id)
     load_url_posters() # TODO Cambiar esta función
-    return render_template('filmDetail.html', film=catalogue['peliculas'][int(id)-1], actores=actores, directores=directores, precio=precio, logged=logged())
+    return render_template('filmDetail.html', film=pelicula, actores=actores, directores=directores, precios=precios, logged=logged())
 
 
 @app.route("/cargar_categoria/<string:categoria>", methods=['GET'])

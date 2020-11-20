@@ -159,7 +159,6 @@ def getActores(id):
     """
         Función que nos devuelve los actores de una 
         pelicula dada
-        select c.actorname, b.character from imdb_actormovies as b, imdb_actors as c where b.movieid = 103 and b.actorid = c.actorid
     """
     try:
         # conexion a la base de datos
@@ -204,7 +203,7 @@ def getPrecio(id):
     
         # Obtener el nombre el precio de la película
         db_result = db_conn.execute(
-            "select price from imdb_movies as m, products as p where m.movieid=p.movieid and m.movieid = "+id
+            "select price, p.description from imdb_movies as m, products as p where m.movieid=p.movieid and m.movieid = "+id
         )
 
         precios_list = []
@@ -226,3 +225,5 @@ def getPrecio(id):
         print("-"*60)
 
         return 'Something is broken'
+
+def validar

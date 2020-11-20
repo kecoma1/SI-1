@@ -1,0 +1,1 @@
+Hemos modificado el archivo css para una mejor visualización de la web
