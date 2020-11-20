@@ -14,6 +14,7 @@ db_imdb_actormovies = Table('imdb_actormovies', db_meta, autoload=True, autoload
 db_imdb_actors = Table('imdb_actors', db_meta, autoload=True, autoload_with=db_engine)
 db_imdb_directormovies = Table('imdb_directormovies', db_meta, autoload=True, autoload_with=db_engine)
 db_imdb_directors = Table('imdb_directors', db_meta, autoload=True, autoload_with=db_engine)
+db_customers = Table('customers', db_meta, autoload=True, autoload_with=db_engine)
 
 def de_tupla_lista(tupla):
     """
@@ -226,4 +227,36 @@ def getPrecio(id):
 
         return 'Something is broken'
 
-def validar
+def validar(username, password):
+    """
+        Funcion para validar la información del login
+    """
+    # Prevenir sqlinjection
+    if "'" in username or "'" in password:
+        return
+    
+    try:
+        # conexion a la base de datos
+        db_conn = None
+        db_conn = db_engine.connect()
+        
+        # Seleccionar las peliculas del anno 1949
+        db_user = select([db_customers]).where(text("username='"+username+"' and password='"+password+"'"))
+        db_result = db_conn.execute(db_user)
+        
+        db_conn.close()
+
+        resultado = list(db_result)[0]
+        if resultado[15] == username and resultado[16] == password:
+            return True
+        else:
+            return False
+    except:
+        if db_conn is not None:
+            db_conn.close()
+        print("Exception in DB access:")
+        print("-"*60)
+        traceback.print_exc(file=sys.stderr)
+        print("-"*60)
+
+        return False

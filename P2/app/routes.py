@@ -86,24 +86,13 @@ def topnav():
 def login_page_POST():
     if request.form['username']:
         username = request.form['username']
-        password = hashlib.sha512(
-            (request.form['password']).encode('utf-8')).hexdigest()
+        password = request.form['password']
 
         # Comprobamos si existe el usuario
-        dir_path = homedir = os.path.expanduser("~")
-        dir_path += "/public_html/usuarios/"+username
-        if os.path.exists(dir_path):
-            f = open(dir_path+"/datos.dat", "r")
-            data = f.read()
-            f.close()
-            data = data.split(' ')
-            users_password = data[1]
-            if users_password == password:
-                session.permanent = False
-                session['usuario'] = username
-                return redirect(url_for('index'))
-            else:
-                return render_template('login.html', title='login', logged=logged(), error="El usuario o la contrasenha son incorrectos")
+        if database.validar(username, password) == True:
+            session.permanent = False
+            session['usuario'] = username
+            return redirect(url_for('index'))
         else:
             return render_template('login.html', title='login', logged=logged(), error="El usuario o la contrasenha son incorrectos")
     else:
