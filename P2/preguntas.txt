@@ -1,2 +1,6 @@
 La forma más correcta o eficiente de usar sqlalchemy, ya sea metiendo la query como tal, pasando la tabla, o haciendo un mix de las dos
 Debemos eliminar la cartera de la página web? Ya que los usuarios no tienen cartera en la BD
+
+
+Hacer que cuando se pregunte el genero lo pregunte con dos puntitos a seleccionar
+Para el boton de ir atras hacer una stack de urls

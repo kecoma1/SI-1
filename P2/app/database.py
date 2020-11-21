@@ -361,16 +361,18 @@ def buscarPeliculas(busqueda):
         Devuelve una lista con las peliculas que en su nombre continen la string introducida
         Devuelve la False si hay un error
     """
-    if len(busqueda) > 0 or '"' in busqueda or "'" in busqueda:
+    # Prevenimos sqlinjection y comprobamos que haya algo que buscar
+    if len(busqueda) <= 0 or ("'" in busqueda) or ('"' in busqueda):
         return False
 
     try:
-        # Comprobar que el username no existe
         # conexion a la base de datos
         db_conn = None
         db_conn = db_engine.connect()
 
-        db_result = db_conn.execute("SELECT * FROM imdb_movies WHERE movietitle LIKE '%"+busqueda+"%' LIMIT 100")
+        # Ejecutamos query buscando las peliculas donde este esa string
+        db_movie_info = select([db_table_movies]).where(text("movietitle LIKE '%"+busqueda+"%' LIMIT 100" ) )
+        db_result = db_conn.execute(db_movie_info)
 
         pelis_list = []
         i = 0
@@ -380,7 +382,48 @@ def buscarPeliculas(busqueda):
             i += 1
 
         db_conn.close()
-        return True
+        return pelis_list
+    except:
+        if db_conn is not None:
+            db_conn.close()
+        print("Exception in DB access:")
+        print("-"*60)
+        traceback.print_exc(file=sys.stderr)
+        print("-"*60)
+        return False
+
+
+def categoria(categoria):
+    """Función que genera una lista de todas las peliculas 
+        con la categoría introducida
+
+    Args:
+        categoria (string): String de la categoría
+
+    Return:
+        Lista de peliculas con la categoría
+    """
+    # Comprobamos que el argumento contenga caracteres y prevenimos sqlinjection
+    if len(categoria) <= 0 or ("'" in categoria) or ('"' in categoria):
+        return False
+    
+    try:
+        # conexion a la base de datos
+        db_conn = None
+        db_conn = db_engine.connect()
+
+        # Ejecutamos query buscando las peliculas que pertenezcan a esa categoria/género
+        db_result = db_conn.execute("SELECT a.movieid, a.movietitle FROM imdb_movies as a, imdb_moviegenres as b WHERE a.movieid=b.movieid AND b.genre='"+categoria+"'")
+
+        pelis_list = []
+        i = 0
+        for tupla in list(db_result):
+            pelis_list.append([])
+            pelis_list[i] = de_tupla_lista(tupla)
+            i += 1
+
+        db_conn.close()
+        return pelis_list
     except:
         if db_conn is not None:
             db_conn.close()

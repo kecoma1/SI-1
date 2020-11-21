@@ -10,15 +10,11 @@
 {% block content %}
     <div class="mainSection">
         {% for film in movies %}
-            {% if film.categoria == categoria %}
             <div class="movie">
-                <a href="index/{{film.id}}">
-                <img src="{{film.poster}}" alt="{{film.titulo}}" class="images"></a><br>
-                <h3>{{film.titulo}}</h3>
-                <p class="price">{{film.precio}}</p>
-                <p class="desccategory">{{film.descripcion}}</p>
+                <a href="index/{{film[0]}}">
+                <img alt="{{film[1]}}" class="images"></a><br>
+                <h3>{{film[1]}}</h3>
             </div>
-            {% endif %}
         {% endfor %}
     </div>
 {% endblock %}

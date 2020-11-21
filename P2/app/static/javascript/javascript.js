@@ -17,6 +17,9 @@ function openNav() {
     document.getElementById("sidevalues4").style.opacity = "1";
     document.getElementById("sidevalues5").style.opacity = "1";
     document.getElementById("sidevalues6").style.opacity = "1";
+    document.getElementById("sidevalues7").style.opacity = "1";
+    document.getElementById("sidevalues8").style.opacity = "1";
+    document.getElementById("sidevalues9").style.opacity = "1";
     document.getElementById("downNavButton").style.opacity = "1";
     document.getElementById("upNavButton").style.opacity = "0";
     document.body.style.backgroundColor = "white";

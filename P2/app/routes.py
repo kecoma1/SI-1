@@ -68,7 +68,7 @@ def index():
     top_films = database.db_top_films()
     if top_films == False:
         return
-        
+
     return render_template('index.html', movies=top_films, logged=logged())
 
 
@@ -148,7 +148,8 @@ def signup_page():
 
         zipcode = request.form['zipcode']
         country = request.form['country']
-        region = request.form['region'] # TODO MAXIMO 6 CHAR
+        region = request.form['region']
+        region = region[:6]
         email = request.form['email']
         if email == '':
             email = 'null'
@@ -178,7 +179,8 @@ def signup_page():
         if gender == '':
             gender = 'null'
         else:
-            gender = "'"+gender+"'"
+            gender = "'"+gender[:1]+"'"
+        
 
         creditcard = creditcard.replace(' ', '')
         # TODO Comprobar si hay cartera o no, wallet = random.randrange(0, 100)
@@ -253,22 +255,22 @@ def film_detail(id):
     pelicula = database.getPelicula(id)
     if pelicula == False:
         print("Error cogiendo la película")
-        return
+        return redirect(url_for('index'))
 
     actores = database.getActores(id)
     if actores == False:
         print("Error cogiendo los actores")
-        return
+        return redirect(url_for('index'))
 
     directores = database.getDirectores(id)
     if directores == False:
         print("Error cogiendo los precios")
-        return 
+        return redirect(url_for('index'))
 
     precios = database.getPrecio(id)
     if precios == False:
         print("Error cogiendo los precios")
-        return 
+        return redirect(url_for('index'))
 
     load_url_posters() # TODO Cambiar esta función
     return render_template('filmDetail.html', film=pelicula, actores=actores, directores=directores, precios=precios, logged=logged())
@@ -277,8 +279,11 @@ def film_detail(id):
 @app.route("/cargar_categoria/<string:categoria>", methods=['GET'])
 def category(categoria):
     global catalogue
-    load_url_posters()
-    return render_template('category.html', movies=catalogue['peliculas'], categoria=categoria)
+    peliculas_categoria = database.categoria(categoria)
+    if peliculas_categoria == False:
+        return redirect(url_for('index'))
+        
+    return render_template('category.html', movies=peliculas_categoria, categoria=categoria)
 
 
 @app.route("/busqueda", methods=['POST'])
@@ -288,6 +293,9 @@ def busqueda():
 
     # Buscamos la pelicula en la base de datos
     peliculas = database.buscarPeliculas(busqueda)
+    if peliculas == False:
+        return redirect(url_for('index'))
+
     return render_template('busqueda.html', movies=peliculas)
 
 

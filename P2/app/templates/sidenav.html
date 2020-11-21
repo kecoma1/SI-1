@@ -9,12 +9,13 @@
     </head>
     <div id="sidenav" class="sidenav">
         <a id="upNavButton" onclick="openNav()"><img src={{ url_for('static', filename="imagenes/utils/dot.png") }} alt="boton" onload="hideUpbottomNav()" class="small_img"></a>
-        <a id="sidevalues1" href={{ url_for('category', categoria='Acción') }} target="_parent">Acción</a>
-        <a id="sidevalues2" href={{ url_for('category', categoria='Anime') }} target="_parent">Anime</a>
-        <a id="sidevalues3" href={{ url_for('category', categoria='Aventuras') }} target="_parent">Aventuras</a>
-        <a id="sidevalues4" href={{ url_for('category', categoria='Ciencia Ficcion') }} target="_parent">Ciencia Ficción</a>
-        <a id="sidevalues5" href={{ url_for('category', categoria='Comedia') }} target="_parent">Comedia</a>
-        <a id="sidevalues6" href={{ url_for('category', categoria='Suspense') }} target="_parent">Suspense</a>
+        <a id="sidevalues1" href={{ url_for('category', categoria='Short') }} target="_parent">Short</a>
+        <a id="sidevalues2" href={{ url_for('category', categoria='Animation') }} target="_parent">Animation</a>
+        <a id="sidevalues3" href={{ url_for('category', categoria='Horror') }} target="_parent">Horror</a>
+        <a id="sidevalues4" href={{ url_for('category', categoria='Drama') }} target="_parent">Drama</a>
+        <a id="sidevalues5" href={{ url_for('category', categoria='Biography') }} target="_parent">Biography</a>
+        <a id="sidevalues6" href={{ url_for('category', categoria='Action') }} target="_parent">Action</a>
+        
         <a id="downNavButton" onclick="closeNav()" ><img src={{ url_for('static', filename="imagenes/utils/dot.png") }} alt="boton" class="small_img"></a>
     </div>
 </html>
