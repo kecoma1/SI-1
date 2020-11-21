@@ -124,7 +124,12 @@ def signup_page():
 
     if request.form['username']:
         firstname = request.form['firstname']
+        if len(firstname) > 50: # Comprobamos que los campos no tengan + de 50 caracteres
+            return render_template('signup.html', title='signup', logged=logged(), error="Los datos no fueron introducidos correctamente")
+
         lastname = request.form['lastname']
+        if len(lastname) > 50:
+            return render_template('signup.html', title='signup', logged=logged(), error="Los datos no fueron introducidos correctamente")
 
         # Los campos que pueden ser null y no tienen información, los cambiamos
         address1 = request.form['direccion1']
@@ -132,49 +137,87 @@ def signup_page():
             address1 = 'null'
         else:
             address1 = "'"+address1+"'"
+        if len(address1) > 52: # Tenemos en cuenta las comillas
+            return render_template('signup.html', title='signup', logged=logged(), error="Los datos no fueron introducidos correctamente")
             
         address2 = request.form['direccion2']
         if address2 == '':
             address2 = 'null' 
         else:
             address2 = "'"+address2+"'"
+        if len(address2) > 52:
+            return render_template('signup.html', title='signup', logged=logged(), error="Los datos no fueron introducidos correctamente")
 
         city = request.form['city']
+        if len(city) > 50:
+            return render_template('signup.html', title='signup', logged=logged(), error="Los datos no fueron introducidos correctamente")
+
         state = request.form['state']
         if state == '':
             state = 'null'
         else:
             state = "'"+state+"'"
+        if len(state) > 52:
+            return render_template('signup.html', title='signup', logged=logged(), error="Los datos no fueron introducidos correctamente")
 
         zipcode = request.form['zipcode']
+        if len(zipcode) > 9:
+            return render_template('signup.html', title='signup', logged=logged(), error="Los datos no fueron introducidos correctamente")
+
         country = request.form['country']
+        if len(country) > 50:
+            return render_template('signup.html', title='signup', logged=logged(), error="Los datos no fueron introducidos correctamente")
+
         region = request.form['region']
-        region = region[:6]
+        if len(region) > 6:
+            return render_template('signup.html', title='signup', logged=logged(), error="Los datos no fueron introducidos correctamente")
+
         email = request.form['email']
         if email == '':
             email = 'null'
         else:
             email = "'"+email+"'"
+        if len(email) > 50:
+            return render_template('signup.html', title='signup', logged=logged(), error="Los datos no fueron introducidos correctamente")
 
         phone = request.form['phone']
         if phone == '':
             phone = 'null'
         else:
             phone = "'"+phone+"'"
+        if len(phone) > 52:
+            return render_template('signup.html', title='signup', logged=logged(), error="Los datos no fueron introducidos correctamente")
 
         creditcardType = request.form['creditcardtype']
+        if len(creditcardType) > 50:
+            return render_template('signup.html', title='signup', logged=logged(), error="Los datos no fueron introducidos correctamente")
+
         creditcard = request.form['card']
+        if len(creditcard) > 50:
+            return render_template('signup.html', title='signup', logged=logged(), error="Los datos no fueron introducidos correctamente")
+
         creditcardexpiration = request.form['creditcardexpiration']
+        if len(creditcardexpiration) > 50:
+            return render_template('signup.html', title='signup', logged=logged(), error="Los datos no fueron introducidos correctamente")
+
         username = request.form['username']
+        if len(username) > 50:
+            return render_template('signup.html', title='signup', logged=logged(), error="Los datos no fueron introducidos correctamente")
+
         password = request.form['password_input']
+        if len(password) > 50:
+            return render_template('signup.html', title='signup', logged=logged(), error="Los datos no fueron introducidos correctamente")
+
         age = request.form['age']
         if age == '':
             age = 'null'
+        if len(age) > 50:
+            return render_template('signup.html', title='signup', logged=logged(), error="Los datos no fueron introducidos correctamente")
 
         income = request.form['income']
         if income == '':
             income = 'null'
-
+        
         gender = request.form['gender']
         if gender == '':
             gender = 'null'
@@ -189,7 +232,7 @@ def signup_page():
                            city, state, zipcode, country, region, email, 
                            phone, creditcardType, creditcard, creditcardexpiration, 
                            username, password, age, income, gender) == False:
-            return render_template('signup.html', title='signup', logged=logged(), error="Los datos no fueron introducidos correctamente")
+            return render_template('signup.html', title='signup', logged=logged(), error="Ya existe ese usurname o hubo un error")
         else:
             session.permanent = False
             session['usuario'] = username
