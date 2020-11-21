@@ -28,6 +28,7 @@ def de_tupla_lista(tupla):
         
     return lista
 
+
 def db_listOfMovies1949():
     try:
         # conexion a la base de datos
@@ -52,9 +53,14 @@ def db_listOfMovies1949():
 
         return 'Something is broken'
 
+
 def db_top_films():
     """
         Función que nos devuelve las topfilms de los últimos 3 anos
+
+        Return:
+            Devuelve una lista en caso de exito,
+            devuelve False en caso de error
     """
     try:
         # conexion a la base de datos
@@ -89,11 +95,16 @@ def db_top_films():
         traceback.print_exc(file=sys.stderr)
         print("-"*60)
 
-        return 'Something is broken'
+        return False
+
 
 def getPelicula(id):
     """
         Función que devuelve la info de una pelicula
+
+        Return:
+            Devuelve una pelicula en caso de exito
+            Devuelve False en caso de error
     """
     try:
         # conexion a la base de datos
@@ -117,12 +128,17 @@ def getPelicula(id):
         traceback.print_exc(file=sys.stderr)
         print("-"*60)
 
-        return 'Something is broken'
+        return False
+
 
 def getDirectores(id):
     """
         Función que nos devuelve los directores de una 
         pelicula dada
+
+        Return:
+            Devuelve un director en caso de exito
+            Devuelve False en caso de error
     """
     try:
         # conexion a la base de datos
@@ -130,10 +146,10 @@ def getDirectores(id):
         db_conn = db_engine.connect()
     
         # Obtener el nombre del director de la película
-        db_result = db_conn.execute("select directorname\
-            from imdb_directors, imdb_directormovies\
-            where imdb_directors.directorid = imdb_directormovies.directorid\
-            and imdb_directormovies.movieid = "+id)
+        db_result = db_conn.execute("SELECT directorname\
+            FROM imdb_directors, imdb_directormovies\
+            WHERE imdb_directors.directorid = imdb_directormovies.directorid\
+            AND imdb_directormovies.movieid = "+id)
         db_conn.close()
         
         directores_lista = []
@@ -154,12 +170,17 @@ def getDirectores(id):
         traceback.print_exc(file=sys.stderr)
         print("-"*60)
 
-        return 'Something is broken'
+        return False
+
 
 def getActores(id):
     """
         Función que nos devuelve los actores de una 
         pelicula dada
+
+        Return:
+            Devuelve un actor en caso de exito
+            Devuelve False en caso de error
     """
     try:
         # conexion a la base de datos
@@ -167,9 +188,9 @@ def getActores(id):
         db_conn = db_engine.connect()
     
         # Obtener todos los actores de la película
-        db_result = db_conn.execute("select c.actorname, b.character\
-        from imdb_actormovies as b, imdb_actors as c\
-        where b.movieid = "+id+" and b.actorid = c.actorid")
+        db_result = db_conn.execute("SELECT c.actorname, b.character\
+        FROM imdb_actormovies AS b, imdb_actors AS c\
+        WHERE b.movieid = "+id+" AND b.actorid = c.actorid")
         db_conn.close()
         
         actores_lista = []
@@ -190,12 +211,17 @@ def getActores(id):
         traceback.print_exc(file=sys.stderr)
         print("-"*60)
 
-        return 'Something is broken'
+        return False
+
 
 def getPrecio(id):
     """
         Funcion que nos devuelve el precio de una 
         pelicula dada
+
+        Return:
+            Devuelve una lista con los precios dependiendo de la edición en caso de exito
+            Devuelve False en caso de error
     """
     try:
         # conexion a la base de datos
@@ -204,7 +230,7 @@ def getPrecio(id):
     
         # Obtener el nombre el precio de la película
         db_result = db_conn.execute(
-            "select price, p.description from imdb_movies as m, products as p where m.movieid=p.movieid and m.movieid = "+id
+            "SELECT price, p.description FROM imdb_movies AS m, products AS p WHERE m.movieid=p.movieid AND m.movieid = "+id
         )
 
         precios_list = []
@@ -225,11 +251,16 @@ def getPrecio(id):
         traceback.print_exc(file=sys.stderr)
         print("-"*60)
 
-        return 'Something is broken'
+        return False
+
 
 def validar(username, password):
     """
         Funcion para validar la información del login
+
+        Return:
+            Devuelve True en caso de que el username y la password sean correctos,
+            en caso de error devuelve False
     """
     # Prevenir sqlinjection
     if "'" in username or "'" in password:
@@ -267,6 +298,14 @@ def registrar(firstname, lastname, address1, address2,
                            city, state, zipcode, country, region, email, 
                            phone, creditcardType, creditcard, creditcardexpiration, 
                            username, password, age, income, gender):
+    """Función para registrar a un usuario si el username no existe
+
+    Args:
+        Información necesaria para registrar al usuario
+
+    Returns:
+        Bool: True si se registra, False si no
+    """
     # Comprobamos los campos requeridos
     if firstname == "" or lastname == "" or city == "" or zipcode == "" or state == ""\
         or  zipcode == "" or country == "" or creditcard == "" or creditcardexpiration == ""\
@@ -279,31 +318,23 @@ def registrar(firstname, lastname, address1, address2,
         db_conn = None
         db_conn = db_engine.connect()
 
-        db_result = db_conn.execute("select * from customers where username='"+username+"'")
+        db_result = db_conn.execute("SELECT * FROM customers WHERE username='"+username+"'")
 
         # Si hay alguien con el mismo username retornar
         if len(list(db_result)) > 0:
             return False
 
         # Obtenemos el último customerid para asignar el siguiente
-        db_result = db_conn.execute("select customerid from customers order by customerid desc limit 1")
+        db_result = db_conn.execute("SELECT customerid FROM customers ORDER BY customerid DESC LIMIT 1")
         customerid = list(db_result)[0][0]
         customerid+=1
 
         # Insertamos en la tabla el usuario
-        print("insert into customers (customerid, firstname, lastname, address1, address2,\
+        db_result = db_conn.execute("INSERT INTO customers (customerid, firstname, lastname, address1, address2,\
                                     city, state, zip, country, region, email,\
                                     phone, creditcardType, creditcard, creditcardexpiration,\
                                     username, password, age, income, gender)\
-                                    values ("+str(customerid)+", '"+firstname+"', '"+lastname+"', "+address1+", "+address2+",\
-                                    '"+city+"', "+state+", '"+zipcode+"', '"+country+"', '"+region+"', "+email+",\
-                                    "+phone+", '"+creditcardType+"', '"+creditcard+"', '"+creditcardexpiration+"', '"+username+"', '"+password+"',\
-                                    "+str(age)+", "+str(income)+", "+gender+")")
-        db_result = db_conn.execute("insert into customers (customerid, firstname, lastname, address1, address2,\
-                                    city, state, zip, country, region, email,\
-                                    phone, creditcardType, creditcard, creditcardexpiration,\
-                                    username, password, age, income, gender)\
-                                    values ("+str(customerid)+", '"+firstname+"', '"+lastname+"', "+address1+", "+address2+",\
+                                    VALUES ("+str(customerid)+", '"+firstname+"', '"+lastname+"', "+address1+", "+address2+",\
                                     '"+city+"', "+state+", '"+zipcode+"', '"+country+"', '"+region+"', "+email+",\
                                     "+phone+", '"+creditcardType+"', '"+creditcard+"', '"+creditcardexpiration+"', '"+username+"', '"+password+"',\
                                     "+age+", "+income+", "+gender+")")
@@ -321,10 +352,40 @@ def registrar(firstname, lastname, address1, address2,
 
 def buscarPeliculas(busqueda):
     """Buscamos las peliculas en las bases de datos dada una string
+    Como máximo se cojen 100 películas (sin imágenes)
 
     Args:
         busqueda (String): String con los nombres a buscar
+
+    Return:
+        Devuelve una lista con las peliculas que en su nombre continen la string introducida
+        Devuelve la False si hay un error
     """
-    if len(busqueda) > 0:
-        pass
-    
+    if len(busqueda) > 0 or '"' in busqueda or "'" in busqueda:
+        return False
+
+    try:
+        # Comprobar que el username no existe
+        # conexion a la base de datos
+        db_conn = None
+        db_conn = db_engine.connect()
+
+        db_result = db_conn.execute("SELECT * FROM imdb_movies WHERE movietitle LIKE '%"+busqueda+"%' LIMIT 100")
+
+        pelis_list = []
+        i = 0
+        for tupla in list(db_result):
+            pelis_list.append([])
+            pelis_list[i] = de_tupla_lista(tupla)
+            i += 1
+
+        db_conn.close()
+        return True
+    except:
+        if db_conn is not None:
+            db_conn.close()
+        print("Exception in DB access:")
+        print("-"*60)
+        traceback.print_exc(file=sys.stderr)
+        print("-"*60)
+        return False

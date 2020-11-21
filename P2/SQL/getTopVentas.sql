@@ -17,8 +17,8 @@ BEGIN
 		FROM 	(	
 			-- Obtenemos las ventas de cada año y las enumeramos de mayor a menor (la que más ventas tiene es la 1) 
 			SELECT a.year as ano, MAX(c.sales) as max_sales, a.movietitle as titulo,
-			
-			-- Creditos a https://stackoverflow.com/questions/6841605/get-top-1-row-of-each-group, para numerar cada fila, y despues coger el mayor (el 1)
+
+			-- Una por año, enumeramos cada película por año
 			ROW_NUMBER() OVER(PARTITION BY a.year ORDER BY MAX(c.sales) DESC) AS rk
 			
 			

@@ -11,11 +11,9 @@
 <div class="mainSection">
     {% for film in movies %}
     <div class="movie">
-        <a href="index/{{film.id}}" alt="página filmDetail">
-            <img src="{{film.poster}}" alt="{{film.titulo}}" class="images"></a><br>
-        <h3>{{film.titulo}}</h3>
-        <p class="price">{{film.precio}}</p>
-        <p class="desccategory">{{film.descripcion}}</p>
+        <a href="index/{{film[0]}}" alt="página filmDetail">
+            <img alt="{{film[1]}}" class="images"></a><br>
+        <h3>{{film[1]}}</h3>
     </div>
     {% endfor %}
 </div>

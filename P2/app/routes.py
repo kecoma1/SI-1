@@ -66,7 +66,9 @@ def logged():
 def index():
     global catalogue
     top_films = database.db_top_films()
-    load_url_posters()
+    if top_films == False:
+        return
+        
     return render_template('index.html', movies=top_films, logged=logged())
 
 
@@ -249,9 +251,25 @@ def carrito():
 def film_detail(id):
     global catalogue
     pelicula = database.getPelicula(id)
+    if pelicula == False:
+        print("Error cogiendo la película")
+        return
+
     actores = database.getActores(id)
+    if actores == False:
+        print("Error cogiendo los actores")
+        return
+
     directores = database.getDirectores(id)
+    if directores == False:
+        print("Error cogiendo los precios")
+        return 
+
     precios = database.getPrecio(id)
+    if precios == False:
+        print("Error cogiendo los precios")
+        return 
+
     load_url_posters() # TODO Cambiar esta función
     return render_template('filmDetail.html', film=pelicula, actores=actores, directores=directores, precios=precios, logged=logged())
 
@@ -270,10 +288,6 @@ def busqueda():
 
     # Buscamos la pelicula en la base de datos
     peliculas = database.buscarPeliculas(busqueda)
-    for film in catalogue['peliculas']:
-        if busqueda in film['titulo']:
-            peliculas.append(film)
-    load_url_posters()
     return render_template('busqueda.html', movies=peliculas)
 
 
