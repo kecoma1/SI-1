@@ -1,4 +1,5 @@
 Hemos modificado el archivo css para una mejor visualización de la web
+Explicar que hay repeticiones y que cogemos la primera al numerarla
 
 Dar creditos a:
     -- Creditos a https://stackoverflow.com/questions/6841605/get-top-1-row-of-each-group, para numerar cada fila, y despues coger el mayor (el 1)
