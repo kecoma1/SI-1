@@ -4,6 +4,7 @@ import sys, traceback
 from sqlalchemy import create_engine
 from sqlalchemy import Table, Column, Integer, String, MetaData, ForeignKey, text
 from sqlalchemy.sql import select
+import datetime
 
 # configurar el motor de sqlalchemy
 db_engine = create_engine("postgresql://alumnodb:alumnodb@localhost/si1", echo=False)
@@ -230,7 +231,7 @@ def getPrecio(id):
     
         # Obtener el nombre el precio de la película
         db_result = db_conn.execute(
-            "SELECT price, p.description FROM imdb_movies AS m, products AS p WHERE m.movieid=p.movieid AND m.movieid = "+id
+            "SELECT price, p.description, p.prod_id FROM imdb_movies AS m, products AS p WHERE m.movieid=p.movieid AND m.movieid = "+id
         )
 
         precios_list = []
@@ -432,3 +433,87 @@ def categoria(categoria):
         traceback.print_exc(file=sys.stderr)
         print("-"*60)
         return False
+
+def anadirFilm(id, username):
+    """ Función que añade las películas que se quieran comprar en el carrito,
+        en el caso de que el usuario haya iniciado sesión
+
+        Args: 
+            id(string): Id de la película que esta siendo añadida.
+
+        Return:
+            Void
+    """anadir
+
+    try:
+        # conexion a la base de datos
+        db_conn = None
+        db_conn = db_engine.connect()
+
+        # Comprobamos si hay un order a null
+        db_result = db_conn.execute("SELECT username, status\
+                                    FROM orders AS a, customers AS b\
+                                    WHERE b.customerid = a.customerid AND b.username = '"+username+"' AND b.status = ''")
+        
+        # No hay carrito
+        if len(list(db_result) == 0):
+            # Cogemos la ultima orderid
+            db_result = db_conn.execute("SELECT orderid FROM orders ORDER BY orderid DESC LIMIT 1")
+            orderid = list(db_result)[0][0]
+            orderid += 1
+
+            now = datetime.now().date()
+            db_conn.execute(Insert into )
+        else:
+
+        if (db_result == null):
+            
+        db_conn.close()
+
+        except:
+        if db_conn is not None:
+            db_conn.close()
+        print("Exception in DB access:")
+        print("-"*60)
+        traceback.print_exc(file=sys.stderr)
+        print("-"*60)
+        return False
+
+    pass
+
+def eliminarFilm(id):
+    """Funcion que elimina una pelicula del carrito de un usuario
+
+    Args:
+        id (string): Id de la pelicula a eliminar
+    """
+    # Comprobamos que el argumento contenga caracteres y prevenimos sqlinjection
+    """if len(categoria) <= 0 or ("'" in categoria) or ('"' in categoria):
+        return False
+    
+    try:
+        # conexion a la base de datos
+        db_conn = None
+        db_conn = db_engine.connect()
+
+        # Eliminamos la pelicula del carrito
+        db_result = db_conn.execute("")
+
+        pelis_list = []
+        i = 0
+        for tupla in list(db_result):
+            pelis_list.append([])
+            pelis_list[i] = de_tupla_lista(tupla)
+            i += 1
+
+        db_conn.close()
+        return pelis_list
+    except:
+        if db_conn is not None:
+            db_conn.close()
+        print("Exception in DB access:")
+        print("-"*60)
+        traceback.print_exc(file=sys.stderr)
+        print("-"*60)
+        return False"""
+    pass        

@@ -24,17 +24,6 @@ loaded_posters = False
 # Stack donde guardamos las urls visitadas
 stack_url = deque()
 
-def goBack():
-    """
-        Función para volver a la página anterior
-
-        Return:
-            Nos redirige a la página anterior
-    """
-    global stack_url
-    stack_url.pop()
-    return redirect(stack_url[0])
-
 def stack_push(url):
     """
         Guarda en la stack la dirección actual
@@ -81,6 +70,12 @@ def index():
 
 @app.route('/back')
 def back():
+    """
+        Función para volver a la página anterior
+
+        Return:
+            Nos redirige a la página anterior
+    """
     global stack_url
     stack_url.pop()
     if len(stack_url) != 0:
@@ -109,6 +104,8 @@ def login_page_POST():
         if database.validar(username, password) == True:
             session.permanent = False
             session['usuario'] = username
+
+            # TODO Anadir la sesión a la BD
             return redirect(url_for('index'))
         else:
             return render_template('login.htailml', title='login', logged=logged(), error="El usuario o la contrasenha son incorrectos")
@@ -248,6 +245,8 @@ def signup_page():
                            city, state, zipcode, country, region, email, 
                            phone, creditcardType, creditcard, creditcardexpiration, 
                            username, password, age, income, gender) == False:
+            session.permanent = False
+            session['usuario'] = username
             return render_template('signup.html', title='signup', logged=logged(), error="Ya existe ese usurname o hubo un error")
         else:
             session.permanent = False
@@ -425,21 +424,34 @@ def redirect_carrito():
 # Rutas para el carrito
 @app.route("/index/anhadir_carrito/<string:id>", methods=['POST'])
 def anhadir_carrito(id):
-    if id in session:
-        session[id] += 1
+    # Comprobamos si es usuario ha hecho login
+    if logged() == False:
+        # Usamos sesiones en caso de no haberse hecho login
+        if 'carrito' in session:
+            session['carrito'].append(id)
+        else:
+            session['carrito'] = []
+            session['carrito'].append(id)
     else:
-        session[id] = 1
+        # Usamos la base de datos al estar logeado
+        if database.anadirFilm(id, session['username']) == False:
+            print("Error anadiendo la pelicula")
+            return redirect(url_for('index'))
     return redirect(url_for('film_detail', id=id))
 
 
 @app.route("/realizar_compra/eliminar_carrito/<string:id>", methods=['POST'])
 @app.route("/eliminar_carrito/<string:id>", methods=['POST'])
 def eliminar_carrito(id):
-    if id in session:
-        session[id] -= 1
-
-    if session[id] == 0:
-        session.pop(id, None)
+    # Comprobamos si es usuario ha hecho login
+    if logged() == False:
+        # Usamos sesiones en caso de no haberse hecho login
+        session['carrito'].remove(id)
+    else:
+        # Usamos la base de datos al estar logeado
+        if database.eliminarFilm(id) == False:
+            print("Error anadiendo la pelicula")
+            return redirect(url_for('index'))
     return redirect(url_for('carrito'))
 
 @app.route("/comprar_todo", methods=['POST'])
@@ -447,71 +459,57 @@ def comprar_todo():
     global catalogue
     precio = 0
     lista_pelis = []
-    if logged():
-        # Cargando el archivo del usuario
-        dir_path = homedir = os.path.expanduser("~")
-        dir_path += "/public_html/usuarios/"+session['usuario']
-        f = open(dir_path+"/datos.dat", "r+")
-        data = f.read()
-        data = data.split(' ')
-        saldo = float(data[4])
+    if logged() == True:
+        # Buscamos las peliculas del carrito
+        for film in catalogue['peliculas']:
 
-        if logged() == True:
-            # Buscamos las peliculas del carrito
-            for film in catalogue['peliculas']:
+            # Si la pelicula esta en el carrito calcular precio total
+            if str(film['id']) in session:
+                precio += film['precio']*int(session[str(film['id'])])
+                lista_pelis.append(film)
 
-                # Si la pelicula esta en el carrito calcular precio total
-                if str(film['id']) in session:
-                    precio += film['precio']*int(session[str(film['id'])])
-                    lista_pelis.append(film)
+        # Comprobamos si hay saldo suficiente
+        if saldo > precio:
 
-            # Comprobamos si hay saldo suficiente
-            if saldo > precio:
+            # Eliminando información anterior del archivo
+            f.seek(0)
+            f.truncate()
 
-                # Eliminando información anterior del archivo
-                f.seek(0)
-                f.truncate()
+            f.write(data[0]+" "+data[1]+" " +
+                    data[2]+" "+data[3]+" "+str(saldo))
+            f.close()
+            f = open(dir_path+"/historial.json", "r+")
+            historial_data = f.read()
 
-                f.write(data[0]+" "+data[1]+" " +
-                        data[2]+" "+data[3]+" "+str(saldo))
-                f.close()
-                f = open(dir_path+"/historial.json", "r+")
-                historial_data = f.read()
-
-                if historial_data != '':
-                    historial = json.loads(historial_data)
-                else:
-                    historial = []
-
-                now = datetime.datetime.now()
-                for film in lista_pelis:
-                    historial.append(film)
-                    historial[-1]['time'] = now.strftime(
-                        "%Y-%m-%d %H:%M:%S")
-                    historial[len(historial)-1]['movement_id'] = len(historial)
-                    historial[len(historial)-1]['quantity'] = session[str(film['id'])]
-                
-                f.seek(0)
-                f.truncate()
-                json.dump(historial, f)
-                f.close()
-
-                for pelicula in lista_pelis:
-                    if str(pelicula['id']) in session:
-                        session.pop(str(pelicula['id']), None)
-                    else:
-                        pass
-
-                carrito_films = cargar_films()
-            
-                return render_template('carrito.html', logged=logged(), carrito_films=carrito_films, error="Compra realizada con exito")
-
+            if historial_data != '':
+                historial = json.loads(historial_data)
             else:
-                carrito_films = cargar_films()
-            
-                return render_template('carrito.html', logged=logged(), carrito_films=carrito_films, error="No hay suficiente saldo")
+                historial = []
 
-    carrito_films = cargar_films()
+            now = datetime.datetime.now()
+            for film in lista_pelis:
+                historial.append(film)
+                historial[-1]['time'] = now.strftime(
+                    "%Y-%m-%d %H:%M:%S")
+                historial[len(historial)-1]['movement_id'] = len(historial)
+                historial[len(historial)-1]['quantity'] = session[str(film['id'])]
+            
+            f.seek(0)
+            f.truncate()
+            json.dump(historial, f)
+            f.close()
+
+            for pelicula in lista_pelis:
+                if str(pelicula['id']) in session:
+                    session.pop(str(pelicula['id']), None)
+                else:
+                    pass
+        
+            return render_template('carrito.html', logged=logged(), carrito_films=carrito_films, error="Compra realizada con exito")
+
+        else:
+        
+            return render_template('carrito.html', logged=logged(), carrito_films=carrito_films, error="No hay suficiente saldo")
 
     return render_template('carrito.html', logged=logged(), carrito_films=carrito_films, error="Haga login para comprar")
 
@@ -567,16 +565,13 @@ def realizar_compra(id):
                             else:
                                 pass
 
-                        carrito_films = cargar_films()
                     
                         return render_template('carrito.html', logged=logged(), carrito_films=carrito_films, error="Compra realizada con exito")
 
                     else:
-                        carrito_films = cargar_films()
                     
                         return render_template('carrito.html', logged=logged(), carrito_films=carrito_films, error="No hay suficiente saldo")
 
-    carrito_films = cargar_films()
 
     return render_template('carrito.html', logged=logged(), carrito_films=carrito_films, error="Haga login para comprar")
 

@@ -11,11 +11,11 @@
     <!--<img alt="{{film[1]}}" class="imagesFilmDetail"><br /> -->
     <div class="venta">
       {% for precio in precios %}
-      <p class="price">{{precio[0]}}</p>versión: {{precio[1]}}<br><br><br>
-      {% endfor %}
-      <form action="anhadir_carrito/{{film[0]}}" method="POST">
+      <p class="price">{{precio[0]}}</p>versión: {{precio[1]}}   
+      <form action="anhadir_carrito/{{precio[2]}}" method="POST">
         <button type=submit class="buttonP">Comprar</button>
       </form>
+      {% endfor %}
     </div>
     <p class="subsecciones">Directores:</p>
     <div>

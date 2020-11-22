@@ -12,9 +12,10 @@ $$
 			(
 			-- Calculamos el total de la orden
 			SELECT SUM(t0.total) as precio
-			FROM	(
-					-- Calculamos precio por producto
-					SELECT quantity*price AS total 
+			FROM	
+				(
+					-- Calculamos precio total de producto*cantidad
+					SELECT NEW.quantity*NEW.price AS total 
 					FROM orderdetail 
 					WHERE orderid = NEW.orderid
 				) as t0
@@ -26,7 +27,7 @@ $$
 		END IF;
 	END;
 $$
-LANGUAGE plpgsql;
+LANGUAGE 'plpgsql';
 
 CREATE TRIGGER updOrders
 AFTER UPDATE OR INSERT OR DELETE ON orderdetail

@@ -1,6 +1,8 @@
 Hemos modificado el archivo css para una mejor visualización de la web
 Explicar que hay repeticiones y que cogemos la primera al numerarla
 
+Mencionar que en orderdetail solo esta el precio de la unidad, para calcular el precio total del orderdetail hay que multiplicar el precio unitario por el quantity.
+
 Dar creditos a:
     -- Creditos a https://stackoverflow.com/questions/6841605/get-top-1-row-of-each-group, para numerar cada fila, y despues coger el mayor (el 1)
 	Para la query get top ventas
