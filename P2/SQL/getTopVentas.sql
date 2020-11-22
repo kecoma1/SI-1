@@ -1,8 +1,10 @@
+DROP FUNCTION gettopventas(integer,integer);
+
 CREATE OR REPLACE FUNCTION getTopVentas (year_1 INTEGER, year_2 INTEGER) 
 RETURNS TABLE (
 ANO		DOUBLE PRECISION,
 PELICULA	VARCHAR,
-VENTAS		BIGINT
+VENTAS		NUMERIC
 )
 AS $$
 
@@ -13,31 +15,34 @@ BEGIN
 
 	RETURN QUERY
 		-- Una vez numeradas las filas solo cogemos la fila numero 1
-		SELECT t1.ANO0 AS ANO, t1.TITULO0 AS TITULO, t1.sumadecantidades0 AS VENTAS
-		FROM
-			(
-			-- Obtenemos los datos que se nos piden en la query
-			-- Enumeramos las filas pero separandolas en años, de mayor a menor con respecto a las ventas, así podremos coger solo una
-			SELECT t0.Oano2 AS ANO0, c.movietitle AS TITULO0, MAX(t0.sumadecantidades) AS sumadecantidades0, 
-						ROW_NUMBER() OVER(PARTITION BY t0.Oano2 ORDER BY t0.sumadecantidades DESC) AS rk
+		SELECT t2.Oano2 AS ANO, b.movietitle AS TITULO, t2.sumadecantidades2 AS VENTAS
+		
+		FROM	(
+			-- Enumeramos cada fila pero agrupandolas por año
+			SELECT t1.sumadecantidades1 AS sumadecantidades2, t1.Oano1 AS Oano2, t1.IMDB_Mid1 AS IMDB_Mid2,
+			ROW_NUMBER() OVER(PARTITION BY t1.Oano1 ORDER BY t1.sumadecantidades1 DESC) AS rk
 			FROM	(
-				-- Sumanmos las cantidades de los orderdetails y las separamos por año
-				SELECT SUM(t.cantidad) AS sumadecantidades, t.ODp_id AS ODp_id2, t.Oano as Oano2
-				FROM 	(
-					-- Seleccionamos todos los orderdetails y los orders con los años
-					SELECT b.orderid AS ODoid, b.prod_id AS ODp_id, b.quantity AS cantidad, EXTRACT(YEAR FROM a.orderdate) AS Oano
-					FROM orders AS a, orderdetail AS b
-					WHERE a.orderid = b.orderid AND CAST(EXTRACT(YEAR FROM a.orderdate) AS INTEGER) <= 2020 AND CAST(EXTRACT(YEAR FROM a.orderdate) AS INTEGER) >= 2018
-					) AS t
-				GROUP BY ODp_id2, Oano2
-				ORDER BY sumadecantidades DESC
-				) AS t0, imdb_movies AS c, products AS d
-			WHERE c.movieid = d.movieid AND d.prod_id = t0.ODp_id2
-			GROUP BY ANO0, TITULO0, t0.sumadecantidades
-			ORDER BY sumadecantidades0 DESC
-			) AS t1
+				-- Sumamos las versiones de las peliculas
+				SELECT SUM(t0.sumadecantidades) AS sumadecantidades1, t0.Oano0 as Oano1, t0.IMDB_Mid0 AS IMDB_Mid1
+				FROM	(
+					-- Sumanmos las cantidades de los orderdetails y las separamos por año
+					SELECT SUM(t.cantidad) AS sumadecantidades, t.ODp_id AS ODp_id2, t.Oano as Oano0, t.IMDB_Mid AS IMDB_Mid0
+					FROM 	(
+						-- Seleccionamos todos los orderdetails y los orders con los años
+						SELECT d.movieid AS IMDB_Mid, c.prod_id AS Pid, b.orderid AS ODoid, b.prod_id AS ODp_id, b.quantity AS cantidad, EXTRACT(YEAR FROM a.orderdate) AS Oano
+						FROM orders AS a, orderdetail AS b, products AS c, imdb_movies as d
+						WHERE a.orderid = b.orderid AND CAST(EXTRACT(YEAR FROM a.orderdate) AS INTEGER) <= 2020 AND CAST(EXTRACT(YEAR FROM a.orderdate) AS INTEGER) >= 2018
+							AND d.movieid = c.movieid AND c.prod_id = b.prod_id
+						) AS t
+					GROUP BY ODp_id2, Oano0, IMDB_Mid0
+					ORDER BY sumadecantidades DESC
+					) AS t0
+				GROUP BY Oano1, IMDB_Mid1
+				) AS t1, imdb_movies AS c
+			GROUP BY Oano2, IMDB_Mid2, sumadecantidades2
+			) AS t2, imdb_movies AS b
 		-- Seleccionamos solo la primera
-		WHERE t1.rk = 1
+		WHERE rk = 1 AND b.movieid = t2.IMDB_Mid2
 		ORDER BY VENTAS DESC;
 
 END; $$
