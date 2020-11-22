@@ -8,7 +8,7 @@
         <script src={{ url_for('static', filename="javascript/javascript.js") }}></script>
     </head>
     <div class="topnav">
-        <a target="_parent"><img src={{ url_for('static', filename="imagenes/utils/back.png") }} alt="back" class="small_img"></a>
+        <a href={{ url_for('back') }} target="_parent"><img src={{ url_for('static', filename="imagenes/utils/back.png") }} alt="back" class="small_img"></a>
         <a href="index" target="_parent">Inicio</a>
         <a href="login.html" target="_parent">
             {% if logged %}

@@ -4,6 +4,7 @@
 from app import app
 from app import database
 from flask import render_template, request, url_for, redirect, session
+from collections import deque
 import json
 import os
 import sys
@@ -20,20 +21,26 @@ catalogue = json.loads(catalogue_data)
 # Variables para guardar el usuario logeado
 loaded_posters = False
 
+# Stack donde guardamos las urls visitadas
+stack_url = deque()
 
-def load_url_posters():
+def goBack():
     """
-        Función que carga la url correcta de las imagenes 
+        Función para volver a la página anterior
+
+        Return:
+            Nos redirige a la página anterior
     """
-    global loaded_posters
-    if loaded_posters == False:
-        for film in catalogue['peliculas']:
-            url = url_for('static', filename=film['poster'])
-            film['poster'] = url
-            for actor in film['actores']:
-                url = url_for('static', filename=actor['foto'])
-                actor['foto'] = url
-        loaded_posters = True
+    global stack_url
+    stack_url.pop()
+    return redirect(stack_url[0])
+
+def stack_push(url):
+    """
+        Guarda en la stack la dirección actual
+    """
+    global stack_url
+    stack_url.append(url)
 
 
 def cargar_films():
@@ -68,14 +75,22 @@ def index():
     top_films = database.db_top_films()
     if top_films == False:
         return
-
+    stack_push(request.url)
     return render_template('index.html', movies=top_films, logged=logged())
 
+
+@app.route('/back')
+def back():
+    global stack_url
+    stack_url.pop()
+    if len(stack_url) != 0:
+        return redirect(stack_url.pop())
+    else:
+        return redirect(url_for('index'))
 
 # Rutas a las diferentes páginas
 @app.route("/sidenav.html", methods=['GET'])
 def sidenav():
-    load_url_posters()
     return render_template('sidenav.html', logged=logged())
 
 
@@ -114,6 +129,7 @@ def login_page_GET():
                 session[id] = 0
         return redirect(url_for('index'))
     else:
+        stack_push(request.url)
         return render_template('login.html', title='login', logged=logged())
 
 
@@ -242,14 +258,18 @@ def signup_page():
 @app.route("/signup.html", methods=['GET'])
 def signup_page_get():
     if logged() == True:
+        stack_push(request.url)
         return render_template('signup.html', title='signup', logged=logged(), error="Cierre sesión por favor")
-    else:
+    else:   
+        stack_push(request.url)
         return render_template('signup.html', title='signup', logged=logged())
 
 
 @app.route("/historial.html", methods=['GET'])
 def historial():
+    return redirect(url_for('index'))
     if logged():
+        #TODO implementar esto con los triggers
         # Cargando el archivo del usuario
         dir_path = homedir = os.path.expanduser("~")
         dir_path += "/public_html/usuarios/"+session['usuario']
@@ -268,6 +288,7 @@ def historial():
             else:
                 historial = []
             f.close()
+        stack_push(request.url)
         return render_template('historial.html', logged=logged(), saldo=saldo, historial=historial)
     else:
         return redirect(url_for('index'))
@@ -284,11 +305,10 @@ def carrito():
                 while i < session[str(film['id'])]:
                     carrito_films.append(film)
                     i += 1
-        load_url_posters()
+        stack_push(request.url)
         return render_template('carrito.html', logged=logged(), carrito_films=carrito_films)
     else:
         pass
-    load_url_posters()
     return redirect(url_for('carrito'))
 
 
@@ -314,8 +334,7 @@ def film_detail(id):
     if precios == False:
         print("Error cogiendo los precios")
         return redirect(url_for('index'))
-
-    load_url_posters() # TODO Cambiar esta función
+    stack_push(request.url)
     return render_template('filmDetail.html', film=pelicula, actores=actores, directores=directores, precios=precios, logged=logged())
 
 
@@ -325,7 +344,7 @@ def category(categoria):
     peliculas_categoria = database.categoria(categoria)
     if peliculas_categoria == False:
         return redirect(url_for('index'))
-        
+    stack_push(request.url)
     return render_template('category.html', movies=peliculas_categoria, categoria=categoria)
 
 
@@ -338,7 +357,7 @@ def busqueda():
     peliculas = database.buscarPeliculas(busqueda)
     if peliculas == False:
         return redirect(url_for('index'))
-
+    stack_push(request.url)
     return render_template('busqueda.html', movies=peliculas)
 
 
@@ -348,6 +367,7 @@ def busqueda():
 @app.route("/cargar_categoria/index", methods=['GET'])
 @app.route("/realizar_compra/index", methods=['GET'])
 def redirect_index():
+    stack_push(request.url)
     return redirect(url_for('index'))
 
 
@@ -361,6 +381,7 @@ def redirect_filmDetail(id):
 @app.route("/realizar_compra/login.html", methods=['GET'])
 @app.route("/index/login.html", methods=['GET'])
 def redirect_login_page():
+    stack_push(request.url)
     return redirect(url_for('login_page_GET'))
 
 
@@ -389,6 +410,7 @@ def redirect_sidenav():
 @app.route("/realizar_compra/historial.html", methods=['GET'])
 @app.route("/index/historial.html", methods=['GET'])
 def redirect_historial():
+    stack_push(request.url)
     return redirect(url_for('historial'))
 
 
@@ -396,6 +418,7 @@ def redirect_historial():
 @app.route("/realizar_compra/carrito.html", methods=['GET'])
 @app.route("/index/carrito.html", methods=['GET'])
 def redirect_carrito():
+    stack_push(request.url)
     return redirect(url_for('carrito'))
 
 
@@ -480,16 +503,16 @@ def comprar_todo():
                         pass
 
                 carrito_films = cargar_films()
-                load_url_posters()
+            
                 return render_template('carrito.html', logged=logged(), carrito_films=carrito_films, error="Compra realizada con exito")
 
             else:
                 carrito_films = cargar_films()
-                load_url_posters()
+            
                 return render_template('carrito.html', logged=logged(), carrito_films=carrito_films, error="No hay suficiente saldo")
 
     carrito_films = cargar_films()
-    load_url_posters()
+
     return render_template('carrito.html', logged=logged(), carrito_films=carrito_films, error="Haga login para comprar")
 
 
@@ -545,16 +568,16 @@ def realizar_compra(id):
                                 pass
 
                         carrito_films = cargar_films()
-                        load_url_posters()
+                    
                         return render_template('carrito.html', logged=logged(), carrito_films=carrito_films, error="Compra realizada con exito")
 
                     else:
                         carrito_films = cargar_films()
-                        load_url_posters()
+                    
                         return render_template('carrito.html', logged=logged(), carrito_films=carrito_films, error="No hay suficiente saldo")
 
     carrito_films = cargar_films()
-    load_url_posters()
+
     return render_template('carrito.html', logged=logged(), carrito_films=carrito_films, error="Haga login para comprar")
 
 
@@ -562,6 +585,7 @@ def realizar_compra(id):
 @app.route("/cargar_categoria/cargar_categoria/<string:categoria>", methods=['GET'])
 @app.route("/realizar_compra/cargar_categoria/<string:categoria>", methods=['POST'])
 def redirect_category(categoria):
+    stack_push(request.url)
     return redirect(url_for('category', categoria=categoria))
 
 
@@ -573,7 +597,7 @@ def redirect_busqueda():
     for film in catalogue['peliculas']:
         if busqueda in film['titulo']:
             peliculas.append(film)
-    load_url_posters()
+    stack_push(request.url)
     return redirect(url_for('busqueda', movies=peliculas))
 
 
