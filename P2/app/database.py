@@ -439,21 +439,25 @@ def anadirFilm(id, username):
         en el caso de que el usuario haya iniciado sesión
 
         Args: 
-            id(string): Id de la película que esta siendo añadida.
+            id(string): Id de la película que esta siendo añadida (producto).
 
         Return:
             Void
-    """anadir
-
+    """
+    orderid = None
     try:
         # conexion a la base de datos
         db_conn = None
         db_conn = db_engine.connect()
 
+        # Cogemos el customerid
+        db_result = db_conn.execute("SELECT customerid FROM customers WHERE username = '"+username+"'")
+        customerid = list(db_result)[0][0]
+
         # Comprobamos si hay un order a null
-        db_result = db_conn.execute("SELECT username, status\
+        db_result = db_conn.execute("SELECT orderid\
                                     FROM orders AS a, customers AS b\
-                                    WHERE b.customerid = a.customerid AND b.username = '"+username+"' AND b.status = ''")
+                                    WHERE b.customerid = a.customerid AND b.username = '"+username+"' AND a.status IS NULL")
         
         # No hay carrito
         if len(list(db_result) == 0):
@@ -462,15 +466,28 @@ def anadirFilm(id, username):
             orderid = list(db_result)[0][0]
             orderid += 1
 
-            now = datetime.now().date()
-            db_conn.execute(Insert into )
+            # Creamos una order con status a null
+            db_conn.execute("INSERT INTO orders (orderid, customerid, netamount, totalamount, tax, status, orderdate)\
+                            VALUES ("+orderid+", "+customerid+", 0, 0, 21, NULL, CURRENT_DATE)")
         else:
+            # Obtenemos el orderid del carrito
+            orderid = list(db_result)[0][0]
 
-        if (db_result == null):
+        # Comprobamos si hay un orderdetail con el mismo producto
+        db_result = db_conn.execute("SELECT orderid, prodid FROM orderdetail WHERE orderid = "+orderid+" AND prod_id = "+id+"")
+        if len(list(db_result)) == 0:
+            # Anadimos el producto a la orden (crear orderdetail)
+            db_conn.execute("INSERT INTO orderdetail (orderid, prod_id, quantity, price)\
+                            VALUES ("+customerid+", "+id+", 1, 10)")
+        else:
+            # Si hay solo actualizamos el valor de quantity
+            db_conn.execute("UPDATE orderdetail\
+                            SET quantity = quantity+1\
+                            WHERE orderid = "+orderid+" AND prod_id = "+id+"")
             
         db_conn.close()
 
-        except:
+    except:
         if db_conn is not None:
             db_conn.close()
         print("Exception in DB access:")
