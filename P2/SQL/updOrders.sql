@@ -7,7 +7,7 @@ $$
 		IF (TG_OP = 'INSERT' OR TG_OP = 'UPDATE' OR TG_OP = 'DELETE') THEN
 		UPDATE orders
 		-- Actualizamos el valor con el precio correcto
-		SET netamount = t.precio, totalamount = t.precio+t.precio*((tax/100))
+		SET netamount = t.precio, totalamount = t.precio+t.precio*((tax/100)),
 		FROM    
 			(
 			-- Calculamos el total de la orden

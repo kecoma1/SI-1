@@ -609,7 +609,11 @@ def carritoFilms(username):
         db_result = db_conn.execute("SELECT orderid\
                                     FROM orders AS a, customers AS b\
                                     WHERE b.customerid = a.customerid AND b.username = '"+username+"' AND a.status IS NULL")
-        orderid_carrito = list(db_result)[0][0]
+        orderid_carrito = list(db_result)
+        if len(orderid_carrito) == 0:
+            return False
+        else:
+            orderid_carrito = orderid_carrito[0][0]
 
         # Obtenemos todos los datos necesarios del carrito
         db_result = db_conn.execute("SELECT d.movieid, d. movietitle, c.price, c.prod_id, c.description, b.quantity\
@@ -795,6 +799,8 @@ def comprarUnidad(id, username):
         else:
             # No tenemos más de un producto, eliminamos la cantidad
             db_conn.execute("DELETE FROM orderdetail WHERE orderid = "+str(orderid_carrito)+" AND prod_id = "+id+"")
+        
+        db_conn.close()
         return True
     except:
         if db_conn is not None:
@@ -824,7 +830,11 @@ def comprarTodo(username):
         db_result = db_conn.execute("SELECT orderid\
                                     FROM orders AS a, customers AS b\
                                     WHERE b.customerid = a.customerid AND b.username = '"+username+"' AND a.status IS NULL")
-        orderid_carrito = list(db_result)[0][0]
+        orderid_carrito = list(db_result)
+        if len(orderid_carrito) == 0:
+            return False
+        else:
+            orderid_carrito = orderid_carrito[0][0]
 
         # Ponemos el status del carrito a paid
         db_conn.execute("UPDATE orders SET status = 'Paid'\
@@ -935,23 +945,102 @@ def getHistorial(username):
                     WHERE orders.customerid = customers.customerid and orders.status IS NOT NULL\
                     and customers.username = '"+username+"'")
         orders = list(db_result)
+        i = 0
         for orden in orders:
-            historial_list.append(dict)
-            historial_list[0]['order'] = []
-            historial_list[0]['order'].append(de_tupla_lista(orden))
+            historial_list.append([])
+            historial_list[i] = dict()
+            historial_list[i]['order'] = []
+            historial_list[i]['order'] = de_tupla_lista(orden)
 
             # Obtener las orderdetails de la order anterior
             db_result = db_conn.execute(
                         "SELECT orderdetail.prod_id, orderdetail.price, orderdetail.quantity\
-                        FROM orderdetail, orders\
-                        WHERE orders.orderid = orderdetail.orderid and orders.orderid = "+historial_list[0]['order'][0]+"'"
-        )
-
-        
+                        FROM orderdetail\
+                        WHERE orderdetail.orderid = "+str(historial_list[0]['order'][0])+"")
+            historial_list[i]['details'] = []
+            for detail in list(db_result):
+                historial_list[i]['details'].append(de_tupla_lista(detail))
+            i += 1
 
         db_conn.close()
-        return saldo_username
+        return historial_list
             
+    except:
+        if db_conn is not None:
+            db_conn.close()
+        print("Exception in DB access:")
+        print("-"*60)
+        traceback.print_exc(file=sys.stderr)
+        print("-"*60)
+
+        return False
+
+
+def getNetoCarrito(username):
+    """Función que devuelve el neto en el carrito de un usuario
+
+    Args:
+        username (string): Username del customer
+
+    Return:
+        En caso de exito el neto, en caso de error False
+    """
+    try:
+        # conexion a la base de datos
+        db_conn = None
+        db_conn = db_engine.connect()
+        historial_list = []
+
+        # Obtenemos el total
+        db_result = db_conn.execute("SELECT netamount\
+                                    FROM orders AS a, customers AS b\
+                                    WHERE b.customerid = a.customerid AND b.username = '"+username+"' AND a.status IS NULL")
+        neto = list(db_result)
+        if len(neto) == 0:
+            return 0
+        else:
+            neto = neto[0][0]
+
+        db_conn.close()
+        return neto
+    except:
+        if db_conn is not None:
+            db_conn.close()
+        print("Exception in DB access:")
+        print("-"*60)
+        traceback.print_exc(file=sys.stderr)
+        print("-"*60)
+
+        return False
+
+
+def getTotalCarrito(username):
+    """Función que devuelve el total en el carrito de un usuario
+
+    Args:
+        username (string): Username del customer
+
+    Return:
+        En caso de exito el total, en caso de error False
+    """
+    try:
+        # conexion a la base de datos
+        db_conn = None
+        db_conn = db_engine.connect()
+        historial_list = []
+
+        # Obtenemos el total
+        db_result = db_conn.execute("SELECT totalamount\
+                                    FROM orders AS a, customers AS b\
+                                    WHERE b.customerid = a.customerid AND b.username = '"+username+"' AND a.status IS NULL")
+        total = list(db_result)
+        if len(total) == 0:
+            return 0
+        else:
+            total = total[0][0]
+
+        db_conn.close()
+        return total
     except:
         if db_conn is not None:
             db_conn.close()

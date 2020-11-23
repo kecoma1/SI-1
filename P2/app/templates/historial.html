@@ -16,7 +16,7 @@
           </tr>
           {% for movimiento in historial %}
           <tr>
-            <td class="tableHistorial">{{movimiento.titulo}}</td>
+            <td class="tableHistorial">{{movimiento["order"][]}}</td>
             <td class="tableHistorial">{{movimiento.precio}}</td>
             <td id="detail_{{movimiento.movement_id}}" class="details">{{movimiento.time}} - Cantidad: {{movimiento.quantity}}</td>
             <script>
