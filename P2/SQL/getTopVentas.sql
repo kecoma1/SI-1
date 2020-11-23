@@ -31,7 +31,7 @@ BEGIN
 						-- Seleccionamos todos los orderdetails y los orders con los años
 						SELECT d.movieid AS IMDB_Mid, c.prod_id AS Pid, b.orderid AS ODoid, b.prod_id AS ODp_id, b.quantity AS cantidad, EXTRACT(YEAR FROM a.orderdate) AS Oano
 						FROM orders AS a, orderdetail AS b, products AS c, imdb_movies as d
-						WHERE a.orderid = b.orderid AND CAST(EXTRACT(YEAR FROM a.orderdate) AS INTEGER) <= 2020 AND CAST(EXTRACT(YEAR FROM a.orderdate) AS INTEGER) >= 2018
+						WHERE a.orderid = b.orderid AND ( CAST(EXTRACT(YEAR FROM a.orderdate) AS INTEGER) BETWEEN year_1 AND year_2 )
 							AND d.movieid = c.movieid AND c.prod_id = b.prod_id
 						) AS t
 					GROUP BY ODp_id2, Oano0, IMDB_Mid0
