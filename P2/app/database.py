@@ -439,7 +439,8 @@ def anadirFilm(id, username):
         en el caso de que el usuario haya iniciado sesión
 
         Args: 
-            id(string): Id de la película que esta siendo añadida (producto).
+            id (string): Id de la película que esta siendo añadida (producto).
+            username (string): Username del customer al que hay que modificar el carrito
 
         Return:
             Devuelve la movieid o false en caso de error
@@ -506,33 +507,44 @@ def anadirFilm(id, username):
         return False
 
 
-def eliminarFilm(id):
+def eliminarFilm(id, username):
     """Funcion que elimina una pelicula del carrito de un usuario
 
     Args:
-        id (string): Id de la pelicula a eliminar
+        id (string): Id del producto a eliminar
+        username (string): Username del customer al que hay que modificar el carrito
+
+    Return:
+        True en caso de exito, False en caso de error
     """
-    # Comprobamos que el argumento contenga caracteres y prevenimos sqlinjection
-    """if len(categoria) <= 0 or ("'" in categoria) or ('"' in categoria):
-        return False
-    
     try:
         # conexion a la base de datos
         db_conn = None
         db_conn = db_engine.connect()
 
-        # Eliminamos la pelicula del carrito
-        db_result = db_conn.execute("")
+        # Obtenemos el carrito
+        db_result = db_conn.execute("SELECT orderid\
+                                    FROM orders AS a, customers AS b\
+                                    WHERE b.customerid = a.customerid AND b.username = '"+username+"' AND a.status IS NULL")
+        orderid_carrito = list(db_result)[0][0]
 
-        pelis_list = []
-        i = 0
-        for tupla in list(db_result):
-            pelis_list.append([])
-            pelis_list[i] = de_tupla_lista(tupla)
-            i += 1
+        # Comprobamos cuantas peliculas hay
+        db_result = db_conn.execute("SELECT quantity\
+                                    FROM orders AS a, orderdetail AS b\
+                                    WHERE a.orderid = b.orderid AND a.orderid = "+orderid_carrito+" AND b.prod_id = "+id+"")
+        quantity = list(db_result)[0][0]
+
+        if quantity > 1:
+            # Si hay más de una solo reducimos la cantidad
+            db_conn.execute("UPDATE orderdetail\
+                            SET quantity = quantity - 1\
+                            WHERE orderid = "+orderid_carrito+" AND prod_id = "+id+"")
+        else:
+            # Si solo hay una eliminamos la fila
+            db_conn.execute("DELETE FROM orderdetail WHERE orderid = "+orderid_carrito+" AND prod_id = "+id+"")
 
         db_conn.close()
-        return pelis_list
+        return True
     except:
         if db_conn is not None:
             db_conn.close()
@@ -540,5 +552,34 @@ def eliminarFilm(id):
         print("-"*60)
         traceback.print_exc(file=sys.stderr)
         print("-"*60)
-        return False"""
-    pass        
+        return False
+
+
+def carritoFilms(username):
+    """Función que devuelve el carrito en una lista
+
+    Args:
+        username (string): Username del que hay que coger el carrito
+    """
+    try:
+        # conexion a la base de datos
+        db_conn = None
+        db_conn = db_engine.connect()
+
+        # Obtenemos el carrito
+        db_result = db_conn.execute("SELECT orderid\
+                                    FROM orders AS a, customers AS b\
+                                    WHERE b.customerid = a.customerid AND b.username = '"+username+"' AND a.status IS NULL")
+        orderid_carrito = list(db_result)[0][0]
+
+        
+        db_conn.close()
+        return True
+    except:
+        if db_conn is not None:
+            db_conn.close()
+        print("Exception in DB access:")
+        print("-"*60)
+        traceback.print_exc(file=sys.stderr)
+        print("-"*60)
+        return False

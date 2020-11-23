@@ -293,22 +293,11 @@ def historial():
         return redirect(url_for('index'))
 
 
-@app.route("/carrito.html", methods=['GET', 'POST'])
+@app.route("/carrito.html", methods=['GET'])
 def carrito():
     global catalogue
-    carrito_films = []
-    if request.method == 'GET':
-        for film in catalogue['peliculas']:
-            if str(film['id']) in session:
-                i = 0
-                while i < session[str(film['id'])]:
-                    carrito_films.append(film)
-                    i += 1
-        stack_push(request.url)
-        return render_template('carrito.html', logged=logged(), carrito_films=carrito_films)
-    else:
-        pass
-    return redirect(url_for('carrito'))
+    carrito_films = database.carritoFilms(session['usuario'])
+    return render_template('carrito.html', logged=logged(), carrito_films=carrito_films)
 
 
 @app.route("/index/<id>", methods=['GET'])
@@ -451,7 +440,7 @@ def eliminar_carrito(id):
     else:
         # Usamos la base de datos al estar logeado
         if database.eliminarFilm(id) == False:
-            print("Error anadiendo la pelicula")
+            print("Error eliminando la pelicula")
             return redirect(url_for('index'))
     return redirect(url_for('carrito'))
 
