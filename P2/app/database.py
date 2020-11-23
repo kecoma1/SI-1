@@ -654,6 +654,7 @@ def carritoFilmsFromSession(ids):
 
         carrito_films = []
         for id in ids:
+            # Obtenemos la información de cada película
             db_result = db_conn.execute("SELECT a.movieid, a. movietitle, b.price, b.prod_id, b.description\
                                         FROM imdb_movies AS a, products AS b\
                                         WHERE a.movieid = b.movieid AND b.prod_id = "+id+"\
@@ -671,3 +672,70 @@ def carritoFilmsFromSession(ids):
         return False
 
 
+def addSessionToCarrito(ids, username):
+    """Función que dado un carrito en una sesión, anade las películas 
+    de esta sesión al carrito.
+
+    Args:
+        ids (list): Lista donde se encuentran los productos a anadir
+    """
+    if ids == 0:
+        return False
+    elif len(ids) == 0:
+        return []
+    
+    try:
+        # conexion a la base de datos
+        db_conn = None
+        db_conn = db_engine.connect()
+
+        # Obtenemos el carrito
+        db_result = db_conn.execute("SELECT orderid\
+                                    FROM orders AS a, customers AS b\
+                                    WHERE b.customerid = a.customerid AND b.username = '"+username+"' AND a.status IS NULL")
+        result = list(db_result)
+        # En caso de que no haya carrito lo  anadimos
+        if len(result) == 0:
+            # Cogemos el customerid
+            db_result = db_conn.execute("SELECT customerid FROM customers WHERE username = '"+username+"'")
+            customerid = list(db_result)[0][0]
+
+            # Cogemos la ultima orderid
+            db_result = db_conn.execute("SELECT orderid FROM orders ORDER BY orderid DESC LIMIT 1")
+            orderid_carrito = list(db_result)[0][0]
+            orderid_carrito += 1
+
+            # Creamos una order con status a null
+            db_conn.execute("INSERT INTO orders (orderid, customerid, netamount, totalamount, tax, status, orderdate)\
+                            VALUES ("+str(orderid_carrito)+", "+str(customerid)+", 0, 0, 21, NULL, CURRENT_DATE)")
+        else:
+            orderid_carrito = result[0][0]
+
+        # Anadimos todas las ids al carrito
+        for id in ids:
+             # Obtenemos el precio del producto
+            db_result = db_conn.execute("SELECT price FROM products WHERE prod_id = "+id+"")
+            price = list(db_result)[0][0]
+
+            # Buscamos si hay un orderdetail de ese producto
+            db_result = db_conn.execute("SELECT quantity FROM orderdetail where orderid = "+str(orderid_carrito)+" AND prod_id = "+id+"")
+            result = list(db_result)
+            if len(result) == 0:
+                # Si no esta ese producto lo anadimos
+                db_conn.execute("INSERT INTO orderdetail (orderid, prod_id, quantity, price)\
+                            VALUES ("+str(orderid_carrito)+", "+id+", 1, "+str(price)+")")
+            else:
+                # Si ya esta ese producto solo aumentamos la cantidad
+                db_conn.execute("UPDATE orderdetail\
+                            SET quantity = quantity+1\
+                            WHERE orderid = "+str(orderid_carrito)+" AND prod_id = "+id+"")
+        db_conn.close()
+        return 
+    except:
+        if db_conn is not None:
+            db_conn.close()
+        print("Exception in DB access:")
+        print("-"*60)
+        traceback.print_exc(file=sys.stderr)
+        print("-"*60)
+        return False

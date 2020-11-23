@@ -117,8 +117,9 @@ def login_page_POST():
             session.permanent = False
             session['usuario'] = username
 
-            if database.addSessionToCarrito() == False:
-                pass
+            if database.addSessionToCarrito(session['carrito'], username) == False:
+                print("Error anadiendo las películas de la sesión a la BD")
+
             return redirect(url_for('index'))
         else:
             return render_template('login.htailml', title='login', logged=logged(), error="El usuario o la contrasenha son incorrectos")
