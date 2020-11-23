@@ -132,6 +132,38 @@ def getPelicula(id):
         return False
 
 
+def getMovieId(prod_id):
+    """Función que devuelve el id de una pelicula dado 
+    dado el id de un producto 
+
+    Args:
+        prod_id (string): Id del producto
+
+    Return:
+        En caso de exito el id de la película, en caso de error False
+    """
+    try:
+        # conexion a la base de datos
+        db_conn = None
+        db_conn = db_engine.connect()
+    
+        # Obtener el nombre del director de la película
+        db_result = db_conn.execute("SELECT b.movieid FROM products AS a, imdb_movies AS b\
+                                    WHERE a.movieid = b.movieid AND a.prod_id = "+prod_id+"")
+        movieid = list(db_result)[0][0]
+        db_conn.close()
+        return movieid  
+    except:
+        if db_conn is not None:
+            db_conn.close()
+        print("Exception in DB access:")
+        print("-"*60)
+        traceback.print_exc(file=sys.stderr)
+        print("-"*60)
+
+        return False
+
+
 def getDirectores(id):
     """
         Función que nos devuelve los directores de una 
@@ -434,6 +466,7 @@ def categoria(categoria):
         print("-"*60)
         return False
 
+
 def anadirFilm(id, username):
     """ Función que añade las películas que se quieran comprar en el carrito,
         en el caso de que el usuario haya iniciado sesión
@@ -531,17 +564,17 @@ def eliminarFilm(id, username):
         # Comprobamos cuantas peliculas hay
         db_result = db_conn.execute("SELECT quantity\
                                     FROM orders AS a, orderdetail AS b\
-                                    WHERE a.orderid = b.orderid AND a.orderid = "+orderid_carrito+" AND b.prod_id = "+id+"")
+                                    WHERE a.orderid = b.orderid AND a.orderid = "+str(orderid_carrito)+" AND b.prod_id = "+id+"")
         quantity = list(db_result)[0][0]
 
         if quantity > 1:
             # Si hay más de una solo reducimos la cantidad
             db_conn.execute("UPDATE orderdetail\
                             SET quantity = quantity - 1\
-                            WHERE orderid = "+orderid_carrito+" AND prod_id = "+id+"")
+                            WHERE orderid = "+str(orderid_carrito)+" AND prod_id = "+id+"")
         else:
             # Si solo hay una eliminamos la fila
-            db_conn.execute("DELETE FROM orderdetail WHERE orderid = "+orderid_carrito+" AND prod_id = "+id+"")
+            db_conn.execute("DELETE FROM orderdetail WHERE orderid = "+str(orderid_carrito)+" AND prod_id = "+id+"")
 
         db_conn.close()
         return True
@@ -560,6 +593,10 @@ def carritoFilms(username):
 
     Args:
         username (string): Username del que hay que coger el carrito
+    
+    Return:
+        En caso de éxito devuelve una lista con las peliculas del carrito,
+        en caso de error devuelve False
     """
     try:
         # conexion a la base de datos
@@ -572,9 +609,26 @@ def carritoFilms(username):
                                     WHERE b.customerid = a.customerid AND b.username = '"+username+"' AND a.status IS NULL")
         orderid_carrito = list(db_result)[0][0]
 
+        # Obtenemos todos los datos necesarios del carrito
+        db_result = db_conn.execute("SELECT d.movieid, d. movietitle, c.price, c.prod_id, c.description, b.quantity\
+                                    FROM orders AS a, orderdetail AS b, products AS c, imdb_movies AS d\
+                                    WHERE a.orderid = "+str(orderid_carrito)+" AND a.orderid = b.orderid AND b.prod_id = c.prod_id\
+	                                AND c.movieid = d.movieid")
         
+        lista_auxiliar = []
+        carrito_films = []
+        i = 0
+        n = 0
+        # Creando una lista con tantas filas de productos como quantity haya
+        # Si quantity = 4, append() x 4
+        for tupla in list(db_result):
+            lista_auxiliar.append(de_tupla_lista(tupla))
+            for n in range(lista_auxiliar[i][5]):
+                carrito_films.append(lista_auxiliar[i][:5])
+                n += 1
+            i += 1
         db_conn.close()
-        return True
+        return carrito_films
     except:
         if db_conn is not None:
             db_conn.close()
@@ -583,3 +637,37 @@ def carritoFilms(username):
         traceback.print_exc(file=sys.stderr)
         print("-"*60)
         return False
+
+def carritoFilmsFromSession(ids):
+    """Función que crea una lista apartir de unos ids
+
+    Args:
+        ids (List): Lista con los ids de los productos en el carrito
+
+    Return:
+        Lista con los productos que se necesitan
+    """
+    try:
+        # conexion a la base de datos
+        db_conn = None
+        db_conn = db_engine.connect()
+
+        carrito_films = []
+        for id in ids:
+            db_result = db_conn.execute("SELECT a.movieid, a. movietitle, b.price, b.prod_id, b.description\
+                                        FROM imdb_movies AS a, products AS b\
+                                        WHERE a.movieid = b.movieid AND b.prod_id = "+id+"\
+                                        ")
+            carrito_films.append(de_tupla_lista(list(db_result)[0]))
+        db_conn.close()
+        return carrito_films
+    except:
+        if db_conn is not None:
+            db_conn.close()
+        print("Exception in DB access:")
+        print("-"*60)
+        traceback.print_exc(file=sys.stderr)
+        print("-"*60)
+        return False
+
+

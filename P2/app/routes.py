@@ -57,6 +57,18 @@ def logged():
         return False
 
 
+def getTotalCarrito(carrito_films):
+    """Funcion que calcula el precio total del carrito
+
+    Returns:
+        float: Total del carrito
+    """
+    total = 0.0
+    for film in carrito_films:
+        total += float(film[2])
+    return total    
+
+
 @app.route('/')
 @app.route('/index')
 def index():
@@ -77,8 +89,8 @@ def back():
             Nos redirige a la página anterior
     """
     global stack_url
-    stack_url.pop()
     if len(stack_url) != 0:
+        stack_url.pop()
         return redirect(stack_url.pop())
     else:
         return redirect(url_for('index'))
@@ -105,7 +117,8 @@ def login_page_POST():
             session.permanent = False
             session['usuario'] = username
 
-            # TODO Anadir la sesión (carrito) a la BD
+            if database.addSessionToCarrito() == False:
+                pass
             return redirect(url_for('index'))
         else:
             return render_template('login.htailml', title='login', logged=logged(), error="El usuario o la contrasenha son incorrectos")
@@ -296,8 +309,21 @@ def historial():
 @app.route("/carrito.html", methods=['GET'])
 def carrito():
     global catalogue
-    carrito_films = database.carritoFilms(session['usuario'])
-    return render_template('carrito.html', logged=logged(), carrito_films=carrito_films)
+    total = 0
+    if logged():
+        carrito_films = database.carritoFilms(session['usuario'])
+        total = getTotalCarrito(carrito_films)
+    else:
+        if 'carrito' in session:
+            if session['carrito'] != 0:
+                carrito_films = database.carritoFilmsFromSession(session['carrito'])
+                total = getTotalCarrito(carrito_films)
+            else: 
+                carrito_films = []
+        else:
+            carrito_films = []
+    stack_push(request.url)
+    return render_template('carrito.html', logged=logged(), carrito_films=carrito_films, total=total)
 
 
 @app.route("/index/<id>", methods=['GET'])
@@ -417,17 +443,22 @@ def anhadir_carrito(id):
     if logged() == False:
         # Usamos sesiones en caso de no haberse hecho login
         if 'carrito' in session:
-            session['carrito'].append(id)
+            if session['carrito'] == 0:
+                session['carrito'] = []
+                session['carrito'].append(id)
+            else:
+                session['carrito'].append(id)
         else:
             session['carrito'] = []
             session['carrito'].append(id)
+        return redirect(url_for('film_detail', id=database.getMovieId(id)))
     else:
         # Usamos la base de datos al estar logeado
         movieid = database.anadirFilm(id, session['usuario'])
         if movieid == False:
             print("Error anadiendo la pelicula")
             return redirect(url_for('index'))
-    return redirect(url_for('film_detail', id=movieid))
+        return redirect(url_for('film_detail', id=movieid))
 
 
 @app.route("/realizar_compra/eliminar_carrito/<string:id>", methods=['POST'])
@@ -439,7 +470,7 @@ def eliminar_carrito(id):
         session['carrito'].remove(id)
     else:
         # Usamos la base de datos al estar logeado
-        if database.eliminarFilm(id) == False:
+        if database.eliminarFilm(id, session['usuario']) == False:
             print("Error eliminando la pelicula")
             return redirect(url_for('index'))
     return redirect(url_for('carrito'))

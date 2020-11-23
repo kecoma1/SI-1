@@ -14,23 +14,24 @@
     <div class="mainSection">
       {% for articulo in carrito_films %}
       <div class="movie">
-        <a href="index/{{articulo.id}}">
-          <img src="{{articulo.poster}}" alt="{{articulo.titulo}}" class="images">
+        <a href="index/{{articulo[0]}}">
+          <img alt="{{articulo[1]}}" class="images">
         </a><br />
-        <p>{{articulo.titulo}}</p><br>
-        <p class="price">{{articulo.precio}}</p>
-        <form action="eliminar_carrito/{{articulo.id}}" method="POST">
+        <p>{{articulo[1]}}</p><br>
+        <p class="price">{{articulo[2]}}</p>{{articulo[4]}}
+        <form action="eliminar_carrito/{{articulo[3]}}" method="POST">
           <button type=submit class="buttonP">Eliminar</button>
         </form>
-        <form action="realizar_compra/{{articulo.id}}" method="POST">
+        <form action="realizar_compra/{{articulo[3]}}" method="POST">
           <button type=submit class="buttonP">Comprar</button>
         </form>
       </div>
       {% endfor %}
     </div>
     <div class="buyallButton">
+      <p class="price">{{total}}</p>
       <form action="comprar_todo" method="POST">
-        <button type=submit class="buttonP">Comprar</button>
+        <button type=submit class="buttonP">Comprar todo</button>
       </form>
     </div>
   </div>
