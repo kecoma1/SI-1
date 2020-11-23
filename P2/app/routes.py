@@ -105,7 +105,7 @@ def login_page_POST():
             session.permanent = False
             session['usuario'] = username
 
-            # TODO Anadir la sesión a la BD
+            # TODO Anadir la sesión (carrito) a la BD
             return redirect(url_for('index'))
         else:
             return render_template('login.htailml', title='login', logged=logged(), error="El usuario o la contrasenha son incorrectos")
@@ -434,10 +434,11 @@ def anhadir_carrito(id):
             session['carrito'].append(id)
     else:
         # Usamos la base de datos al estar logeado
-        if database.anadirFilm(id, session['username']) == False:
+        movieid = database.anadirFilm(id, session['usuario'])
+        if movieid == False:
             print("Error anadiendo la pelicula")
             return redirect(url_for('index'))
-    return redirect(url_for('film_detail', id=id))
+    return redirect(url_for('film_detail', id=movieid))
 
 
 @app.route("/realizar_compra/eliminar_carrito/<string:id>", methods=['POST'])

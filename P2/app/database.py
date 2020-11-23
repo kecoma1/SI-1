@@ -69,7 +69,7 @@ def db_top_films():
         db_conn = db_engine.connect()
         
         # Seleccionar las peliculas mas vendidas en los ultimos 3 anos
-        db_result = db_conn.execute("SELECT * FROM getTopVentas(2004, 2006)")
+        db_result = db_conn.execute("SELECT * FROM getTopVentas(2018, 2020)")
         db_conn.close()
         resultlist = list(db_result)
         # Convertimos a una lista las peliculas
@@ -442,7 +442,7 @@ def anadirFilm(id, username):
             id(string): Id de la película que esta siendo añadida (producto).
 
         Return:
-            Void
+            Devuelve la movieid o false en caso de error
     """
     orderid = None
     try:
@@ -458,9 +458,10 @@ def anadirFilm(id, username):
         db_result = db_conn.execute("SELECT orderid\
                                     FROM orders AS a, customers AS b\
                                     WHERE b.customerid = a.customerid AND b.username = '"+username+"' AND a.status IS NULL")
+        orderid_list = list(db_result)
         
         # No hay carrito
-        if len(list(db_result) == 0):
+        if len(orderid_list) == 0:
             # Cogemos la ultima orderid
             db_result = db_conn.execute("SELECT orderid FROM orders ORDER BY orderid DESC LIMIT 1")
             orderid = list(db_result)[0][0]
@@ -468,25 +469,33 @@ def anadirFilm(id, username):
 
             # Creamos una order con status a null
             db_conn.execute("INSERT INTO orders (orderid, customerid, netamount, totalamount, tax, status, orderdate)\
-                            VALUES ("+orderid+", "+customerid+", 0, 0, 21, NULL, CURRENT_DATE)")
+                            VALUES ("+str(orderid)+", "+str(customerid)+", 0, 0, 21, NULL, CURRENT_DATE)")
         else:
             # Obtenemos el orderid del carrito
-            orderid = list(db_result)[0][0]
+            orderid = orderid_list[0][0]
+
+        # Obtenemos el precio del producto
+        db_result = db_conn.execute("SELECT price FROM products WHERE prod_id = "+id+"")
+        price = list(db_result)[0][0]
 
         # Comprobamos si hay un orderdetail con el mismo producto
-        db_result = db_conn.execute("SELECT orderid, prodid FROM orderdetail WHERE orderid = "+orderid+" AND prod_id = "+id+"")
+        db_result = db_conn.execute("SELECT orderid, prod_id FROM orderdetail WHERE orderid = "+str(orderid)+" AND prod_id = "+id+"")
         if len(list(db_result)) == 0:
             # Anadimos el producto a la orden (crear orderdetail)
             db_conn.execute("INSERT INTO orderdetail (orderid, prod_id, quantity, price)\
-                            VALUES ("+customerid+", "+id+", 1, 10)")
+                            VALUES ("+str(orderid)+", "+id+", 1, "+str(price)+")")
         else:
             # Si hay solo actualizamos el valor de quantity
             db_conn.execute("UPDATE orderdetail\
                             SET quantity = quantity+1\
-                            WHERE orderid = "+orderid+" AND prod_id = "+id+"")
+                            WHERE orderid = "+str(orderid)+" AND prod_id = "+id+"")
             
-        db_conn.close()
+        # Cogemos la movieid del producto
+        db_result = db_conn.execute("SELECT a.movieid FROM imdb_movies AS a, products AS b\
+                                    WHERE a.movieid  = b.movieid AND b.prod_id = "+id+"")
 
+        db_conn.close()
+        return list(db_result)[0][0]
     except:
         if db_conn is not None:
             db_conn.close()
@@ -496,7 +505,6 @@ def anadirFilm(id, username):
         print("-"*60)
         return False
 
-    pass
 
 def eliminarFilm(id):
     """Funcion que elimina una pelicula del carrito de un usuario
