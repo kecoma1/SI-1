@@ -29,6 +29,9 @@
       {% endfor %}
     </div>
     <div class="buyallButton">
+      <div class="errorMsg2">
+        <p id="errMSG">{{error}}</p>
+      </div>
       <p class="price">{{total}}</p>
       <form action="comprar_todo" method="POST">
         <button type=submit class="buttonP">Comprar todo</button>
@@ -36,7 +39,4 @@
     </div>
   </div>
 </main>
-<div class="errorMsg2">
-  <p id="errMSG">{{error}}</p>
-</div>
 {% endblock %}

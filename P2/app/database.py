@@ -5,6 +5,7 @@ from sqlalchemy import create_engine
 from sqlalchemy import Table, Column, Integer, String, MetaData, ForeignKey, text
 from sqlalchemy.sql import select
 import datetime
+import random
 
 # configurar el motor de sqlalchemy
 db_engine = create_engine("postgresql://alumnodb:alumnodb@localhost/si1", echo=False)
@@ -330,7 +331,7 @@ def validar(username, password):
 def registrar(firstname, lastname, address1, address2, 
                            city, state, zipcode, country, region, email, 
                            phone, creditcardType, creditcard, creditcardexpiration, 
-                           username, password, age, income, gender):
+                           username, password, age, gender):
     """Función para registrar a un usuario si el username no existe
 
     Args:
@@ -343,7 +344,7 @@ def registrar(firstname, lastname, address1, address2,
     if firstname == "" or lastname == "" or city == "" or zipcode == "" or state == ""\
         or  zipcode == "" or country == "" or creditcard == "" or creditcardexpiration == ""\
         or username == "" or password == "":
-            return
+            return False
 
     try:
         # Comprobar que el username no existe
@@ -361,6 +362,7 @@ def registrar(firstname, lastname, address1, address2,
         db_result = db_conn.execute("SELECT customerid FROM customers ORDER BY customerid DESC LIMIT 1")
         customerid = list(db_result)[0][0]
         customerid+=1
+        income = random.randrange(20, 40)
 
         # Insertamos en la tabla el usuario
         db_result = db_conn.execute("INSERT INTO customers (customerid, firstname, lastname, address1, address2,\
@@ -370,7 +372,7 @@ def registrar(firstname, lastname, address1, address2,
                                     VALUES ("+str(customerid)+", '"+firstname+"', '"+lastname+"', "+address1+", "+address2+",\
                                     '"+city+"', "+state+", '"+zipcode+"', '"+country+"', '"+region+"', "+email+",\
                                     "+phone+", '"+creditcardType+"', '"+creditcard+"', '"+creditcardexpiration+"', '"+username+"', '"+password+"',\
-                                    "+age+", "+income+", "+gender+")")
+                                    "+age+", "+str(income)+", "+gender+")")
         db_conn.close()
         return True
     except:
@@ -638,6 +640,7 @@ def carritoFilms(username):
         print("-"*60)
         return False
 
+
 def carritoFilmsFromSession(ids):
     """Función que crea una lista apartir de unos ids
 
@@ -678,6 +681,7 @@ def addSessionToCarrito(ids, username):
 
     Args:
         ids (list): Lista donde se encuentran los productos a anadir
+        username (string): Username del customer al que anadir los productos
     """
     if ids == 0:
         return False
@@ -738,4 +742,222 @@ def addSessionToCarrito(ids, username):
         print("-"*60)
         traceback.print_exc(file=sys.stderr)
         print("-"*60)
+        return False
+
+
+def comprarUnidad(id, username):
+    """Función realiza la compra de un producto
+
+    Args:
+        id (string): Id del producto a comprar
+        username (string): Username del customer que realiza la compra
+    """
+    try:
+        # conexion a la base de datos
+        db_conn = None
+        db_conn = db_engine.connect()
+
+        # Obtenemos el carrito
+        db_result = db_conn.execute("SELECT orderid\
+                                    FROM orders AS a, customers AS b\
+                                    WHERE b.customerid = a.customerid AND b.username = '"+username+"' AND a.status IS NULL")
+        orderid_carrito = list(db_result)[0][0]
+
+        # Cogemos la ultima orderid
+        db_result = db_conn.execute("SELECT orderid FROM orders ORDER BY orderid DESC LIMIT 1")
+        orderid = list(db_result)[0][0]
+        orderid += 1
+        
+        # Cogemos el customerid
+        db_result = db_conn.execute("SELECT customerid FROM customers WHERE username = '"+username+"'")
+        customerid = list(db_result)[0][0]
+
+        # Creamos una order con solo ese producto y ponemos status a paid
+        db_conn.execute("INSERT INTO orders (orderid, customerid, netamount, totalamount, tax, status, orderdate)\
+                            VALUES ("+str(orderid)+", "+str(customerid)+", 0, 0, 21, 'Paid', CURRENT_DATE)")
+
+         # Obtenemos el precio del producto
+        db_result = db_conn.execute("SELECT price FROM products WHERE prod_id = "+id+"")
+        price = list(db_result)[0][0]
+
+        # Creamos el orderdetail correspondiente
+        db_conn.execute("INSERT INTO orderdetail (orderid, prod_id, price, quantity)\
+                            VALUES ("+str(orderid)+", "+id+", "+str(price)+",1)")
+
+        # Reducimos el quantity o eliminamos la orderid
+        db_result = db_conn.execute("SELECT quantity FROM orderdetail where orderid = "+str(orderid_carrito)+" AND prod_id = "+id+"")
+        quantity = list(db_result)[0][0]
+        if quantity > 1:
+            # Tenemos más de un producto, solo reducimos la cantidad
+            db_conn.execute("UPDATE orderdetail\
+                        SET quantity = quantity-1\
+                        WHERE orderid = "+str(orderid_carrito)+" AND prod_id = "+id+"")
+        else:
+            # No tenemos más de un producto, eliminamos la cantidad
+            db_conn.execute("DELETE FROM orderdetail WHERE orderid = "+str(orderid_carrito)+" AND prod_id = "+id+"")
+        return True
+    except:
+        if db_conn is not None:
+            db_conn.close()
+        print("Exception in DB access:")
+        print("-"*60)
+        traceback.print_exc(file=sys.stderr)
+        print("-"*60)
+        return False
+        
+
+def comprarTodo(username):
+    """Función que hace una compra de todos los productos en el carrito
+
+    Args:
+        username (string): Username del usuario que realiza la compra
+    
+    Return:
+        En caso de éxito devuelve True, en caso de error devuelve false
+    """
+    try:
+        # conexion a la base de datos
+        db_conn = None
+        db_conn = db_engine.connect()
+
+        # Obtenemos el carrito
+        db_result = db_conn.execute("SELECT orderid\
+                                    FROM orders AS a, customers AS b\
+                                    WHERE b.customerid = a.customerid AND b.username = '"+username+"' AND a.status IS NULL")
+        orderid_carrito = list(db_result)[0][0]
+
+        # Ponemos el status del carrito a paid
+        db_conn.execute("UPDATE orders SET status = 'Paid'\
+                        WHERE orderid = "+str(orderid_carrito)+"")
+
+        db_conn.close()
+        return True
+    except:
+        if db_conn is not None:
+            db_conn.close()
+        print("Exception in DB access:")
+        print("-"*60)
+        traceback.print_exc(file=sys.stderr)
+        print("-"*60)
+        return False
+
+
+def introducir_saldo(username, saldo_a_introducir):
+    """Función que introduce un saldo dentro de un customer
+
+    Args:
+        username (string): Username del customer al que se le debe introducir un username
+        saldo_a_introducir (int): Saldo que debe introducirse en el customes
+    """
+    try:
+        # conexion a la base de datos
+        db_conn = None
+        db_conn = db_engine.connect()
+
+        # Cogemos el customerid
+        db_result = db_conn.execute("SELECT customerid FROM customers WHERE username = '"+username+"'")
+        customerid = list(db_result)[0][0]
+
+        # Ponemos el status del carrito a paid
+        db_conn.execute("UPDATE orders SET income = income+"+saldo_a_introducir+"\
+                        WHERE orderid = "+str(customerid)+"")
+
+        db_conn.close()
+        return True
+    except:
+        if db_conn is not None:
+            db_conn.close()
+        print("Exception in DB access:")
+        print("-"*60)
+        traceback.print_exc(file=sys.stderr)
+        print("-"*60)
+        return False
+
+
+def getSaldo(username):
+    """ 
+        Funcion que nos devuelve el saldo de un usuario dado
+
+        Args:
+            username: usuario del que obtenemos el saldo
+
+        Return:
+            Devuelve el saldo del usuario 
+            Devuelve FALSE en caso de error
+    """
+    try:
+        # conexion a la base de datos
+        db_conn = None
+        db_conn = db_engine.connect()
+    
+        # Obtener el nombre el precio de la película
+        db_result = db_conn.execute(
+            "SELECT income FROM customers WHERE username = '"+username+"'"
+        )
+
+        saldo_username = list(db_result)[0][0]
+
+        db_conn.close()
+        return saldo_username
+            
+    except:
+        if db_conn is not None:
+            db_conn.close()
+        print("Exception in DB access:")
+        print("-"*60)
+        traceback.print_exc(file=sys.stderr)
+        print("-"*60)
+
+        return False
+
+
+def getHistorial(username):
+    """ 
+        Funcion que nos devuelve el historial de compra del usuario dado
+
+        Args:
+            username (string): Username del customer que obtenemos el historial
+
+        Return:
+            Devuelve una lista de diccionarios de order y orderdetail
+            Devuelve FALSE en caso de error
+    """
+    try:
+        # conexion a la base de datos
+        db_conn = None
+        db_conn = db_engine.connect()
+        historial_list = []
+
+        # Obtener las orders del usuario que no sean null
+        db_result = db_conn.execute(
+                    "SELECT orders.orderid, orders.orderdate, orders.totalamount\
+                    FROM orders, customers\
+                    WHERE orders.customerid = customers.customerid and orders.status IS NOT NULL\
+                    and customers.username = '"+username+"'")
+        orders = list(db_result)
+        for orden in orders:
+            historial_list.append(dict)
+            historial_list[0]['order'] = []
+            historial_list[0]['order'].append(de_tupla_lista(orden))
+
+            # Obtener las orderdetails de la order anterior
+            db_result = db_conn.execute(
+                        "SELECT orderdetail.prod_id, orderdetail.price, orderdetail.quantity\
+                        FROM orderdetail, orders\
+                        WHERE orders.orderid = orderdetail.orderid and orders.orderid = "+historial_list[0]['order'][0]+"'"
+        )
+
+        
+
+        db_conn.close()
+        return saldo_username
+            
+    except:
+        if db_conn is not None:
+            db_conn.close()
+        print("Exception in DB access:")
+        print("-"*60)
+        traceback.print_exc(file=sys.stderr)
+        print("-"*60)
+
         return False

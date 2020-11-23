@@ -20,7 +20,7 @@ $$
 					WHERE orderid = NEW.orderid
 				) as t0
 			) AS t;
-			
+		WHERE NEW.orderid = orderid
 			RETURN NEW;
 		ELSE
 			RETURN NULL;

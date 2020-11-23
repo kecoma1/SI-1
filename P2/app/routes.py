@@ -12,15 +12,6 @@ import hashlib
 import random
 import datetime
 
-# Catálogo
-catalogue = None
-catalogue_data = open(os.path.join(
-    app.root_path, 'catalogue/catalogue.json')).read()
-catalogue = json.loads(catalogue_data)
-
-# Variables para guardar el usuario logeado
-loaded_posters = False
-
 # Stack donde guardamos las urls visitadas
 stack_url = deque()
 
@@ -30,22 +21,6 @@ def stack_push(url):
     """
     global stack_url
     stack_url.append(url)
-
-
-def cargar_films():
-    """
-        Función que carga las peliculas en una lista usada en el carrito 
-    """
-    global catalogue
-    carrito_films = []
-    for film in catalogue['peliculas']:
-        if str(film['id']) in session:
-            i = 0
-            while i < session[str(film['id'])]:
-                carrito_films.append(film)
-                i += 1
-    return carrito_films
-
 
 def logged():
     """
@@ -72,7 +47,6 @@ def getTotalCarrito(carrito_films):
 @app.route('/')
 @app.route('/index')
 def index():
-    global catalogue
     top_films = database.db_top_films()
     if top_films == False:
         return
@@ -138,7 +112,7 @@ def login_page_GET():
         for id in session:
             if id != 'usuario':
                 session[id] = 0
-        return redirect(url_for('index'))
+        return redirect(url_for('login_page_GET'))
     else:
         stack_push(request.url)
         return render_template('login.html', title='login', logged=logged())
@@ -240,10 +214,6 @@ def signup_page():
             age = 'null'
         if len(age) > 50:
             return render_template('signup.html', title='signup', logged=logged(), error="Los datos no fueron introducidos correctamente")
-
-        income = request.form['income']
-        if income == '':
-            income = 'null'
         
         gender = request.form['gender']
         if gender == '':
@@ -258,7 +228,7 @@ def signup_page():
         if database.registrar(firstname, lastname, address1, address2, 
                            city, state, zipcode, country, region, email, 
                            phone, creditcardType, creditcard, creditcardexpiration, 
-                           username, password, age, income, gender) == False:
+                           username, password, age, gender) == False:
             session.permanent = False
             session['usuario'] = username
             return render_template('signup.html', title='signup', logged=logged(), error="Ya existe ese usurname o hubo un error")
@@ -280,36 +250,20 @@ def signup_page_get():
 
 @app.route("/historial.html", methods=['GET'])
 def historial():
-    return redirect(url_for('index'))
     if logged():
-        #TODO implementar esto con los triggers
-        # Cargando el archivo del usuario
-        dir_path = homedir = os.path.expanduser("~")
-        dir_path += "/public_html/usuarios/"+session['usuario']
-        f = open(dir_path+"/datos.dat", "r")
-        data = f.read()
-        f.close()
-        data = data.split(' ')
-        saldo = data[4]
-        f.close()
-
-        f = open(dir_path+"/historial.json", "r")
-        if f is not None:
-            historial_data = f.read()
-            if historial_data != '':
-                historial = json.loads(historial_data)
-            else:
-                historial = []
-            f.close()
-        stack_push(request.url)
+        username = session['usuario']
+        # Obtenemos el saldo -> getSaldo(username)
+        saldo = database.getSaldo(username)
+        # Obtenemos las orders así [order -> ordfda, orderdetail[]]
+        historial = database.getHistorial(username)
+        
         return render_template('historial.html', logged=logged(), saldo=saldo, historial=historial)
     else:
-        return redirect(url_for('index'))
+        return redirect(url_for('login_page_GET'))
 
 
 @app.route("/carrito.html", methods=['GET'])
 def carrito():
-    global catalogue
     total = 0
     if logged():
         carrito_films = database.carritoFilms(session['usuario'])
@@ -329,7 +283,6 @@ def carrito():
 
 @app.route("/index/<id>", methods=['GET'])
 def film_detail(id):
-    global catalogue
     pelicula = database.getPelicula(id)
     if pelicula == False:
         print("Error cogiendo la película")
@@ -355,7 +308,6 @@ def film_detail(id):
 
 @app.route("/cargar_categoria/<string:categoria>", methods=['GET'])
 def category(categoria):
-    global catalogue
     peliculas_categoria = database.categoria(categoria)
     if peliculas_categoria == False:
         return redirect(url_for('index'))
@@ -365,7 +317,6 @@ def category(categoria):
 
 @app.route("/busqueda", methods=['POST'])
 def busqueda():
-    global catalogue
     busqueda = request.form['search']
 
     # Buscamos la pelicula en la base de datos
@@ -476,126 +427,54 @@ def eliminar_carrito(id):
             return redirect(url_for('index'))
     return redirect(url_for('carrito'))
 
+
 @app.route("/comprar_todo", methods=['POST'])
 def comprar_todo():
-    global catalogue
-    precio = 0
-    lista_pelis = []
-    if logged() == True:
-        # Buscamos las peliculas del carrito
-        for film in catalogue['peliculas']:
-
-            # Si la pelicula esta en el carrito calcular precio total
-            if str(film['id']) in session:
-                precio += film['precio']*int(session[str(film['id'])])
-                lista_pelis.append(film)
-
-        # Comprobamos si hay saldo suficiente
-        if saldo > precio:
-
-            # Eliminando información anterior del archivo
-            f.seek(0)
-            f.truncate()
-
-            f.write(data[0]+" "+data[1]+" " +
-                    data[2]+" "+data[3]+" "+str(saldo))
-            f.close()
-            f = open(dir_path+"/historial.json", "r+")
-            historial_data = f.read()
-
-            if historial_data != '':
-                historial = json.loads(historial_data)
-            else:
-                historial = []
-
-            now = datetime.datetime.now()
-            for film in lista_pelis:
-                historial.append(film)
-                historial[-1]['time'] = now.strftime(
-                    "%Y-%m-%d %H:%M:%S")
-                historial[len(historial)-1]['movement_id'] = len(historial)
-                historial[len(historial)-1]['quantity'] = session[str(film['id'])]
-            
-            f.seek(0)
-            f.truncate()
-            json.dump(historial, f)
-            f.close()
-
-            for pelicula in lista_pelis:
-                if str(pelicula['id']) in session:
-                    session.pop(str(pelicula['id']), None)
-                else:
-                    pass
-        
-            return render_template('carrito.html', logged=logged(), carrito_films=carrito_films, error="Compra realizada con exito")
-
+    if logged():
+        if database.comprarTodo(session['usuario']) == False:
+            carrito_films = database.carritoFilms(session['usuario'])
+            if carrito_films == False:
+                return redirect(url_for('carrito'))
+                
+            total = getTotalCarrito(carrito_films)
+            return render_template('carrito.html', logged=logged(), carrito_films=carrito_films, total=total, error="ERROR, consulte su saldo")
         else:
-        
-            return render_template('carrito.html', logged=logged(), carrito_films=carrito_films, error="No hay suficiente saldo")
-
-    return render_template('carrito.html', logged=logged(), carrito_films=carrito_films, error="Haga login para comprar")
+            carrito_films = []
+            total = 0
+            return render_template('carrito.html', logged=logged(), carrito_films=carrito_films, total=total, error="Compra realizada con éxito")
+    else:
+        carrito_films = database.carritoFilms(session['usuario'])
+        if carrito_films == False:
+                return redirect(url_for('carrito'))
+                
+        total = getTotalCarrito(carrito_films)
+        return render_template('carrito.html', logged=logged(), carrito_films=carrito_films, total=total, error="Haga login para comprar")
 
 
 @app.route("/realizar_compra/<string:id>", methods=['POST', 'GET'])
 def realizar_compra(id):
-    global catalogue
     if logged():
-        # Cargando el archivo del usuario
-        dir_path = homedir = os.path.expanduser("~")
-        dir_path += "/public_html/usuarios/"+session['usuario']
-        f = open(dir_path+"/datos.dat", "r+")
-        data = f.read()
-        data = data.split(' ')
-        saldo = float(data[4])
+        if database.comprarUnidad(id, session['usuario']) == False:
+            carrito_films = database.carritoFilms(session['usuario'])
+            if carrito_films == False:
+                return redirect(url_for('carrito'))
+                
+            total = getTotalCarrito(carrito_films)
+            return render_template('carrito.html', logged=logged(), carrito_films=carrito_films, total=total, error="ERROR, consulte su saldo")
+        else:
+            carrito_films = database.carritoFilms(session['usuario'])
+            if carrito_films == False:
+                return redirect(url_for('carrito'))
+                
+            total = getTotalCarrito(carrito_films)
+            return render_template('carrito.html', logged=logged(), carrito_films=carrito_films, total=total, error="Compra realizada con éxito")
+    else:
+        carrito_films = database.carritoFilms(session['usuario'])
+        if carrito_films == False:
+                return redirect(url_for('carrito'))
 
-        if logged() == True:
-            for film in catalogue['peliculas']:
-                if id in session and str(film['id']) == id:
-                    if saldo > float(film['precio']):
-                        saldo = saldo - film['precio']
-
-                        # Eliminando información anterior del archivo
-                        f.seek(0)
-                        f.truncate()
-
-                        f.write(data[0]+" "+data[1]+" " +
-                                data[2]+" "+data[3]+" "+str(saldo))
-                        f.close()
-                        f = open(dir_path+"/historial.json", "r+")
-                        historial_data = f.read()
-
-                        if historial_data != '':
-                            historial = json.loads(historial_data)
-                        else:
-                            historial = []
-
-                        historial.append(film)
-                        now = datetime.datetime.now()
-                        historial[-1]['time'] = now.strftime(
-                            "%Y-%m-%d %H:%M:%S")
-                        historial[-1]['movement_id'] = len(historial)
-                        historial[len(historial)-1]['quantity'] = 1
-                        f.seek(0)
-                        f.truncate()
-                        json.dump(historial, f)
-                        f.close()
-
-                        if str(film['id']) in session:
-                            session[str(film['id'])] -= 1
-                            if session[str(film['id'])] == 0:
-                                session.pop(str(film['id']), None)
-                            else:
-                                pass
-
-                    
-                        return render_template('carrito.html', logged=logged(), carrito_films=carrito_films, error="Compra realizada con exito")
-
-                    else:
-                    
-                        return render_template('carrito.html', logged=logged(), carrito_films=carrito_films, error="No hay suficiente saldo")
-
-
-    return render_template('carrito.html', logged=logged(), carrito_films=carrito_films, error="Haga login para comprar")
+        total = getTotalCarrito(carrito_films)
+        return render_template('carrito.html', logged=logged(), carrito_films=carrito_films, total=total, error="Haga login para comprar")
 
 
 @app.route("/index/cargar_categoria/<string:categoria>", methods=['GET'])
@@ -608,12 +487,11 @@ def redirect_category(categoria):
 
 @app.route("/index/busqueda", methods=['POST'])
 def redirect_busqueda():
-    global catalogue
+    # Buscamos la pelicula en la base de datos
     busqueda = request.form['search']
-    peliculas = []
-    for film in catalogue['peliculas']:
-        if busqueda in film['titulo']:
-            peliculas.append(film)
+    peliculas = database.buscarPeliculas(busqueda)
+    if peliculas == False:
+        return redirect(url_for('index'))
     stack_push(request.url)
     return redirect(url_for('busqueda', movies=peliculas))
 
@@ -627,20 +505,10 @@ def redirect_realizar_compra(id):
 def introducir_saldo():
     if logged():
         saldo_a_introducir = request.form['input_saldo']
-        dir_path = homedir = os.path.expanduser("~")
-        dir_path += "/public_html/usuarios/"+session['usuario']
-        f = open(dir_path+"/datos.dat", "r+")
-        data = f.read()
-        data = data.split(' ')
-        saldo = data[4]
-        saldo_actual = float(saldo)
-        saldo = float(saldo_a_introducir)+float(saldo_actual)
-
-        f.seek(0)
-        f.truncate()
-
-        f.write(data[0]+" "+data[1]+" "+data[2]+" "+data[3]+" "+str(saldo))
-        f.close()
-        return redirect(url_for('historial'))
+        if database.introducir_saldo(session['usuario'], saldo_a_introducir) == False:
+            print("Error al introducir el saldo")
+            return redirect(url_for('historial'))
+        else:
+            return redirect(url_for('historial'))
     else:
-        return redirect(url_for('index'))
+        return redirect(url_for('login_page_GET'))
