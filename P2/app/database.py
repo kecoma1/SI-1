@@ -882,9 +882,19 @@ def introducir_saldo(username, saldo_a_introducir):
         db_result = db_conn.execute("SELECT customerid FROM customers WHERE username = '"+username+"'")
         customerid = list(db_result)[0][0]
 
-        # Ponemos el status del carrito a paid
-        db_conn.execute("UPDATE orders SET income = income+"+saldo_a_introducir+"\
-                        WHERE orderid = "+str(customerid)+"")
+        # Obtenemos el saldo
+        db_result = db_conn.execute("SELECT income FROM customers WHERE customerid = "+str(customerid)+"")
+        saldo = list(db_result)[0][0]
+
+        if saldo is not None:
+            # Aumentamos el saldo
+            saldo += int(saldo_a_introducir)
+            db_conn.execute("UPDATE customers SET income = "+str(saldo)+"\
+                            WHERE customerid = "+str(customerid)+"")
+        else:
+            # Asignamos saldo
+            db_conn.execute("UPDATE customers SET income = "+saldo_a_introducir+"\
+                            WHERE customerid = "+str(customerid)+"")
 
         db_conn.close()
         return True
