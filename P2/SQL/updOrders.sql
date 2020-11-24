@@ -15,7 +15,7 @@ $$
 			FROM	
 				(
 					-- Calculamos precio total de producto*cantidad
-					SELECT NEW.quantity*NEW.price AS total 
+					SELECT quantity*price AS total 
 					FROM orderdetail 
 					WHERE orderid = NEW.orderid
 				) as t0

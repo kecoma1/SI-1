@@ -18,7 +18,9 @@
           <img alt="{{articulo[1]}}" class="images">
         </a><br />
         <p>{{articulo[1]}}</p><br>
-        <p class="price">{{articulo[2]}}</p>{{articulo[4]}}
+        <p class="price">Neto: {{articulo[2]}}</p>
+        <p class="price">Total: {{(articulo[2]|int)+(articulo[2]|int)*0.21}}</p>
+        {{articulo[4]}}
         <form action="eliminar_carrito/{{articulo[3]}}" method="POST">
           <button type=submit class="buttonP">Eliminar</button>
         </form>

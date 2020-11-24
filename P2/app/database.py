@@ -578,6 +578,12 @@ def eliminarFilm(id, username):
             # Si solo hay una eliminamos la fila
             db_conn.execute("DELETE FROM orderdetail WHERE orderid = "+str(orderid_carrito)+" AND prod_id = "+id+"")
 
+        # Comprobar si el carrito esta vacío, si lo esta borrar el carrito
+        db_result = db_conn.execute("SELECT * FROM orderdetail WHERE orderid = "+str(orderid_carrito)+"")
+        result = list(db_result)
+        if len(result) == 0:
+            db_result = db_conn.execute("DELETE FROM orders WHERE orderid = "+str(orderid_carrito)+"")
+
         db_conn.close()
         return True
     except:
@@ -799,9 +805,17 @@ def comprarUnidad(id, username):
         else:
             # No tenemos más de un producto, eliminamos la cantidad
             db_conn.execute("DELETE FROM orderdetail WHERE orderid = "+str(orderid_carrito)+" AND prod_id = "+id+"")
-        
+
+        # Comprobar si el carrito esta vacío, si lo esta borrar el carrito
+        db_result = db_conn.execute("SELECT * FROM orderdetail WHERE orderid = "+str(orderid_carrito)+"")
+        result = list(db_result)
+        if len(result) == 0:
+            db_result = db_conn.execute("DELETE FROM orders WHERE orderid = "+str(orderid_carrito)+"")
+
         db_conn.close()
         return True
+        """
+        """    
     except:
         if db_conn is not None:
             db_conn.close()
@@ -940,10 +954,10 @@ def getHistorial(username):
 
         # Obtener las orders del usuario que no sean null
         db_result = db_conn.execute(
-                    "SELECT orders.orderid, orders.orderdate, orders.totalamount\
-                    FROM orders, customers\
-                    WHERE orders.customerid = customers.customerid and orders.status IS NOT NULL\
-                    and customers.username = '"+username+"'")
+                    "SELECT a.*\
+                    FROM orders AS a, customers AS b\
+                    WHERE a.customerid = b.customerid and a.status IS NOT NULL\
+                    and b.username = '"+username+"'")
         orders = list(db_result)
         i = 0
         for orden in orders:
@@ -954,9 +968,9 @@ def getHistorial(username):
 
             # Obtener las orderdetails de la order anterior
             db_result = db_conn.execute(
-                        "SELECT orderdetail.prod_id, orderdetail.price, orderdetail.quantity\
+                        "SELECT *\
                         FROM orderdetail\
-                        WHERE orderdetail.orderid = "+str(historial_list[0]['order'][0])+"")
+                        WHERE orderdetail.orderid = "+str(historial_list[i]['order'][0])+"")
             historial_list[i]['details'] = []
             for detail in list(db_result):
                 historial_list[i]['details'].append(de_tupla_lista(detail))
@@ -1041,6 +1055,40 @@ def getTotalCarrito(username):
 
         db_conn.close()
         return total
+    except:
+        if db_conn is not None:
+            db_conn.close()
+        print("Exception in DB access:")
+        print("-"*60)
+        traceback.print_exc(file=sys.stderr)
+        print("-"*60)
+
+        return False
+
+
+def getPrice(id):
+    """Función que devuelve el precio por unidad de un producto
+
+    Args:
+        id (string): Id del producto
+
+    Return:
+        Precio del producto en caso de éxito, en caso de error False
+    """
+    try:
+        # conexion a la base de datos
+        db_conn = None
+        db_conn = db_engine.connect()
+        historial_list = []
+
+        # Obtenemos el total
+        db_result = db_conn.execute("SELECT price FROM products WHERE prod_id = "+id+"")
+        result = list(db_result)
+        if len(result) == 0:
+            return False
+        else:
+            db_conn.close()
+            return result[0][0]
     except:
         if db_conn is not None:
             db_conn.close()

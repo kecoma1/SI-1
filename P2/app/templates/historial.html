@@ -14,16 +14,26 @@
           <tr>
             <th colspan="3" class="tableHistorial">Tus movimientos:</th>
           </tr>
+          {% set variable = 0 %}
           {% for movimiento in historial %}
           <tr>
-            <td class="tableHistorial">{{movimiento["order"][]}}</td>
-            <td class="tableHistorial">{{movimiento.precio}}</td>
-            <td id="detail_{{movimiento.movement_id}}" class="details">{{movimiento.time}} - Cantidad: {{movimiento.quantity}}</td>
-            <script>
-              $("#detail_{{movimiento.movement_id}}").click(function(){
-                $("#detail_{{movimiento.movement_id}}").css("font-size", "25px");
-              });
-            </script>
+             <!-- Id orders -->
+            <td class="tableHistorial">{{movimiento["order"][0]}}</td>
+            <!-- Time orders -->
+            <td class="tableHistorial">{{movimiento["order"][1]}}</td>
+            <!-- Precio orders -->
+            <td class="tableHistorial">{{movimiento["order"][2]}}</td>
+            
+            {% for detail in movimiento["details"] %}
+              <!-- Precio y quantity de details  id="detail_{{detail[0]}}" movimiento.movement_id -->
+              <td id="detail_{{detail[0]}}_{{detail[1]}}" class="tableHistorial">{{Id: detail[0] - Precio: detail[1]}} - Cantidad: {{detail[2]}}</td>
+              <script>
+                $("#detail_{{detail[0]}}_{{detail[1]}}").click(function(){
+                  $("#detail_{{detail[0]}}_{{detail[1]}}").css("font-size", "25px");
+                });
+              </script>
+              <!-- <a id="extendInfo" onclick="extendInfo()"><img src={{ url_for('static', filename="imagenes/utils/dot.png") }} alt="boton" class="small_img"></a> -->
+            {% endfor %}
           </tr>
           {% endfor %}
         </table>

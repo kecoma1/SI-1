@@ -16,21 +16,40 @@ import datetime
 stack_url = deque()
 
 def stack_push(url):
-    """
-        Guarda en la stack la dirección actual
+    """Guarda en la stack la dirección actual
+
+    Args:
+        url (string): URL de la página actual
     """
     global stack_url
     stack_url.append(url)
 
+
 def logged():
-    """
-        Función para comprobar si alguien ha hecho login 
+    """Función para comprobar si alguien ha hecho login 
+
+    Returns:
+        Bool: True si ha hecho login, False si no
     """
     if 'usuario' in session:
         return True
     else:
         return False
 
+
+def getSessionNetoCarrito(carrito):
+    """Función que calcula el total de la compra dada la sesión con el carrito
+
+    Args:
+        Carrito (list): Lista con las ids de cada producto en el carrito
+
+    Returns:
+        float: Precio total
+    """
+    precio = 0.0
+    for film in carrito:
+        precio += float(database.getPrice(film))
+    return precio
 
 @app.route('/')
 @app.route('/index')
@@ -212,7 +231,6 @@ def signup_page():
         
 
         creditcard = creditcard.replace(' ', '')
-        # TODO Comprobar si hay cartera o no, wallet = random.randrange(0, 100)
 
         if database.registrar(firstname, lastname, address1, address2, 
                            city, state, zipcode, country, region, email, 
@@ -245,6 +263,9 @@ def historial():
         saldo = database.getSaldo(username)
         # Obtenemos las orders así [order -> 1, mov..., detail -> [[1, mov, ...] [2, ...]]
         historial = database.getHistorial(username)
+        if historial == False:
+            print("Error al obtener el historial")
+            return redirect(url_for('login_page_GET'))
         
         return render_template('historial.html', logged=logged(), saldo=saldo, historial=historial)
     else:
@@ -254,6 +275,7 @@ def historial():
 @app.route("/carrito.html", methods=['GET'])
 def carrito():
     total = 0
+    neto = 0
     if logged():
         carrito_films = database.carritoFilms(session['usuario'])
         if carrito_films == False:
@@ -267,14 +289,15 @@ def carrito():
         if 'carrito' in session:
             if session['carrito'] != 0:
                 carrito_films = database.carritoFilmsFromSession(session['carrito'])
-                total = database.getTotalCarrito(session['usuario'])
-                neto = database.getNetoCarrito(session['usuario'])
+                neto = getSessionNetoCarrito(session['carrito'])
+                total = 0 # Como no sabémos el tax no podemos calcular el total
             else: 
                 carrito_films = []
+            return render_template('carrito.html', logged=logged(), carrito_films=carrito_films, total=float(round(total, 2)),  total2=float(round(neto, 2)), error="TAX no aplicado")
         else:
             carrito_films = []
     stack_push(request.url)
-    return render_template('carrito.html', logged=logged(), carrito_films=carrito_films, total=round(total, 2), total2=round(neto, 2))
+    return render_template('carrito.html', logged=logged(), carrito_films=carrito_films, total=float(round(total, 2)), total2=float(round(neto, 2)))
 
 
 @app.route("/index/<id>", methods=['GET'])
@@ -434,20 +457,20 @@ def comprar_todo():
                 
             total = database.getTotalCarrito(session['usuario'])
             neto = database.getNetoCarrito(session['usuario'])
-            return render_template('carrito.html', logged=logged(), carrito_films=carrito_films, total=round(total, 2),  total2=round(neto, 2), error="ERROR, consulte su saldo")
+            return render_template('carrito.html', logged=logged(), carrito_films=carrito_films, total=float(round(total, 2)),  total2=float(round(neto, 2)), error="ERROR, consulte su saldo")
         else:
             carrito_films = []
             total = 0
             neto = 0
-            return render_template('carrito.html', logged=logged(), carrito_films=carrito_films, total=round(total, 2),  total2=round(neto, 2), error="Compra realizada con éxito")
+            return render_template('carrito.html', logged=logged(), carrito_films=carrito_films, total=float(round(total, 2)),  total2=float(round(neto, 2)), error="Compra realizada con exito")
     else:
-        carrito_films = database.carritoFilms(session['usuario'])
+        carrito_films = database.carritoFilmsFromSession(session['carrito'])
         if carrito_films == False:
                 return redirect(url_for('carrito'))
                 
-        total = database.getTotalCarrito(session['usuario'])
-        neto = database.getNetoCarrito(session['usuario'])
-        return render_template('carrito.html', logged=logged(), carrito_films=carrito_films, total=round(total, 2),  total2=round(neto, 2), error="Haga login para comprar")
+        neto = getSessionNetoCarrito(session['carrito'])
+        total = 0
+        return render_template('carrito.html', logged=logged(), carrito_films=carrito_films, total=float(round(total, 2)),  total2=float(round(neto, 2)), error="Haga login para comprar")
 
 
 @app.route("/realizar_compra/<string:id>", methods=['POST', 'GET'])
@@ -460,7 +483,7 @@ def realizar_compra(id):
                 
             total = database.getTotalCarrito(session['usuario'])
             neto = database.getNetoCarrito(session['usuario'])
-            return render_template('carrito.html', logged=logged(), carrito_films=carrito_films, total=round(total, 2),  total2=round(neto, 2), error="ERROR, consulte su saldo")
+            return render_template('carrito.html', logged=logged(), carrito_films=carrito_films, total=float(round(total, 2)),  total2=float(round(neto, 2)), error="ERROR, consulte su saldo")
         else:
             carrito_films = database.carritoFilms(session['usuario'])
             if carrito_films == False:
@@ -468,15 +491,15 @@ def realizar_compra(id):
                 
             total = database.getTotalCarrito(session['usuario'])
             neto = database.getNetoCarrito(session['usuario'])
-            return render_template('carrito.html', logged=logged(), carrito_films=carrito_films, total=round(total, 2),  total2=round(neto, 2), error="Compra realizada con éxito")
+            return render_template('carrito.html', logged=logged(), carrito_films=carrito_films, total=float(round(total, 2)),  total2=float(round(neto, 2)), error="Compra realizada con éxito")
     else:
-        carrito_films = database.carritoFilms(session['usuario'])
+        carrito_films = database.carritoFilmsFromSession(session['carrito'])
         if carrito_films == False:
                 return redirect(url_for('carrito'))
 
-        total = database.getTotalCarrito(session['usuario'])
-        neto = database.getNetoCarrito(session['usuario'])
-        return render_template('carrito.html', logged=logged(), carrito_films=carrito_films, total=round(total, 2),  total2=round(neto, 2), error="Haga login para comprar")
+        neto = getSessionNetoCarrito(session['carrito'])
+        total = 0
+        return render_template('carrito.html', logged=logged(), carrito_films=carrito_films, total=float(round(total, 2)),  total2=float(round(neto, 2)), error="Haga login para comprar")
 
 
 @app.route("/index/cargar_categoria/<string:categoria>", methods=['GET'])
@@ -518,3 +541,8 @@ def introducir_saldo():
             return redirect(url_for('historial'))
     else:
         return redirect(url_for('login_page_GET'))
+
+"""@app.route("/historial.html", methods=['GET'])
+def extendInfo:
+"""
+
