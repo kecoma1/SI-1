@@ -54,7 +54,10 @@ def getSessionNetoCarrito(carrito):
 @app.route('/')
 @app.route('/index')
 def index():
-    top_films = database.db_top_films()
+    top_films = [[442893, 'Wizard of Oz, The (1939)', '', 0, '1939', 0], 
+                 [229764, 'Life Less Ordinary, A (1997)', '', 0, '1997', 0],
+                 [149475, 'Gang Related (1997)', '', 0, '1997', 0]]
+    #top_films = database.db_top_films()
     if top_films == False:
         return
     stack_push(request.url)
