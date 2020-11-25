@@ -1023,9 +1023,9 @@ def getHistorial(username):
 
             # Obtener las orderdetails de la order anterior
             db_result = db_conn.execute(
-                        "SELECT *\
-                        FROM orderdetail\
-                        WHERE orderdetail.orderid = "+str(historial_list[i]['order'][0])+"")
+                        "SELECT b.*\
+                        FROM orderdetail AS a, products AS b\
+                        WHERE a.orderid = "+str(historial_list[i]['order'][0])+" AND a.prod_id = b.prod_id")
             historial_list[i]['details'] = []
             for detail in list(db_result):
                 historial_list[i]['details'].append(de_tupla_lista(detail))
