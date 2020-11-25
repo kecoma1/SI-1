@@ -790,6 +790,21 @@ def comprarUnidad(id, username):
         db_result = db_conn.execute("SELECT price FROM products WHERE prod_id = "+id+"")
         price = list(db_result)[0][0]
 
+        # Obtenemos el saldo
+        db_result = db_conn.execute("SELECT income FROM customers WHERE customerid = "+str(customerid)+"")
+        saldo = list(db_result)[0][0]
+
+        # Comprobamos si hay saldo suficiente
+        if saldo < price:
+            db_conn.close()
+            return True
+        else:
+            # Si lo hay reducimos el saldo
+            saldo -= price
+            db_conn.execute("UPDATE customers\
+                        SET income = "+str(saldo)+"\
+                        WHERE customerid = "+str(customerid)+"")
+
         # Creamos el orderdetail correspondiente
         db_conn.execute("INSERT INTO orderdetail (orderid, prod_id, price, quantity)\
                             VALUES ("+str(orderid)+", "+id+", "+str(price)+",1)")
@@ -813,9 +828,7 @@ def comprarUnidad(id, username):
             db_result = db_conn.execute("DELETE FROM orders WHERE orderid = "+str(orderid_carrito)+"")
 
         db_conn.close()
-        return True
-        """
-        """    
+        return True 
     except:
         if db_conn is not None:
             db_conn.close()
@@ -849,6 +862,38 @@ def comprarTodo(username):
             return False
         else:
             orderid_carrito = orderid_carrito[0][0]
+
+        # Obtenemos el precio
+        db_result = db_conn.execute("SELECT totalamount FROM orders\
+                                    WHERE orderid = "+str(orderid_carrito)+"")
+        price = list(db_result)
+        if len(price) > 0:
+            price = price[0][0]
+            if price is None:
+                db_conn.close()
+                return False
+        else:
+            db_conn.close()
+            return False
+        
+        # Cogemos el customerid
+        db_result = db_conn.execute("SELECT customerid FROM customers WHERE username = '"+username+"'")
+        customerid = list(db_result)[0][0]
+
+        # Obtenemos el saldo
+        db_result = db_conn.execute("SELECT income FROM customers WHERE customerid = "+str(customerid)+"")
+        saldo = list(db_result)[0][0]
+
+         # Comprobamos si hay saldo suficiente
+        if saldo < price:
+            db_conn.close()
+            return True
+        else:
+            # Si lo hay reducimos el saldo
+            saldo -= price
+            db_conn.execute("UPDATE customers\
+                        SET income = "+str(saldo)+"\
+                        WHERE customerid = "+str(customerid)+"")
 
         # Ponemos el status del carrito a paid
         db_conn.execute("UPDATE orders SET status = 'Paid'\
