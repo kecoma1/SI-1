@@ -107,7 +107,7 @@ def login_page_POST():
 
             return redirect(url_for('index'))
         else:
-            return render_template('login.htailml', title='login', logged=logged(), error="El usuario o la contrasenha son incorrectos")
+            return render_template('login.html', title='login', logged=logged(), error="El usuario o la contrasenha son incorrectos")
     else:
         return render_template('signup.html', title='signup', logged=logged(), error="Los datos no fueron introducidos correctamente")
 
