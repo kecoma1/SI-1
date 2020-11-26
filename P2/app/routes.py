@@ -241,6 +241,11 @@ def signup_page():
                            username, password, age, gender) == False:
             session.permanent = False
             session['usuario'] = username
+
+            if 'carrito' in session:    
+                if database.addSessionToCarrito(session['carrito'], username) == False:
+                    print("Error anadiendo las películas de la sesión a la BD")
+
             return render_template('signup.html', title='signup', logged=logged(), error="Ya existe ese usurname o hubo un error")
         else:
             session.permanent = False
