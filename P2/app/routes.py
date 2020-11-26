@@ -104,6 +104,7 @@ def login_page_POST():
             if 'carrito' in session:    
                 if database.addSessionToCarrito(session['carrito'], username) == False:
                     print("Error anadiendo las películas de la sesión a la BD")
+                session.pop('carrito', None)
 
             return redirect(url_for('index'))
         else:
@@ -242,12 +243,13 @@ def signup_page():
             session.permanent = False
             session['usuario'] = username
 
+            return render_template('signup.html', title='signup', logged=logged(), error="Ya existe ese usurname o hubo un error")
+        else:
             if 'carrito' in session:    
                 if database.addSessionToCarrito(session['carrito'], username) == False:
                     print("Error anadiendo las películas de la sesión a la BD")
+                session.pop('carrito', None)
 
-            return render_template('signup.html', title='signup', logged=logged(), error="Ya existe ese usurname o hubo un error")
-        else:
             session.permanent = False
             session['usuario'] = username
             return redirect(url_for('index'))
