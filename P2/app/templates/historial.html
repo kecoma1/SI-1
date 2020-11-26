@@ -3,114 +3,76 @@
 {% block titleHead %}Historial{% endblock %}
 
 {% block body %}
-
-  <main>
+<main>
     <div class="mainHistorial">
-      <div>
-        <h1>Historial</h1>
-      </div>
-
-
-
-
-
-      <div>
-        <table id="table_historial" class="tableHistorial">
-          <tr>
-            <th colspan="3" class="tableHistorial">Tus movimientos:</th>
-          </tr>
-          {% for movimiento in historial %}
-          <tr>
-             <!-- Id orders -->
-            <td class="tableHistorial">{{movimiento["order"][0]}}</td>
-            <!-- Time orders -->
-            <td class="tableHistorial">{{movimiento["order"][1]}}</td>
-            <!-- Precio orders -->
-            <td class="tableHistorial">{{movimiento["order"][2]}}</td>
-            <tr>
-              <td class="tableHistorial" colspan="1"><button onclick="aparecer()">Mas info</button></td>
-              <td class="tableHistorial" colspan="1">Pedidos del order:</td>
-              <td class="tableHistorial" colspan="1"><button onclick="desaparecer()">Menos info</button></td>
-            </tr>
-            <div id="prueba2">
-              <tr>
-              {% for detail in movimiento["details"] %}
-                <!-- Precio y quantity de details -->
-                <td id="detail_{{detail[0]}}_{{detail[1]}}" class="tableHistorial">Precio: {{detail[2]}} - Cantidad: {{detail[3]}}</td>
-                
-                <!-- <script>
-                  $("#detail_{{detail[0]}}_{{detail[1]}}").click(function(){
-                    $("#detail_{{detail[0]}}_{{detail[1]}}").css("font-size", "25px");
-                  });
-                </script> -->
-                <!-- <a id="extendInfo" onclick="extendInfo()"><img src={{ url_for('static', filename="imagenes/utils/dot.png") }} alt="boton" class="small_img"></a> -->
-                
-              {% endfor %}
-              </tr>
-            </div>
-          </tr>
-          {% endfor %}
-        </table>
-      </div>
-
-      <div id="prueba">
-        <table id="table_historial" class="tableHistorial">
-          {% for movimiento in historial %}
-            {% for detail in movimiento["details"] %}
-              <!-- Precio y quantity de details -->
-              <td id="detail_{{detail[0]}}_{{detail[1]}}" class="tableHistorial">Precio: {{detail[2]}} - Cantidad: {{detail[3]}}</td>
-              
-              <!-- <script>
-                $("#detail_{{detail[0]}}_{{detail[1]}}").click(function(){
-                  $("#detail_{{detail[0]}}_{{detail[1]}}").css("font-size", "25px");
-                });
-              </script> -->
-              <!-- <a id="extendInfo" onclick="extendInfo()"><img src={{ url_for('static', filename="imagenes/utils/dot.png") }} alt="boton" class="small_img"></a> -->
-              
-            {% endfor %}
-          {% endfor %}
-          </tr>
-        </table>
-      </div>
-      
-      <!--
-      <button onclick="desaparece()">desaparece</button>
-      <button onclick="aparece()">aparece</button>
-      <div id="prueba">
-        <table>
-          <th>
-            prueba
-          </th>
-          <tr>
-            <td>
-              algo
-            </td>
-          </tr>
-        </table>
-      </div>
-      -->
-
-      <br>
-      <div>
-        <table class="tableHistorial">
-          <tr>
-            <th class="tableHistorial">
-              Tu saldo:
-            </th>
-          </tr>
-          <tr>
-            <td class="tableHistorial">{{saldo}}</td>
-          </tr>
-        </table>
-      </div>
-      <br>
-      <div>
-        <form action="introducir_saldo" method="POST">
-          <input id="Saldo_a_introducir" name="input_saldo" type="text" placeholder="Introduzca la cantidad"
-            required><br>
-          <button type="submit" name="button" class="opciones">Añadir saldo</button>
-        </form>
-      </div>
+        <div>
+            <h1>Historial</h1>
+        </div>
+        <div>
+            <table id="table_historial" class="tableHistorial">
+                <tr class="header_row_table">
+                    <th class="">Id orden</th>
+                    <th class="">Fecha</th>
+                    <th class="">Precio neto</th>
+                    <th class="">Impuesto</th>
+                    <th class="">Precio total</th>
+                    <th class="">Estado</th>
+                </tr>
+                {% for movimiento in historial %}
+    
+                <tr onclick="cargar('{{movimiento["order"][0]}}', {{movimiento["order"][7]}})">
+                    <td class="orden">{{movimiento["order"][0]}}</td>
+                    <td class="orden">{{movimiento["order"][1]}}</td>
+                    <td class="orden">{{movimiento["order"][3]}}</td>
+                    <td class="orden">{{movimiento["order"][4]}}</td>
+                    <td class="orden">{{movimiento["order"][5]}}</td>
+                    <td class="orden">{{movimiento["order"][6]}}</td>
+                </tr>
+                    <tr id={{movimiento["order"][0]}}_ class="detalle">
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th class="detalle">Id producto</th>
+                        <th class="detalle">Precio neto</th>
+                        <th class="detalle">Versión</th>
+                    </tr>
+                    {% set counter = 0 -%}
+                    {% for detail in movimiento["details"] %}
+                    <tr id={{movimiento["order"][0]}}_{{ loop.index }} class="detalle">
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="detalle">{{detail[0]}}</td>
+                        <td class="detalle">{{detail[2]}}</td>
+                        <td class="detalle">{{detail[3]}}</td>
+                    </tr>
+                    {% set counter = counter + 1 %}
+                    {% endfor %}
+                </div>
+                {% endfor %}
+            </table>
+        </div>
+        <br>
+        <div>
+            <table class="tableHistorial">
+                <tr>
+                    <th class="orden">
+                        Tu saldo:
+                    </th>
+                </tr>
+                <tr>
+                    <td class="tableHistorial">{{saldo}}</td>
+                </tr>
+            </table>
+        </div>
+        <br>
+        <div>
+            <form action="introducir_saldo" method="POST">
+                <input id="Saldo_a_introducir" name="input_saldo" type="text" placeholder="Introduzca la cantidad"
+                    required><br>
+                <button type="submit" name="button" class="buttonP">Añadir saldo</button>
+            </form>
+        </div>
     </div>
-  </main>
+</main>
 {% endblock %}

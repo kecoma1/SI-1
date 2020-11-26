@@ -53,10 +53,24 @@ function loadNum() {
     xhttp.send();
 }
 
-function aparece(){
-    document.getElementById("prueba").style.opacity = "1";
-}
-
-function desaparece(){
-    document.getElementById("prueba").style.opacity = "0";
+function cargar(id, n){
+    var id_ = id+"_"
+    var col = document.getElementById(id_);
+    if (col.style.display == "none") {
+        col.style.display = "table-row";
+    } else {
+        col.style.display = "none";
+    }
+    var i = 0;
+    
+    for (i = 1; i <= n; i++) {
+        id_ = id+"_"+i
+        col = document.getElementById(id_);
+        if (col.style.display == "none") {
+            col.style.display = "table-row";
+        } else {
+            col.style.display = "none";
+        }
+        
+    }
 }

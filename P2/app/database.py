@@ -1037,6 +1037,7 @@ def getHistorial(username):
                     and b.username = '"+username+"'")
         orders = list(db_result)
         i = 0
+        
         for orden in orders:
             historial_list.append([])
             historial_list[i] = dict()
@@ -1049,8 +1050,11 @@ def getHistorial(username):
                         FROM orderdetail AS a, products AS b\
                         WHERE a.orderid = "+str(historial_list[i]['order'][0])+" AND a.prod_id = b.prod_id")
             historial_list[i]['details'] = []
+            n = 0
             for detail in list(db_result):
                 historial_list[i]['details'].append(de_tupla_lista(detail))
+                n += 1
+            historial_list[i]['order'].append(n)
             i += 1
 
         db_conn.close()

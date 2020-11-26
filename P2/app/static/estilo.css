@@ -415,21 +415,6 @@ meter {
   transition: 500ms;
 }
 
-.opciones {
-  text-align: center;
-  font-size: 20px;
-  margin: 0px;
-  transition: 500ms;
-  border: 1px;
-  border-radius: 5px;
-  border-style: solid;
-  background-color: darkseagreen;
-}
-
-.opciones:hover {
-  font-size: 25px;
-}
-
 .mainHistorial {
   width: 90%;
   display: flex;
@@ -441,10 +426,33 @@ meter {
 }
 
 .tableHistorial {
-  border: 2px solid darkseagreen;
   padding: 10px;
 }
 
+.orden {
+  background-color: #333;
+  color: white;
+  padding: 18px;
+  border: none;
+  text-align: left;
+  outline: none;
+}
+
+.detalle {
+  transition: max-height 0.2s ease-out;
+  background-color: #f1f1f1;
+  padding: 0 18px;
+  max-height: 0;
+  overflow: hidden;
+}
+
+.header_row_table {
+  background-color: rgb(175, 175, 175);
+}
+
+.header_row_table_detalle {
+  background-color: rgb(233, 233, 233);
+}
 
 meter::-webkit-meter-optimum-value {
   background: red;
