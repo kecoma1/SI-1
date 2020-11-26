@@ -52,3 +52,11 @@ function loadNum() {
     xhttp.open("GET", "prueba.txt", true);
     xhttp.send();
 }
+
+function aparece(){
+    document.getElementById("prueba").style.opacity = "1";
+}
+
+function desaparece(){
+    document.getElementById("prueba").style.opacity = "0";
+}
