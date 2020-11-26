@@ -28,35 +28,23 @@
             <!-- Precio orders -->
             <td class="tableHistorial">{{movimiento["order"][2]}}</td>
             <tr>
-              <td class="tableHistorial" colspan="3"><button onclick="function()">Pedidos del order:</button></td>
+              <td class="tableHistorial" colspan="1"><button onclick="aparecer()">Mas info</button></td>
+              <td class="tableHistorial" colspan="1">Pedidos del order:</td>
+              <td class="tableHistorial" colspan="1"><button onclick="desaparecer()">Menos info</button></td>
             </tr>
-            <style>
-              #"detail_{{movimiento["order"][0]}}"{
-                
-              }
-            </style>
-            <div id="detail_{{movimiento["order"][0]}}">
+            <div id="prueba2">
               <tr>
               {% for detail in movimiento["details"] %}
-                <!-- Precio y quantity de details  id="detail_{{detail[0]}}" movimiento.movement_id -->
+                <!-- Precio y quantity de details -->
                 <td id="detail_{{detail[0]}}_{{detail[1]}}" class="tableHistorial">Precio: {{detail[2]}} - Cantidad: {{detail[3]}}</td>
+                
                 <!-- <script>
                   $("#detail_{{detail[0]}}_{{detail[1]}}").click(function(){
                     $("#detail_{{detail[0]}}_{{detail[1]}}").css("font-size", "25px");
                   });
                 </script> -->
                 <!-- <a id="extendInfo" onclick="extendInfo()"><img src={{ url_for('static', filename="imagenes/utils/dot.png") }} alt="boton" class="small_img"></a> -->
-              
-                <script>
-                  function function(){
-                    var = Document.getElementById("detail_{{movimiento["order"][0]}}");
-                    if (x.style.display === "none"){
-                      x.style.display = "block";
-                    } else {
-                      x.style.display = "none";
-                    }
-                  }
-                </script>
+                
               {% endfor %}
               </tr>
             </div>
@@ -65,8 +53,42 @@
         </table>
       </div>
 
+      <div id="prueba">
+        <table id="table_historial" class="tableHistorial">
+          {% for movimiento in historial %}
+            {% for detail in movimiento["details"] %}
+              <!-- Precio y quantity de details -->
+              <td id="detail_{{detail[0]}}_{{detail[1]}}" class="tableHistorial">Precio: {{detail[2]}} - Cantidad: {{detail[3]}}</td>
+              
+              <!-- <script>
+                $("#detail_{{detail[0]}}_{{detail[1]}}").click(function(){
+                  $("#detail_{{detail[0]}}_{{detail[1]}}").css("font-size", "25px");
+                });
+              </script> -->
+              <!-- <a id="extendInfo" onclick="extendInfo()"><img src={{ url_for('static', filename="imagenes/utils/dot.png") }} alt="boton" class="small_img"></a> -->
+              
+            {% endfor %}
+          {% endfor %}
+          </tr>
+        </table>
+      </div>
       
-
+      <!--
+      <button onclick="desaparece()">desaparece</button>
+      <button onclick="aparece()">aparece</button>
+      <div id="prueba">
+        <table>
+          <th>
+            prueba
+          </th>
+          <tr>
+            <td>
+              algo
+            </td>
+          </tr>
+        </table>
+      </div>
+      -->
 
       <br>
       <div>
