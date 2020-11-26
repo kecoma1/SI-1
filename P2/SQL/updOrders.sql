@@ -21,16 +21,14 @@ $$
 						WHERE orderid = NEW.orderid
 					) as t0
 				) AS t
-			WHERE NEW.orderid = orderid;
-				
+			WHERE NEW.orderid = orderid;	
 			RETURN NEW;
-			-- En el caso de que borremos tenemos que no tener en cuenta el id del product borrado
+		-- En el caso de que borremos tenemos que no tener en cuenta el id del product borrado
 		ELSIF (TG_OP = 'DELETE') THEN
 			UPDATE orders
 			SET netamount = t.precio, totalamount = t.precio+t.precio*((tax/100))
 			FROM
 				(
-				-- 
 				SELECT SUM(t0.total) AS precio
 				FROM	
 					(
@@ -41,8 +39,7 @@ $$
 						WHERE orderid = NEW.orderid AND prod_id != NEW.prod_id
 					) as t0
 				) AS t
-			WHERE NEW.orderid = orderid;
-				
+			WHERE NEW.orderid = orderid;	
 			RETURN NEW;		
 		ELSE
 			RETURN NULL;

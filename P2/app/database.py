@@ -794,10 +794,17 @@ def comprarUnidad(id, username):
         db_result = db_conn.execute("SELECT income FROM customers WHERE customerid = "+str(customerid)+"")
         saldo = list(db_result)[0][0]
 
+        # Comprobamos el stock
+        db_result = db_conn.execute("SELECT stock FROM inventory WHERE prod_id = "+id+"")
+        stock = list(db_result)[0][0]
+        if stock == 0:
+            db_conn.close()
+            return False
+
         # Comprobamos si hay saldo suficiente
         if saldo < price:
             db_conn.close()
-            return True
+            return False
         else:
             # Si lo hay reducimos el saldo
             saldo -= price
@@ -859,6 +866,7 @@ def comprarTodo(username):
                                     WHERE b.customerid = a.customerid AND b.username = '"+username+"' AND a.status IS NULL")
         orderid_carrito = list(db_result)
         if len(orderid_carrito) == 0:
+            db_conn.close()
             return False
         else:
             orderid_carrito = orderid_carrito[0][0]
@@ -883,6 +891,20 @@ def comprarTodo(username):
         # Obtenemos el saldo
         db_result = db_conn.execute("SELECT income FROM customers WHERE customerid = "+str(customerid)+"")
         saldo = list(db_result)[0][0]
+
+        # Comprobamos el stock de cada pelicula
+        db_result = db_conn.execute("SELECT prod_id, quantity FROM orderdetail WHERE  orderid = "+str(orderid_carrito)+"")
+        cantidad = []
+        for tupla in list(db_result):
+            cantidad.append( de_tupla_lista(tupla) )
+        
+        for film in cantidad:
+            # Consulta para obtener el stock
+            db_result = db_conn.execute("SELECT stock FROM inventory WHERE  prod_id = "+str(film[0])+"")
+            stock = list(db_result)[0][0]
+            if stock < film[1]:
+                print("No hay stock")
+                return False
 
          # Comprobamos si hay saldo suficiente
         if saldo < price:
