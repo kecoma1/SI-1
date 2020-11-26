@@ -8,9 +8,6 @@ VENTAS		NUMERIC
 )
 AS $$
 
-DECLARE
-i integer:= 0;
-
 BEGIN
 
 	RETURN QUERY
