@@ -31,20 +31,20 @@
                     <tr id={{movimiento["order"][0]}}_ class="detalle">
                         <th></th>
                         <th></th>
-                        <th></th>
                         <th class="detalle">Id producto</th>
                         <th class="detalle">Precio neto</th>
                         <th class="detalle">Versión</th>
+                        <th class="detalle">Cantidad</th>
                     </tr>
                     {% set counter = 0 -%}
                     {% for detail in movimiento["details"] %}
                     <tr id={{movimiento["order"][0]}}_{{ loop.index }} class="detalle">
                         <td></td>
                         <td></td>
-                        <td></td>
                         <td class="detalle">{{detail[0]}}</td>
                         <td class="detalle">{{detail[2]}}</td>
                         <td class="detalle">{{detail[3]}}</td>
+                        <td class="detalle">{{detail[4]}}</td>
                     </tr>
                     {% set counter = counter + 1 %}
                     {% endfor %}
