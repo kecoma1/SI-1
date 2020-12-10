@@ -12,7 +12,7 @@ import random
 db_engine = create_engine("postgresql://alumnodb:alumnodb@localhost/si1", echo=False)
 db_meta = MetaData(bind=db_engine)
 
-def db_top_films():
+def db_top_usa_films():
     """
         Función que nos devuelve las peliculas mas actuales de 
         USA (800)
@@ -22,6 +22,13 @@ def db_top_films():
             devuelve False en caso de error
     """
     try:
+        """
+        myclient = pymongo.MongoClient("mongodb://localhost:27017/")
+        mydb = myclient["si1"]
+
+        mycol = mydb["topUSA"]
+        mycol.delete_many({})
+        """
         # conexion a la base de datos
         db_conn = None
         db_conn = db_engine.connect()
@@ -37,22 +44,22 @@ def db_top_films():
         db_conn.close()
 
         # Obtenemos los valores buscados para meter en la base mongodb
-        movieid_list = []
-        title_list = []
-        year_list = []
-        for value in db_result:
-            # print(value[0])
-            movieid_list.append(value[0])
-            title_list.append(value[1])
-            year_list.append(value[2])
+        mainlist = []
 
-        # print(year_list)
+        list_db_result = list(db_result)
+        for value in list_db_result:
+            maindic = {}
+            maindic['title'] = value[1]
+            db_genres_list = db_genres(value[0])
+            maindic['genres'] = db_genres_list
+            maindic['year'] = value[2]
+            maindic['directors'] = db_directors(value[0])
+            maindic['actors'] = db_actors(value[0]) # Se puede limitar
+            maindic['most_related_movies'] = db_most_related(db_genres_list, db_result)
+            maindic['related_movies'] = db_related(db_genres_list, db_result)
+            mainlist.append(maindic)
 
-        genres_list = db_genres(movieid_list)
-        
-
-        # Convertimos a una lista las peliculas
-        pelis_list = []
+        return mainlist
        
     except:
         if db_conn is not None:
@@ -80,7 +87,7 @@ def db_genres(id):
         # Obtiene los genres de la movieid que pasamos
         db_result = db_conn.execute("select imdb_moviegenres.genre\
                                     from imdb_moviegenres\
-                                    where imdb_moviegenres.movieid = '"+id+"'") 
+                                    where imdb_moviegenres.movieid = '"+str(id)+"'") 
         db_conn.close()
         
         # Pasamos los valores de tupla a lista
@@ -117,7 +124,7 @@ def db_directors(id):
         db_result = db_conn.execute("select directorname\
                                     from imdb_directormovies, imdb_directors\
                                     where imdb_directormovies.directorid = imdb_directors.directorid\
-                                    and imdb_directormovies.movieid = '"+id+"'") 
+                                    and imdb_directormovies.movieid = '"+str(id)+"'") 
         db_conn.close()
         
         # Pasamos los valores de tupla a lista
@@ -154,7 +161,8 @@ def db_actors(id):
         db_result = db_conn.execute("select actorname\
                                     from imdb_actormovies, imdb_actors\
                                     where imdb_actormovies.actorid = imdb_actors.actorid and\
-                                    imdb_actormovies.movieid = '"+id+"'") 
+                                    imdb_actormovies.movieid = '"+str(id)+"'\
+                                    limit 5") 
         db_conn.close()
         
         # Pasamos los valores de tupla a lista
@@ -175,9 +183,81 @@ def db_actors(id):
         return False
 
 
-myclient = pymongo.MongoClient("mongodb://localhost:27017/")
-mydb = myclient["si1"]
+def db_most_related(lista, tuplas):
+    """
+    Función que nos devuelve una lista con las películas que tengan mismo generos
+    Return:
+        Devuelve una lista en caso de exito,
+        devuelve False en caso de error
+    """
+    if lista == None or tuplas == None:
+        return False
 
-mycol = mydb["topUSA"]
+    most_related_list = []
+    most_related_dic = {}
+    counter = 0
+    for value in tuplas:
+        if lista == db_genres(value[0]):
+            most_related_dic['title'] = value[1]
+            most_related_dic['year'] = value[2]
+            most_related_list.append(most_related_dic)
+            counter += 1
 
-db_top_films()
+        if counter >= 10:
+            break
+    
+    return most_related_list
+
+
+def db_related(lista, tuplas):
+    """
+    Función que nos devuelve una lista con las películas que tengan relación
+    Return:
+        Devuelve una lista en caso de exito,
+        devuelve False en caso de error
+    """
+
+    if lista == None or tuplas == None:
+        return False
+
+    length = len(lista)
+    related_list = []
+
+    if length == 1:
+        return related_list
+
+    related_dic = {}
+    counter = 0
+    for value in tuplas:
+
+        matches = 0
+        genres_list = db_genres(value[0])
+        for genre in genres_list:
+            if genre in lista:
+                matches += 1
+
+        if matches == (length/2):
+            related_dic['title'] = value[1]
+            related_dic['year'] = value[2]
+            related_list.append(related_dic)
+            counter += 1
+            
+        if counter >= 10:
+            break
+    
+    return related_list
+
+
+def main():
+    myclient = pymongo.MongoClient("mongodb://localhost:27017/")
+    mydb = myclient["si1"]
+
+    mycol = mydb["topUSA"]
+    mycol.drop()
+
+    top_usa = db_top_usa_films()
+
+    mycol.insert_many(top_usa)
+
+if __name__ == '__main__':
+    main()

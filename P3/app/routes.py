@@ -11,6 +11,7 @@ import sys
 import hashlib
 import random
 import datetime
+import pymongo
 
 # Stack donde guardamos las urls visitadas
 stack_url = deque()
@@ -111,7 +112,6 @@ def login_page_POST():
             return render_template('login.html', title='login', logged=logged(), error="El usuario o la contrasenha son incorrectos")
     else:
         return render_template('signup.html', title='signup', logged=logged(), error="Los datos no fueron introducidos correctamente")
-
 
 @app.route("/login.html", methods=['GET'])
 def login_page_GET():
@@ -264,6 +264,21 @@ def signup_page_get():
         stack_push(request.url)
         return render_template('signup.html', title='signup', logged=logged())
 
+
+@app.route("/topUSA.html", methods=['GET'])
+def topUSA():
+    myclient = pymongo.MongoClient("mongodb://localhost:27017/")
+    mydb = myclient["si1"]
+    mycol = mydb["topUSA"]
+    
+    # Comedias de 1997 con "Life" en el titulo
+    first_table = mycol.find({"year": "1997"}, {"genres":{$elemMatch: {"Comedy"}}},{"title": {$search: "Life"}})
+
+    # Peliculas dirigidas por Woody Allen en los 90
+    second_table = mycol.find({"year": {$lt:"2000"}}, {"directors":{$elemMatch:{"Woody Allen"}}})
+
+    # Peliculas en las que Johnny Galecki y Jim Parsons compartan reparto
+    third_table = mycol.find()
 
 @app.route("/historial.html", methods=['GET'])
 def historial():
