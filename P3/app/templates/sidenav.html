@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <title>sidenav</title>
+        <meta name="viewport" content="width=device-width, intial-scale=1.0">
+        <meta charset="UTF-8"/>
+        <link rel="stylesheet" href={{ url_for('static', filename="estilo.css") }}>
+        <script src={{ url_for('static', filename="javascript/javascript.js") }}></script>
+    </head>
+    <div id="sidenav" class="sidenav">
+        <a id="upNavButton" onclick="openNav()"><img src={{ url_for('static', filename="imagenes/utils/dot.png") }} alt="boton" onload="hideUpbottomNav()" class="small_img"></a>
+        <a id="sidevalues1" href={{ url_for('category', categoria='Short') }} target="_parent">Short</a>
+        <a id="sidevalues2" href={{ url_for('category', categoria='Animation') }} target="_parent">Animation</a>
+        <a id="sidevalues3" href={{ url_for('category', categoria='Horror') }} target="_parent">Horror</a>
+        <a id="sidevalues4" href={{ url_for('category', categoria='Drama') }} target="_parent">Drama</a>
+        <a id="sidevalues5" href={{ url_for('category', categoria='Biography') }} target="_parent">Biography</a>
+        <a id="sidevalues6" href={{ url_for('category', categoria='Action') }} target="_parent">Action</a>
+        
+        <a id="downNavButton" onclick="closeNav()" ><img src={{ url_for('static', filename="imagenes/utils/dot.png") }} alt="boton" class="small_img"></a>
+    </div>
+</html>

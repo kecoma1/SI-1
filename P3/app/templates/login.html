@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block titleHead %} Iniciar sesión {% endblock %}
+
+{% block body %}
+
+    <div class="info">
+        <header>
+            <h1>Login Usuario</h1>
+        </header>
+        <main>
+            <form action={{ url_for('login_page_POST') }} method="POST">
+                <label>Nombre de usuario</label><br>
+                <input id="username" name="username" type="text" placeholder="Introduzca el nombre de usuario" required>
+                <br><br>
+                <label>Contrasena</label><br>
+                <input id="password" name="password" type="password" placeholder="Introduzca la contrasena"
+                    required><br>
+                <button type="submit" class="buttonP">Login</button>
+            </form>
+        </main>
+        <div class="errorMsg">
+            <p id="errMSG">{{error}}</p>
+        </div>
+    </div>
+{% endblock %}

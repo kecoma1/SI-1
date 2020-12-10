@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block titleHead %}Inicio{% endblock %}
+
+{% block title %}
+    <div class="pageTitle">
+        <h1>Catálogo de películas</h1>
+    </div>
+{% endblock %}
+{% block content %}
+    <div class="mainSection">
+        {% for film in movies %}
+        <div class="movie">
+            <a href="index/{{film[0]}}">
+            <img src="../static/imagenes/peliculas/{{film[0]}}.jpg" alt="{{film[1]}}" class="images"></a><br>
+            <h3>{{film[1]}}</h3>
+        </div>
+        {% endfor %}
+    </div>
+{% endblock %}
+

@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block titleHead %}Carrito{% endblock %}</title>
+
+{% block body %}
+
+<main>
+  {% block title %}
+  <div class="pageTitle">
+    <h1>Tu Carrito</h1>
+  </div>
+  {% endblock %}
+  <div class="carritoPage">
+    <div class="mainSection">
+      {% for articulo in carrito_films %}
+      <div class="movie">
+        <a href="index/{{articulo[0]}}">
+          <img alt="{{articulo[1]}}" class="images">
+        </a><br />
+        <p>{{articulo[1]}}</p><br>
+        <p class="price">Neto: {{articulo[2]}}</p>
+        <p class="price">Total: {{(articulo[2]|int)+(articulo[2]|int)*0.21}}</p>
+        {{articulo[4]}}
+        <form action="eliminar_carrito/{{articulo[3]}}" method="POST">
+          <button type=submit class="buttonP">Eliminar</button>
+        </form>
+        <form action="realizar_compra/{{articulo[3]}}" method="POST">
+          <button type=submit class="buttonP">Comprar</button>
+        </form>
+      </div>
+      {% endfor %}
+    </div>
+    <div class="buyallButton">
+      <div class="errorMsg2">
+        <p id="errMSG">{{error}}</p>
+      </div>
+      Precio total:<p class="price">{{total}}</p>
+      Precio neto:<p class="price">{{total2}}</p>
+      <form action="comprar_todo" method="POST">
+        <button type=submit class="buttonP">Comprar todo</button>
+      </form>
+    </div>
+  </div>
+</main>
+{% endblock %}

@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block titleHead %}{{film[1]}}{% endblock %}
+
+{% block content %}
+<div class="info">
+  <header>
+  </header>
+  <div class="mainFilmDetail">
+    <h1>{{film[1]}}</h1>
+    <!--<img alt="{{film[1]}}" class="imagesFilmDetail"><br /> -->
+    <div class="venta">
+      {% for precio in precios %}
+      <p class="price">{{precio[0]}}</p>versión: {{precio[1]}}   
+      <form action="anhadir_carrito/{{precio[2]}}" method="POST">
+        <button type=submit class="buttonP">Comprar</button>
+      </form>
+      {% endfor %}
+    </div>
+    <p class="subsecciones">Directores:</p>
+    <div>
+      <p class="descmovieFilmDetail">
+        {% for director in directores %}
+          {{director}}<br>
+        {% endfor %}
+        <!-- {{film.categoria}} no mostramos ya la categoria-->
+      </p>
+    </div>
+    <p class="subsecciones">Actores principales:</p>
+    <div class="actores">
+      {% set counter = 0 %}
+      {% for actor in actores %}
+      <div class="actor">
+        <!-- <img src="" alt="Foto " class="images"> -->
+        <p class="descActor">
+          Nombre: {{actor[0]}}<br>
+          Personaje: {{actor[1]}}
+        </p>
+      </div>
+      {% set counter = counter+1 %}
+      <br>
+      {% if counter%3 == 0 %}
+      {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endblock %}

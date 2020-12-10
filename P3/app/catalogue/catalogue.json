@@ -1,0 +1,243 @@
+{
+    "peliculas": [{
+        "id": 1,
+        "titulo": "Joker",
+        "poster": "imagenes/peliculas/joker.jpg",
+        "director": "Todd Phillips",
+        "precio": 18.99,
+        "categoria": "Drama",
+        "descripcion": "Joker (conocida como Guasón en Hispanoamérica) es una película de suspenso y drama psicológico estadounidense de 2019 distribuida por Warner Bros. Pictures y basada en el Joker, personaje de DC Comics",
+        "anno": 2019,
+        "actores": [{
+                "nombre": "Joaquin Phoenix",
+                "personaje": "Joker",
+                "foto": "imagenes/actores/Joaquin.jpg"
+            },
+            {
+                "nombre": "Robert De Niro",
+                "personaje": "Murray Franklin",
+                "foto": "imagenes/actores/RobertDeNiro.jpg"
+            }
+        ]
+    }, {
+        "id": 2,
+        "titulo": "Cadena perpetua",
+        "poster": "imagenes/peliculas/cadena_perpetua.jpg",
+        "director": "FranK Darabont",
+        "precio": 68.99,
+        "categoria": "Drama",
+        "descripcion": "The Shawshank Redemption (Cadena perpetua en España; Sueño de fuga en Colombia, Chile, México, Perú y Venezuela; y Sueños de libertad o Escape a la libertad en Argentina) es una película estadounidense de 1994 escrita y dirigida por Frank Darabont y protagonizada por Tim Robbins y Morgan Freeman.",
+        "anno": 1994,
+        "actores": [{
+                "nombre": "Tim Robbins",
+                "personaje": "Andy Dufresne",
+                "foto": "imagenes/actores/TodRobbins.png"
+            },
+            {
+                "nombre": "Morgan Freeman",
+                "personaje": "Ellis Boyd",
+                "foto": "imagenes/actores/MorganFreeman.jpg"
+            }
+        ] 
+    }, {
+        "id": 3,
+        "titulo": "Spider-Man",
+        "poster": "imagenes/peliculas/spiderman.jpeg",
+        "director": "Sam Raimi",
+        "precio": 58.99,
+        "categoria": "Aventura",
+        "descripcion": "El mejor spiderman.",
+        "anno": 2002,
+        "actores": [{
+                "nombre": "Tobey Maguire",
+                "personaje": "Spider-Man, Peter Parker",
+                "foto": "imagenes/actores/TobeyMaguire.jpg"
+            },
+            {
+                "nombre": "Willem Dafoe",
+                "personaje": "Duende Verde",
+                "foto": "imagenes/actores/WillemDafoe.jpg"
+            }
+        ] 
+    }, {
+        "id": 4,
+        "titulo": "Pulp Fiction",
+        "poster": "imagenes/peliculas/pulp_fiction.jpg",
+        "director": "Quentin Tarantino",
+        "precio": 18.99,
+        "categoria": "Comedia",
+        "descripcion": "Pulp Fiction (en Hispanoamérica Tiempos violentos) es una película estadounidense de 19944​ escrita y dirigida por Quentin Tarantino. El guion está basado en historias que el mismo Tarantino desarrolló en colaboración con Roger Avary durante los años 1992 y 1993, incluyendo escenas que originalmente habían sido escritas para True Romance.",
+        "anno": 1994,
+        "actores": [{
+                "nombre": "John Travolta",
+                "personaje": "Vincent Vega",
+                "foto": "imagenes/actores/JohnTravolta.jpg"
+            },
+            {
+                "nombre": "Samuel L. Jackson",
+                "personaje": "Jules Winnfield",
+                "foto": "imagenes/actores/SamuelLJackson.jpg"
+            }
+        ] 
+    }, {
+        "id": 5,
+        "titulo": "Origen",
+        "poster": "imagenes/peliculas/origen.jpg",
+        "director": "Christopher Nolan",
+        "precio": 70.99,
+        "categoria": "Suspense",
+        "descripcion": "Inception (Origen, en España, y El origen, en Hispanoamérica) es una película británica-estadounidense de ciencia ficción escrita, producida y dirigida por Christopher Nolan y protagonizada por Leonardo DiCaprio, Ellen Page, Joseph Gordon-Levitt, Ken Watanabe, Tom Hardy, Marion Cotillard, Cillian Murphy, Tom Berenger y Michael Caine.",
+        "anno": 2010,
+        "actores": [{
+                "nombre": "Leonardo DiCaprio",
+                "personaje": "Dominick Cobb",
+                "foto": "imagenes/actores/LeonardoDiCaprio.jpg"
+            },
+            {
+                "nombre": "Cillian Murphy",
+                "personaje": "Robert Fischer",
+                "foto": "imagenes/actores/CillianMurphy.jpg"
+            }
+        ] 
+    }, {
+        "id": 6,
+        "titulo": "El Caballero oscuro",
+        "poster": "imagenes/peliculas/dark_knight.jpg",
+        "director": "Christopher Nolan",
+        "precio": 31.99,
+        "categoria": "Acción",
+        "descripcion": "The Dark Knight (titulada El caballero oscuro en España y Batman: El caballero de la noche en Hispanoamérica) es una película de superhéroes británico-estadounidense de 2008 dirigida por Christopher Nolan, escrita por Nolan y su hermano Jonathan Nolan y producida por Emma Thomas, Charles Roven y el mismo Nolan.",
+        "anno": 2008,
+        "actores": [{
+                "nombre": "Christian Bale",
+                "personaje": "Batman",
+                "foto": "imagenes/actores/christianBale.jpg"
+            },
+            {
+                "nombre": "Michael Caine",
+                "personaje": "Alfred",
+                "foto": "imagenes/actores/MichaelCaine.jpg"
+            }
+        ] 
+    }, {
+        "id": 7,
+        "titulo": "Interestellar",
+        "poster": "imagenes/peliculas/interestelar.jpg",
+        "director": "Christopher Nolan",
+        "precio": 69.99,
+        "categoria": "Ciencia Ficción",
+        "descripcion": "Interstellar es una película épica de ciencia ficción estadounidense de 2014, dirigida por Christopher Nolan y protagonizada por Matthew McConaughey, Anne Hathaway, Jessica Chastain, Michael Caine y Matt Damon. Presenta a un equipo de astronautas que viajan a través de un agujero de gusano en busca de un nuevo hogar para la humanidad.",
+        "anno": 2014,
+        "actores": [{
+                "nombre": "Matthew McConaughey",
+                "personaje": "Joseph Cooper",
+                "foto": "imagenes/actores/matthewMc.jpg"
+            },
+            {
+                "nombre": "Anne Hathaway",
+                "personaje": "Amelia Brand",
+                "foto": "imagenes/actores/AnneHathaway.jpg"
+            }
+        ] 
+    }, {
+        "id": 8,
+        "titulo": "The Fast and the Furious.\nTokyo Drift",
+        "poster": "imagenes/peliculas/tokiodrift.jpg",
+        "director": "Justin Lin",
+        "precio": 180.99,
+        "categoria": "Acción",
+        "descripcion": "The Fast and the Furious: Tokyo Drift (titulada: A todo gas: Tokyo Race en España y Rápido y furioso: Reto Tokio en Hispanoamérica) es una película estadounidense, dirigida por Justin Lin y protagonizada por Lucas Black, Bow Wow, Sung Kang, Nathalie Kelley y Brian Tee.",
+        "anno": 2006,
+        "actores": [{
+                "nombre": "Lucas Black",
+                "personaje": "Sean Boswell",
+                "foto": "imagenes/actores/lucas_black.jpg"
+            },
+            {
+                "nombre": "Sung Kang",
+                "personaje": "Han Lue",
+                "foto": "imagenes/actores/sungKang.jpg"
+            }
+        ] 
+    },{
+        "id": 9,
+        "titulo": "Star Wars: Episodio III - La venganza de los Sith",
+        "poster": "imagenes/peliculas/starwars3.jpg",
+        "director": "George Lucas",
+        "precio": 68.99,
+        "categoria": "Ciencia Ficción",
+        "descripcion": "Star Wars: Episodio III - La venganza de los Sith (título original en inglés: Star Wars: Episode III - Revenge of the Sith; también conocida en español como La guerra de las galaxias: Episodio III - La venganza de los Sith) es una película de space operan. 1​ estadounidense, escrita y dirigida por George Lucas.",
+        "anno": 2005,
+        "actores": [{
+                "nombre": "Hayden Christensen",
+                "personaje": "Anakin Skywalker",
+                "foto": "imagenes/actores/haydenChristensen.jpg"
+            },
+            {
+                "nombre": "Ewan McGregor",
+                "personaje": "Obi-Wan Kenobi",
+                "foto": "imagenes/actores/EwanMcgregor.jpg"
+            }
+        ] 
+    }, {
+        "id": 10,
+        "titulo": "Attack on titan Temporada 3",
+        "poster": "imagenes/peliculas/attackontitan3.jpg",
+        "director": "Hajime Isayama",
+        "precio": 680.99,
+        "categoria": "Anime",
+        "descripcion": "El anime está basado en el manga homónimo, creado en 2009 por Hajime Isayama. La serie se centra en Eren Jaeger y sus amigos Armin Arlert y Mikasa Ackerman, quienes viven en una ciudad rodeada por tres grandes murallas, las cuales son la única defensa de la humanidad ante los «titanes», unos gigantes come humanos.",
+        "anno": 2018,
+        "actores": [{
+                "nombre": "",
+                "personaje": "Eren Jaeger",
+                "foto": "imagenes/actores/ErenJaeger.png"
+            },
+            {
+                "nombre": "",
+                "personaje": "Levi Ackerman",
+                "foto": "imagenes/actores/LeviAckerman.png"
+            }
+        ] 
+    }, {
+        "id": 11,
+        "titulo": "The mechanic",
+        "poster": "imagenes/peliculas/themechanic.jpg",
+        "director": "Simon West",
+        "precio": 18.99,
+        "categoria": "Acción",
+        "descripcion": "The Mechanic (titulada The Mechanic en España, El mecánico en Argentina y El especialista en México) es una película estadounidense de acción de 2011. Protagonizada por Jason Statham y Ben Foster. Dirigida por Simon West.",
+        "anno": 2011,
+        "actores": [{
+                "nombre": "Jason Statham",
+                "personaje": "Arthur Bishop",
+                "foto": "imagenes/actores/JasonStatham.jpg"
+            },
+            {
+                "nombre": "Mini Andén",
+                "personaje": "Sarah",
+                "foto": "imagenes/actores/MiniAnden.png"
+            }
+        ] 
+    }, {
+        "id": 12,
+        "titulo": "Vengadores: Infinity War",
+        "poster": "imagenes/peliculas/infinitywar.jpg",
+        "director": "Joe Russo, Anthony Russo",
+        "precio": 40.99,
+        "categoria": "Acción",
+        "descripcion": "Avengers: Infinity War (titulada Vengadores: Infinity War en España) es una película estadounidense de superhéroes de 2018, basada en el equipo de superhéroes de Marvel Comics los Vengadores, producida por Marvel Studios y distribuida por Walt Disney Studios Motion Pictures.",
+        "anno": 2018,
+        "actores": [{
+                "nombre": "Robert Downey Jr",
+                "personaje": "Iron Man",
+                "foto": "imagenes/actores/RobertDowneyJr.jpg"
+            },
+            {
+                "nombre": "Chris Hemsworth",
+                "personaje": "Thor",
+                "foto": "imagenes/actores/ChrisHemsworth.jpg"
+            }
+        ] 
+    }]
+}

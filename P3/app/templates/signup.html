@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+
+{% block titleHead %} Registro {% endblock %}
+
+{% block body %}
+
+    <div class="info">
+        <header>
+            <h1>Página de registro</h1>
+        </header>
+        <main>
+            <form action={{ url_for('signup_page') }} method="POST" onsubmit="return(validation())">
+                <label>Nombre</label><br>
+                <input id="firstname" name="firstname" type="text" placeholder="Introduzca el nombre" required>
+                <br><br>
+                <label>Apellidos</label><br>
+                <input id="lastname" name="lastname" type="text" placeholder="Introduzca el apellido" required>
+                <br><br>
+                <label>Dirección 1</label><br>
+                <input id="direccion1" name="direccion1" type="text" placeholder="Introduzca la dirección" required>
+                <br><br>
+                <label>Dirección 2</label><br>
+                <input id="direccion2" name="direccion2" type="text" placeholder="Introduzca el nombre  (No requerida)" >
+                <br><br>
+                <label>Ciudad</label><br>
+                <input id="city" name="city" type="text" placeholder="Introduzca el nombre" required>
+                <br><br>
+                <label>Estado</label><br>
+                <input id="state" name="state" type="text" placeholder="Introduzca el estado  (No requerida)">
+                <br><br>
+                <label>Código postal</label><br>
+                <input id="zipcode" name="zipcode" type="text" placeholder="Introduzca el código postal" required>
+                <br><br>
+                <label>País</label><br>
+                <input id="country" name="country" type="text" placeholder="Introduzca el País" required>
+                <br><br>
+                <label>Región</label><br>
+                <input id="region" name="region" type="text" placeholder="Introduzca la región" required>
+                <br><br>
+                <label>Email</label><br>
+                <input id="email" name="email" type="text" placeholder="Introduzca el Email  (No requerida)">
+                <br><br>
+                <label>Phone</label><br>
+                <input id="phone" name="phone" type="text" placeholder="Introduzca el número de teléfono  (No requerida)">
+                <br><br>
+                <label>Tipo de tarjeta de crédito</label><br>
+                <input id="creditcardtype" name="creditcardtype" type="text" placeholder="Introduzca el tipo de tarjeta" required>
+                <br><br>
+                <label>Credit card</label><br>
+                <input id="card" name="card" type="tel" inputmode="numeric" pattern="[0-9\s]{13,19}" maxlength="19"
+                    placeholder="xxxx xxxx xxxx xxxx" required>
+                <br><br>
+                <label>Fecha de caducidad de la tarjeta de crédito</label><br>
+                <input id="creditcardexpiration" name="creditcardexpiration" type="text" placeholder="Introduzca la fecha de caducidad de la tarjeta" required>
+                <br><br>
+                <label>Edad</label><br>
+                <input id="age" name="age" type="text" placeholder="Introduzca su edad  (No requerida)">
+                <br><br>
+                <label>Género - M (Male) o F (Female)</label><br>
+                <input id="gender" name="gender" type="text" placeholder="Introduzca su género  (No requerido)">
+                <br><br>
+                <label>Nombre de usuario</label><br>
+                <input id="username" name="username" type="text" placeholder="Introduzca el nombre de usuario" required>
+                <br><br>
+                <label>Contrasena</label><br>
+                <input id="password_input" name="password_input" type="password" onsubmit="return fortaleza()"
+                    placeholder="Introduzca la contrasena" required><br>
+                <meter id="password_strength_meter" min="0" max="4" low="3" high="4" value="0"></meter>
+                <script>
+                    $(document).ready(function () {
+                        $("#password_input").on('hover keydown keypress keyup', function (key) {
+                            var password = document.getElementById('password_input').value;
+                            var fortaleza = 4;
+                            var keypressed = key.key;
+                            var meter = document.getElementById('password_strength_meter');
+                            if (keypressed == "Backspace") password.slice(0, -1);
+                            else if (keypressed == "Shift") password = password;
+                            else if (keypressed == "CapsLock") password = password;
+                            else if (keypressed == "Alt") password = password;
+                            else if (keypressed == "Control") password = password;
+                            else if (keypressed == "ArrowUp") password = password;
+                            else if (keypressed == "ArrowDown") password = password;
+                            else if (keypressed == "ArrowLeft") password = password;
+                            else if (keypressed == "ArrowRight") password = password;
+
+                            else password += keypressed;
+
+                            if (password.length < 6) {
+                                document.getElementById('errMSG').innerHTML = "6 caracteres mínimo";
+                                fortaleza -= 1;
+                            }
+                            if (/[A-Z]/.test(password) == false) {
+                                document.getElementById('errMSG').innerHTML = "1 mayúscula mínimo";
+                                fortaleza -= 1;
+                            }
+                            if (/[a-z]/.test(password) == false) {
+                                document.getElementById('errMSG').innerHTML = "1 minúscula mínimo";
+                                fortaleza -= 1;
+                            }
+                            if (/[0-9]/.test(password) == false) {
+                                document.getElementById('errMSG').innerHTML = "1 dígito mínimo";
+                                fortaleza -= 1;
+                            }
+
+                            if (fortaleza == 4) {
+                                document.getElementById('errMSG').innerHTML = "";
+                            }
+
+                            meter.value = fortaleza;
+                        });
+                    });
+                </script>
+                <br><br>
+                <label>Repetir contrasena</label><br>
+                <input id="password_input_repeat" name="Contrasenha" type="password"
+                    placeholder="Introduzca la contrasenha" required>
+                <br><br>
+                <button id="button" type="submit" class="buttonP">Registrarse</button>
+            </form>
+            <br><br>
+            <div class="errorMsg">
+                <p id="errMSG">{{error}}</p>
+            </div>
+        </main>
+    </div>
+{% endblock %}
