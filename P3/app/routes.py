@@ -278,7 +278,7 @@ def topUSA():
     second_table = mycol.find({"year": {$lt:"2000"}}, {"directors":{$elemMatch:{"Woody Allen"}}})
 
     # Peliculas en las que Johnny Galecki y Jim Parsons compartan reparto
-    third_table = mycol.find()
+    third_table = mycol.find({"$and": [{"actors": {$elemMatch: {"Parsons, Jim"}}}, {"actors": {$elemMatch: {"Parsons, Jim"}}}]})
 
 @app.route("/historial.html", methods=['GET'])
 def historial():

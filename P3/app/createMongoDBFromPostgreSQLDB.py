@@ -259,5 +259,13 @@ def main():
 
     mycol.insert_many(top_usa)
 
+    first_table = mycol.find({"$and": [{"year": {'$lt':2000}}, {"genres":{'$elemMatch': {"Comedy"}}}, {"title": {'$search': "Life"}}]})
+    # second_table = mycol.find({"year": {'$lt':"2000"}}, {"directors":{'$elemMatch':{"Woody Allen"}}})
+    # third_table = mycol.find({"$and": [{"actors": {'$elemMatch': {"Parsons, Jim"}}}, {"actors": {'$elemMatch': {"Parsons, Jim"}}}]})
+
+    print(list(first_table))
+    # print(second_table)
+    # print(third_table)
+
 if __name__ == '__main__':
     main()
