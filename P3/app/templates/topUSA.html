@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block titleHead %}{{film[1]}}{% endblock %}
+{% block titleHead %}topUSA{% endblock %}
 
 {% block content %}
 <div class="info">
@@ -8,7 +8,7 @@
   </header>
   <div>
     <table>
-      {% for pelicula in tabla1 %}
+      {% for pelicula in first_table %}
       <tr>
         <th>title</th>
         <th>genres</th>
@@ -27,6 +27,51 @@
         <td>{{pelicula[5]}}</td>
         <td>{{pelicula[6]}}</td>
       </tr>
+      {% endfor %}
+    </table>
+    <table>
+      {% for pelicula in second_table %}
+      <tr>
+        <th>title</th>
+        <th>genres</th>
+        <th>year</th>
+        <th>directors</th>
+        <th>actors</th>
+        <th>most related movies</th>
+        <th>related movies</th>
+      </tr>
+      <tr>
+        <td>{{pelicula[0]}}</td>
+        <td>{{pelicula[1]}}</td>
+        <td>{{pelicula[2]}}</td>
+        <td>{{pelicula[3]}}</td>
+        <td>{{pelicula[4]}}</td>
+        <td>{{pelicula[5]}}</td>
+        <td>{{pelicula[6]}}</td>
+      </tr>
+      {% endfor %}
+    </table>
+    <table>
+      {% for pelicula in third_table %}
+      <tr>
+        <th>title</th>
+        <th>genres</th>
+        <th>year</th>
+        <th>directors</th>
+        <th>actors</th>
+        <th>most related movies</th>
+        <th>related movies</th>
+      </tr>
+      <tr>
+        <td>{{pelicula[0]}}</td>
+        <td>{{pelicula[1]}}</td>
+        <td>{{pelicula[2]}}</td>
+        <td>{{pelicula[3]}}</td>
+        <td>{{pelicula[4]}}</td>
+        <td>{{pelicula[5]}}</td>
+        <td>{{pelicula[6]}}</td>
+      </tr>
+      {% endfor %}
     </table>
   </div>
 </div>

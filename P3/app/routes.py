@@ -272,13 +272,32 @@ def topUSA():
     mycol = mydb["topUSA"]
     
     # Comedias de 1997 con "Life" en el titulo
-    first_table = mycol.find({"year": "1997"}, {"genres":{$elemMatch: {"Comedy"}}},{"title": {$search: "Life"}})
-
+    first_table = mycol.find({'$and': 
+                                [
+                                    {"year":'1997'}, 
+                                    {"genres":{'$elemMatch': {'$regex' : ".*Comedy.*"}}},
+                                    {"title": {'$regex': ".*Life.*"}}
+                                ]
+                            })
+    
     # Peliculas dirigidas por Woody Allen en los 90
-    second_table = mycol.find({"year": {$lt:"2000"}}, {"directors":{$elemMatch:{"Woody Allen"}}})
+    second_table = mycol.find({'$and': 
+                                [
+                                    {'year': {'$lt':'2000'}}, 
+                                    {'year':{'$gt': '1989'}}, 
+                                    {'directors': {'$elemMatch': {'$regex': '.*Woody.*'}}},
+                                    {'directors': {'$elemMatch': {'$regex': '.*Allen.*'}}}
+                                ]
+                            })
 
     # Peliculas en las que Johnny Galecki y Jim Parsons compartan reparto
-    third_table = mycol.find({"$and": [{"actors": {$elemMatch: {"Parsons, Jim"}}}, {"actors": {$elemMatch: {"Parsons, Jim"}}}]})
+    third_table = mycol.find({"$and": 
+                                [
+                                    {"actors": {'$elemMatch': {'$regex': ".*Parsons, Jim.*"}}}, 
+                                    {"actors": {'$elemMatch': {'$regex': ".*Galecki, Johnny.*"}}}
+                                ]
+                            })
+    return render_template('topUSA.html', logged=logged(), first_table=first_table, second_table=second_table, third_table=third_table)
 
 @app.route("/historial.html", methods=['GET'])
 def historial():
@@ -422,6 +441,13 @@ def redirect_sidenav():
 def redirect_historial():
     stack_push(request.url)
     return redirect(url_for('historial'))
+
+@app.route("/cargar_categoria/topUSA.html", methods=['GET'])
+@app.route("/realizar_compra/topUSA.html", methods=['GET'])
+@app.route("/index/topUSA.html", methods=['GET'])
+def redirect_topUSA():
+    stack_push(request.url)
+    return redirect(url_for('topUSA'))
 
 
 @app.route("/cargar_categoria/carrito.html", methods=['GET'])

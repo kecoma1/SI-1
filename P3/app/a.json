@@ -1,0 +1,27 @@
+[
+    {'_id': ObjectId('5fd669f1574a97a3064c87bf'), 'title': 'Big Bang Theory (2006)', 'genres': ['Comedy'
+        ], 'year': '2006', 'directors': [], 'actors': ['Galecki, Johnny', 'Parsons, Jim (II)', 'Walsh, Amanda (II)'
+        ], 'most_related_movies': [
+            {'title': 'Big Bang Theory (2006)', 'year': '2006'
+            },
+            {'title': 'Next Friday (2000)', 'year': '2000'
+            },
+            {'title': 'American Virgin (2000)', 'year': '2000'
+            },
+            {'title': 'Specials, The (2000)', 'year': '2000'
+            },
+            {'title': "I'm the One That I Want (2000)", 'year': '2000'
+            },
+            {'title': '3 Strikes (2000)', 'year': '2000'
+            },
+            {'title': 'Meet the Parents (2000)', 'year': '2000'
+            },
+            {'title': 'Wirey Spindell (2000)', 'year': '2000'
+            },
+            {'title': 'Screwed (2000)', 'year': '2000'
+            },
+            {'title': 'Cecil B. DeMented (2000)', 'year': '2000'
+            }
+        ], 'related_movies': []
+    }
+]
