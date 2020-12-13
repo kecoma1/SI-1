@@ -3,73 +3,134 @@
 {% block titleHead %}topUSA{% endblock %}
 
 {% block content %}
-<div class="info">
-  <header>
-  </header>
+<div class="mainHistorial">
   <div>
-    <table>
+    <br><br>Comedias de 1997 con "Life" en el título<br>
+    <table class="tabletopUSA">
+      <tr class="header_row_table">
+        <th>Título</th>
+        <th>Género</th>
+        <th>Año</th>
+        <th>Directores</th>
+        <th>Actores</th>
+        <th>Películas más relacionadas</th>
+        <th>Películas relacionadas</th>
+      </tr>
       {% for pelicula in first_table %}
       <tr>
-        <th>title</th>
-        <th>genres</th>
-        <th>year</th>
-        <th>directors</th>
-        <th>actors</th>
-        <th>most related movies</th>
-        <th>related movies</th>
-      </tr>
-      <tr>
-        <td>{{pelicula[0]}}</td>
-        <td>{{pelicula[1]}}</td>
-        <td>{{pelicula[2]}}</td>
-        <td>{{pelicula[3]}}</td>
-        <td>{{pelicula[4]}}</td>
-        <td>{{pelicula[5]}}</td>
-        <td>{{pelicula[6]}}</td>
+        <td class="orden">{{pelicula["title"]}}</td>
+        <td class="orden">
+          {% for genero in pelicula["genres"]%}
+            {{genero}}<br>
+          {% endfor %}
+        </td>
+        <td class="orden">{{pelicula["year"]}}</td>
+        <td class="orden">
+          {% for directores in pelicula["directors"]%}
+            {{directores}}<br>
+          {% endfor %}
+        </td>
+        <td class="orden">
+          {% for actores in pelicula["actors"]%}
+            {{actores}}<br>
+          {% endfor %}
+        </td>
+        <td class="orden">
+          {% for mrm in pelicula["most_related_movies"]%}
+            {{mrm["title"]}}<br>
+          {% endfor %}
+        </td>
+        <td class="orden">
+          {% for rm in pelicula["related_movies"]%}
+            {{rm["title"]}}<br>
+          {% endfor %}
+        </td>
       </tr>
       {% endfor %}
     </table>
-    <table>
+    <br><br><br><br><br><br>Películas dirigidas por Woody Allen en los 90<br>
+    <table class="tabletopUSA">
+      <tr class="header_row_table">
+        <th>Título</th>
+        <th>Género</th>
+        <th>Año</th>
+        <th>Directores</th>
+        <th>Actores</th>
+        <th>Películas más relacionadas</th>
+        <th>Películas relacionadas</th>
+      </tr>
       {% for pelicula in second_table %}
       <tr>
-        <th>title</th>
-        <th>genres</th>
-        <th>year</th>
-        <th>directors</th>
-        <th>actors</th>
-        <th>most related movies</th>
-        <th>related movies</th>
-      </tr>
-      <tr>
-        <td>{{pelicula[0]}}</td>
-        <td>{{pelicula[1]}}</td>
-        <td>{{pelicula[2]}}</td>
-        <td>{{pelicula[3]}}</td>
-        <td>{{pelicula[4]}}</td>
-        <td>{{pelicula[5]}}</td>
-        <td>{{pelicula[6]}}</td>
+        <td class="orden">{{pelicula["title"]}}</td>
+        <td class="orden">
+          {% for genero in pelicula["genres"]%}
+            {{genero}}<br>
+          {% endfor %}
+        </td>
+        <td class="orden">{{pelicula["year"]}}</td>
+        <td class="orden">
+          {% for directores in pelicula["directors"]%}
+            {{directores}}<br>
+          {% endfor %}
+        </td>
+        <td class="orden">
+          {% for actores in pelicula["actors"]%}
+            {{actores}}<br>
+          {% endfor %}
+        </td>
+        <td class="orden">
+          {% for mrm in pelicula["most_related_movies"]%}
+            {{mrm["title"]}}<br>
+          {% endfor %}
+        </td>
+        <td class="orden">
+          {% for rm in pelicula["related_movies"]%}
+            {{rm["title"]}}<br>
+          {% endfor %}
+        </td>
       </tr>
       {% endfor %}
     </table>
-    <table>
+    <br><br><br><br><br><br>Películas en las que Johnny Galecki y Jim Parsons compartan reparto<br>
+    <table class="tabletopUSA">
+      <tr class="header_row_table">
+        <th>Título</th>
+        <th>Género</th>
+        <th>Año</th>
+        <th>Directores</th>
+        <th>Actores</th>
+        <th>Películas más relacionadas</th>
+        <th>Películas relacionadas</th>
+      </tr>
       {% for pelicula in third_table %}
       <tr>
-        <th>title</th>
-        <th>genres</th>
-        <th>year</th>
-        <th>directors</th>
-        <th>actors</th>
-        <th>most related movies</th>
-        <th>related movies</th>
-      </tr>
-      <tr>
-        <td>{{pelicula[0]}}</td>
-        <td>{{pelicula[1]}}</td>
-        <td>{{pelicula[2]}}</td>
-        <td>{{pelicula[3]}}</td>
-        <td>{{pelicula[4]}}</td>
-        <td>{{pelicula[5]}}</td>
-        <td>{{pelicula[6]}}</td>
+        <td class="orden">{{pelicula["title"]}}</td>
+        <td class="orden">
+          {% for genero in pelicula["genres"]%}
+            {{genero}}<br>
+          {% endfor %}
+        </td>
+        <td class="orden">{{pelicula["year"]}}</td>
+        <td class="orden">
+          {% for directores in pelicula["directors"]%}
+            {{directores}}<br>
+          {% endfor %}
+        </td>
+        <td class="orden">
+          {% for actores in pelicula["actors"]%}
+            {{actores}}<br>
+          {% endfor %}
+        </td>
+        <td class="orden">
+          {% for mrm in pelicula["most_related_movies"]%}
+            {{mrm["title"]}}<br>
+          {% endfor %}
+        </td>
+        <td class="orden">
+          {% for rm in pelicula["related_movies"]%}
+            {{rm["title"]}}<br>
+          {% endfor %}
+        </td>
       </tr>
       {% endfor %}
     </table>

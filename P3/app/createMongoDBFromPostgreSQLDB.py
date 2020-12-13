@@ -285,7 +285,6 @@ def main():
     #print(list(prueba))
     #print(list(second_table))
     # print(second_table)
-    print(list(third_table))
 
 if __name__ == '__main__':
     main()

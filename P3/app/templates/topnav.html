@@ -9,6 +9,7 @@
     </head>
     <div class="topnav">
         <a href={{ url_for('back') }} target="_parent"><img src={{ url_for('static', filename="imagenes/utils/back.png") }} alt="back" class="small_img"></a>
+        <a href={{ url_for('topUSA') }} target="_parent">Top USA</a>
         <a href="index" target="_parent">Inicio</a>
         <a href="login.html" target="_parent">
             {% if logged %}
@@ -17,7 +18,6 @@
                 Iniciar sesión
             {% endif %}
         </a>
-        <a href={{ url_for('topUSA') }} target="_parent">Top USA</a>
         <a href={{ url_for('signup_page') }} target="_parent">Registrarse</a>
         <a href={{ url_for('historial') }} target="_parent">Historial</a>
         <a href={{ url_for('carrito') }} target="_parent"><img src={{ url_for('static', filename="imagenes/utils/carrito5.png") }} alt="Carrito" class="small_img"></a>

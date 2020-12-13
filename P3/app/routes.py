@@ -279,7 +279,7 @@ def topUSA():
                                     {"title": {'$regex': ".*Life.*"}}
                                 ]
                             })
-    
+
     # Peliculas dirigidas por Woody Allen en los 90
     second_table = mycol.find({'$and': 
                                 [
@@ -297,7 +297,7 @@ def topUSA():
                                     {"actors": {'$elemMatch': {'$regex': ".*Galecki, Johnny.*"}}}
                                 ]
                             })
-    return render_template('topUSA.html', logged=logged(), first_table=first_table, second_table=second_table, third_table=third_table)
+    return render_template('topUSA.html', logged=logged(), first_table=list(first_table), second_table=list(second_table), third_table=list(third_table))
 
 @app.route("/historial.html", methods=['GET'])
 def historial():
