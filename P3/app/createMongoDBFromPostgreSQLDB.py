@@ -21,7 +21,7 @@ def db_top_usa_films():
         USA (800)
 
         Return:
-            Devuelve True en caso de exito,
+            Devuelve una lista con las películas en caso de exito,
             devuelve False en caso de error
     """
     try:
@@ -48,8 +48,8 @@ def db_top_usa_films():
             maindic['year'] = value[2]
             maindic['directors'] = db_directors(value[0])
             maindic['actors'] = db_actors(value[0]) # Se puede limitar
-            maindic['most_related_movies'] = db_most_related(db_genres_list, list_db_result)
-            maindic['related_movies'] = db_related(db_genres_list, list_db_result)
+            maindic['most_related_movies'] = db_most_related(value[0], db_genres_list, list_db_result)
+            maindic['related_movies'] = db_related(value[0], db_genres_list, list_db_result)
             mainlist.append(maindic)
             print("\tPelicula ", i, " de 800")
             i+=1
@@ -69,8 +69,11 @@ def db_genres(id):
     """
     Función que nos devuelve una lista con los generos de la película
 
+    Args:
+        id (int): Entero con la id de la película
+
     Return:
-        Devuelve una lista en caso de exito,
+        Devuelve una lista con los géneros en caso de exito,
         devuelve False en caso de error
     """
     try:
@@ -100,6 +103,9 @@ def db_genres(id):
 def db_directors(id):
     """
     Función que nos devuelve una lista con los directores de la película
+
+    Args:
+        id (int): Entero con la id de la película
 
     Return:
         Devuelve una lista en caso de exito,
@@ -134,6 +140,9 @@ def db_actors(id):
     """
     Función que nos devuelve una lista con los directores de la película
 
+    Args:
+        id (int): Entero con la id de la película
+
     Return:
         Devuelve una lista en caso de exito,
         devuelve False en caso de error
@@ -165,9 +174,16 @@ def db_actors(id):
         return False
 
 
-def db_most_related(lista, tuplas):
+def db_most_related(id, lista, tuplas):
     """
-    Función que nos devuelve una lista con las películas que tengan mismo generos
+    Función que nos devuelve una lista con las películas que tengan el 100%
+    de los generos de la película 'x'
+
+    Args:
+        id (int): Entero con la id de la película (usado para no anadir la misma pelicula)
+        lista (list): Lista con los generos de la película 'x'
+        tuplas (lista de tuplas): Lista con las 800 películas del topUsa
+
     Return:
         Devuelve una lista en caso de exito,
         devuelve False en caso de error
@@ -179,8 +195,8 @@ def db_most_related(lista, tuplas):
     most_related_dic = {}
     counter = 0
     for value in tuplas:
-        # Comprobamos si la lista es igual a los géneros 
-        if lista == db_genres(value[0]):
+        # Comprobamos si la lista es igual a los géneros
+        if  all(item in db_genres(value[0]) for item in lista) and id != value[0]:
             # Actualizamos el diccionario
             most_related_dic = {}
             most_related_dic['title'] = value[1]
@@ -195,9 +211,16 @@ def db_most_related(lista, tuplas):
     return most_related_list
 
 
-def db_related(lista, tuplas):
+def db_related(id, lista, tuplas):
     """
-    Función que nos devuelve una lista con las películas que tengan relación
+    Función que nos devuelve una lista con las películas que tengan relación, 
+    el 50% (aprox.) de las películas
+
+    Args:
+        id (int): Entero con la id de la película (usado para no anadir la misma pelicula)
+        lista (list): Lista con los generos de la película 'x'
+        tuplas (lista de tuplas): Lista con las 800 películas del topUsa
+
     Return:
         Devuelve una lista en caso de exito,
         devuelve False en caso de error
@@ -207,13 +230,9 @@ def db_related(lista, tuplas):
         return False
 
     length = len(lista)
+    if length == 0:
+        return []
     related_list = []
-
-    # Si hay un elemento con generos impares, retornamos una lista vacia (50% imposible)
-    if length%2 != 0:
-        return related_list
-
-    related_dic = {}
     counter = 0
     for value in tuplas:
 
@@ -225,8 +244,13 @@ def db_related(lista, tuplas):
             if genre in lista:
                 matches += 1
 
+        # Evitamos divisiones entre 0
+        if matches == 0:
+            continue
+
         # Si los matches son el 50%, actualizamos el diccionario
-        if matches == (length/2):
+        if (length/matches >= 1.5 and length/matches <= 2) and id != list(value)[0]:
+            related_dic = {}
             related_dic['title'] = value[1]
             related_dic['year'] = value[2]
             related_list.append(related_dic)
@@ -260,24 +284,6 @@ db_conn.close()
 
 print("Insertamos las peliculas en mongodb")
 mycol.insert_many(top_usa)
-
-first_table = mycol.find({'$and': 
-                            [
-                                {"year":'1997'}, 
-                                {"genres":{'$elemMatch': {'$regex' : ".*Comedy.*"}}},
-                                {"title": {'$regex': ".*Life.*"}}
-                            ]
-                        })
-second_table = mycol.find({'$and': 
-                            [
-                                {'year': {'$lt':'2000'}}, 
-                                {'year':{'$gt': '1989'}}, 
-                                {'directors': {'$elemMatch': {'$regex': '.*Woody.*'}}},
-                                {'directors': {'$elemMatch': {'$regex': '.*Allen.*'}}}
-                            ]
-                        })
-
-
 
 prueba = mycol.find({'directors': {'$elemMatch': {'$regex': 'Allen, Woody'}}})
 #print(list(prueba))
