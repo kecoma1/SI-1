@@ -239,52 +239,47 @@ def db_related(lista, tuplas):
     return related_list
 
 
-def main():
-    global db_conn
-    myclient = pymongo.MongoClient("mongodb://localhost:27017/")
-    mydb = myclient["si1"]
-    
-    # En caso de que exista la eliminamos
-    #mycol = mydb["topUSA"]
-    #mycol.drop()
+myclient = pymongo.MongoClient("mongodb://localhost:27017/")
+mydb = myclient["si1"]
 
-    # La volvemos a crear
-    mycol = mydb["topUSA"]
+# En caso de que exista la eliminamos
+mycol = mydb["topUSA"]
+mycol.drop()
 
-    # conexion a la base de datos
-    db_conn = None
-    db_conn = db_engine.connect()
+# La volvemos a crear
+mycol = mydb["topUSA"]
 
-    print("Registramos las peliculas de la BD")
-    #top_usa = db_top_usa_films()
+# conexion a la base de datos
+db_conn = None
+db_conn = db_engine.connect()
 
-    db_conn.close()
+print("Registramos las peliculas de la BD")
+top_usa = db_top_usa_films()
 
-    print("Insertamos las peliculas en mongodb")
-    #mycol.insert_many(top_usa)
+db_conn.close()
 
-    first_table = mycol.find({'$and': 
-                                [
-                                    {"year":'1997'}, 
-                                    {"genres":{'$elemMatch': {'$regex' : ".*Comedy.*"}}},
-                                    {"title": {'$regex': ".*Life.*"}}
-                                ]
-                            })
-    second_table = mycol.find({'$and': 
-                                [
-                                    {'year': {'$lt':'2000'}}, 
-                                    {'year':{'$gt': '1989'}}, 
-                                    {'directors': {'$elemMatch': {'$regex': '.*Woody.*'}}},
-                                    {'directors': {'$elemMatch': {'$regex': '.*Allen.*'}}}
-                                ]
-                            })
+print("Insertamos las peliculas en mongodb")
+mycol.insert_many(top_usa)
 
-    
+first_table = mycol.find({'$and': 
+                            [
+                                {"year":'1997'}, 
+                                {"genres":{'$elemMatch': {'$regex' : ".*Comedy.*"}}},
+                                {"title": {'$regex': ".*Life.*"}}
+                            ]
+                        })
+second_table = mycol.find({'$and': 
+                            [
+                                {'year': {'$lt':'2000'}}, 
+                                {'year':{'$gt': '1989'}}, 
+                                {'directors': {'$elemMatch': {'$regex': '.*Woody.*'}}},
+                                {'directors': {'$elemMatch': {'$regex': '.*Allen.*'}}}
+                            ]
+                        })
 
-    prueba = mycol.find({'directors': {'$elemMatch': {'$regex': 'Allen, Woody'}}})
-    #print(list(prueba))
-    #print(list(second_table))
-    # print(second_table)
 
-if __name__ == '__main__':
-    main()
+
+prueba = mycol.find({'directors': {'$elemMatch': {'$regex': 'Allen, Woody'}}})
+#print(list(prueba))
+#print(list(second_table))
+# print(second_table)
