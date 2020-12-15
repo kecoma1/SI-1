@@ -13,6 +13,11 @@ import random
 import datetime
 import pymongo
 
+# Base de datos mongodb
+myclient = pymongo.MongoClient("mongodb://localhost:27017/")
+mydb = myclient["si1"]
+mycol = mydb["topUSA"]
+
 # Stack donde guardamos las urls visitadas
 stack_url = deque()
 
@@ -267,9 +272,7 @@ def signup_page_get():
 
 @app.route("/topUSA.html", methods=['GET'])
 def topUSA():
-    myclient = pymongo.MongoClient("mongodb://localhost:27017/")
-    mydb = myclient["si1"]
-    mycol = mydb["topUSA"]
+    global mycol
     
     # Comedias de 1997 con "Life" en el titulo
     first_table = mycol.find({'$and': 

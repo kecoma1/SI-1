@@ -230,7 +230,7 @@ def db_related(id, lista, tuplas):
         return False
 
     length = len(lista)
-    if length == 0:
+    if length == 0 or length == 1:
         return []
     related_list = []
     counter = 0
