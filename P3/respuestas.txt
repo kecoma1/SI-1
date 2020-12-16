@@ -1,0 +1,36 @@
+F.
+    i.  Todas las consultas del anexo devuelven una respuesta rapida (en menos de 160 msec)
+    ii. Todas las consultas se benefician de la ejecucion en paralelo, ya que si eliminamos la ejecucion paralela, tarda aproximadamente 32 veces más (3.2 segundos)
+            select a.customerid
+            from customers as a, orders as b
+            where b.status <> 'Paid' and a.customerid = b.customerid
+
+G.
+    b.
+    La consulta hace un escaneo sequencial en todas las ordenes comprobando si hay algun status a null.
+    
+    c.
+
+    d.
+    --Aggregate  (cost=1496.52..1496.53 rows=1 width=8)
+    --  ->  Bitmap Heap Scan on orders  (cost=19.46..1494.25 rows=909 width=0)
+    --        Recheck Cond: (status IS NULL)
+    --        ->  Bitmap Index Scan on index_status  (cost=0.00..19.24 rows=909 width=0)
+    --              Index Cond: (status IS NULL)
+    Podemos ver que el escaneo secuencial ha desaparecido, se ha creado un bitmap sobre el status y se escanea este.
+    El coste se ha reducido bastante.
+
+    e.
+    ANALYZE orders
+
+    f.
+    --Aggregate  (cost=7.33..7.34 rows=1 width=8)
+    --  ->  Index Only Scan using index_status on orders  (cost=0.42..7.32 rows=1 width=0)
+    --        Index Cond: (status IS NULL)
+    El escaneo al bitmap ha desaparecido pero en su lugar se escanean ahora los indices.
+    A pesar de que el coste ya se había reducido bastante con el bitmap, ahora se reduce todavía más con con el escaneo del indice.
+    El coste ha pasado de 3500 a 1496 y finalmente a 7. 
+
+    ANALYZE recoge estadistcas sobre los contenidos de la tabla orders, estas estadistcas las guarda en pg_statistic. El planificador de queries usa las estadistcas para hacer una ejecucion mas eficiente, es por eso que hasta que no usamos el ANALYZE no se mejora coste, no hay datos en pg_statistic. 
+
+
