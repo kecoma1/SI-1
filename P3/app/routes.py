@@ -302,6 +302,10 @@ def topUSA():
                             })
     return render_template('topUSA.html', logged=logged(), first_table=list(first_table), second_table=list(second_table), third_table=list(third_table))
 
+@app.route("/borraCliente.html", methods=['GET'])
+def borraCliente():
+    return render_template('borraCliente.html')
+
 @app.route("/historial.html", methods=['GET'])
 def historial():
     if logged():
@@ -452,6 +456,12 @@ def redirect_topUSA():
     stack_push(request.url)
     return redirect(url_for('topUSA'))
 
+@app.route("/cargar_categoria/borraCliente.html", methods=['GET'])
+@app.route("/realizar_compra/borraCliente.html", methods=['GET'])
+@app.route("/index/borraCliente.html", methods=['GET'])
+def redirect_borraCliente():
+    return redirect(url_for('borraCliente'))
+
 
 @app.route("/cargar_categoria/carrito.html", methods=['GET'])
 @app.route("/realizar_compra/carrito.html", methods=['GET'])
@@ -596,7 +606,4 @@ def introducir_saldo():
     else:
         return redirect(url_for('login_page_GET'))
 
-"""@app.route("/historial.html", methods=['GET'])
-def extendInfo:
-"""
 
