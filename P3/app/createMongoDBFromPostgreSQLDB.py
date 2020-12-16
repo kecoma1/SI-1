@@ -286,6 +286,3 @@ print("Insertamos las peliculas en mongodb")
 mycol.insert_many(top_usa)
 
 prueba = mycol.find({'directors': {'$elemMatch': {'$regex': 'Allen, Woody'}}})
-#print(list(prueba))
-#print(list(second_table))
-# print(second_table)
