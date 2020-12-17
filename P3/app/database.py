@@ -1179,3 +1179,53 @@ def getPrice(id):
         print("-"*60)
 
         return False
+
+
+def borrarClienteSQL(customerid, commit, fallo, duerme):
+    """Funcion que mediante una transacción en SQL borra un cliente
+
+    Args:
+        customerid (int): Id del customer que eliminar
+        commit (str): 'on' se hace commit, si no, no
+        fallo (str): Marca si se debe generar un fallo
+        duerme (int): Segundos que debe dormir el proceso
+
+    Return:
+        False en caso de error
+    """
+    try:
+        # conexion a la base de datos
+        db_conn = None
+        db_conn = db_engine.connect()
+        del_1 = "DELETE FROM orderdetail\
+                USING orders AS a\
+                WHERE a.customerid = 1 AND a.orderid = orderdetail.orderid"
+        del_2 = "DELETE FROM orders\
+                WHERE customerid = 1"
+        del_3 = "DELETE FROM customers WHERE customerid = 1"
+
+
+        db_conn.close()
+    except:
+        if db_conn is not None:
+            db_conn.close()
+        print("Exception in DB access:")
+        print("-"*60)
+        traceback.print_exc(file=sys.stderr)
+        print("-"*60)
+
+        return False
+
+
+def borrarClienteSQLAlchemy(customerid, commit, fallo, duerme):
+    """Funcion que mediante una transacción en SQLAlchemy borra un cliente
+
+    Args:
+        customerid (int): Id del customer que eliminar
+        commit (str): 'on' se hace commit, si no, no
+        fallo (str): Marca si se debe generar un fallo
+        duerme (int): Segundos que debe dormir el proceso
+
+    Return:
+        False en caso de error
+    """
