@@ -81,7 +81,6 @@ def delCustomer(customerid, bFallo, bSQL, duerme, bCommit):
 
     try:
         i = 0
-        # Ejecutamos con fallo
         for del_ in lista:
             i+=1
 
