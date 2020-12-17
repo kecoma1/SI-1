@@ -47,5 +47,3 @@ EXECUTE PROCEDURE updPromo();
 UPDATE orders set status = NULL where customerid=1;
 UPDATE orders set status = NULL where customerid=2;
 UPDATE orders set status = NULL where customerid=3;
-
--- Consultar bloqueos
