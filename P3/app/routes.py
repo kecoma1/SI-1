@@ -302,31 +302,6 @@ def topUSA():
                             })
     return render_template('topUSA.html', logged=logged(), first_table=list(first_table), second_table=list(second_table), third_table=list(third_table))
 
-@app.route("/borraCliente.html", methods=['GET'])
-def borraCliente():
-    customerid = request.args.get('customerid')
-    if customerid != None:
-        customerid = int(customerid)
-    trans_type = request.args.get('txnSQL') 
-    commit = request.args.get('bCommit')
-    fallo = request.args.get('bFallo')
-    duerme = request.args.get('duerme')
-    if duerme != None:
-        duerme = int(duerme)
-    
-    if customerid != None:
-        if trans_type == '1':
-            #SQL
-            if database.borrarClienteSQL(customerid, commit, fallo, duerme) == True: 
-                return render_template('borraCliente.html')
-
-        else:
-            #SQLAlchemy
-            if database.borrarClienteSQLAlchemy(customerid, commit, fallo, duerme) == True: 
-                return render_template('borraCliente.html')
-            
-    return render_template('borraCliente.html')
-
 @app.route("/historial.html", methods=['GET'])
 def historial():
     if logged():
@@ -470,18 +445,13 @@ def redirect_historial():
     stack_push(request.url)
     return redirect(url_for('historial'))
 
+
 @app.route("/cargar_categoria/topUSA.html", methods=['GET'])
 @app.route("/realizar_compra/topUSA.html", methods=['GET'])
 @app.route("/index/topUSA.html", methods=['GET'])
 def redirect_topUSA():
     stack_push(request.url)
     return redirect(url_for('topUSA'))
-
-@app.route("/cargar_categoria/borraCliente.html", methods=['GET'])
-@app.route("/realizar_compra/borraCliente.html", methods=['GET'])
-@app.route("/index/borraCliente.html", methods=['GET'])
-def redirect_borraCliente():
-    return redirect(url_for('borraCliente'))
 
 
 @app.route("/cargar_categoria/carrito.html", methods=['GET'])
