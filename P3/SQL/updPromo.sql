@@ -1,5 +1,7 @@
+-- Modificamos la tabla customers
 ALTER TABLE customers ADD COLUMN promo DECIMAL(4,2);
 
+-- Creamos el trigger
 DROP TRIGGER IF EXISTS updPromo ON customers;
 
 CREATE OR REPLACE FUNCTION updPromo()
@@ -8,10 +10,11 @@ $$
 	BEGIN
         IF(TG_OP = 'UPDATE') THEN
 				-- Actualizamos los orderdetails
-        			UPDATE orderdetail AS b
-					SET price = price - price * (NEW.promo/100)
-					FROM orders AS a
-					WHERE a.customerid = NEW.customerid AND a.orderid = b.orderid AND a.status IS NULL;
+				UPDATE orderdetail AS b
+				SET price = price - price * (NEW.promo/100)
+				FROM orders AS a
+				WHERE a.customerid = NEW.customerid AND a.orderid = b.orderid AND a.status IS NULL;
+
 				-- Actualizamos las orders
 				UPDATE orders AS a
 					SET netamount = t.t_price, 
@@ -35,3 +38,9 @@ CREATE TRIGGER updPromo
 AFTER UPDATE OF promo ON customers
 FOR EACH ROW
 EXECUTE PROCEDURE updPromo();
+
+
+-- Creamos carritos
+UPDATE orders set status = NULL where orderid=109
+UPDATE orders set status = NULL where orderid=108
+UPDATE orders set status = NULL where orderid=107
