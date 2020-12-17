@@ -5,6 +5,7 @@ import sys, traceback, time
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 from sqlalchemy.orm import sessionmaker
+import time
 
 # configurar el motor de sqlalchemy
 db_engine = create_engine("postgresql://alumnodb:alumnodb@localhost/si1", echo=False, execution_options={"autocommit":False})
@@ -116,6 +117,8 @@ def delCustomer(customerid, bFallo, bSQL, duerme, bCommit):
                 db_conn.execute(del_)
             else:
                 session.execute(del_)
+            # Sleep justo después de la ejecución
+            time.sleep(40)
             dbr.append("[info] Consulta "+str(i)+" de 3: ¡Ejecutada!")
 
             dbr.append("[info] Commit: en ejecución...")
@@ -151,7 +154,6 @@ def delCustomer(customerid, bFallo, bSQL, duerme, bCommit):
         session.close()
     else:
         dbr.append("[info] Ejecución correcta.")
-
 
         dbr.append("[info] Finalizando transaccion.")
         # Finalizando la transaccion

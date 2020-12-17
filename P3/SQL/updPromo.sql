@@ -27,6 +27,9 @@ $$
 						GROUP BY c.orderid
 						) AS t
 					WHERE a.customerid = NEW.customerid AND a.status is NULL AND t.t_id = a.orderid;
+				
+				-- Sleep tras haber modificado los datos
+				PERFORM pg_sleep(20);
 					
 			RETURN NEW;
 	END IF;
@@ -41,6 +44,8 @@ EXECUTE PROCEDURE updPromo();
 
 
 -- Creamos carritos
-UPDATE orders set status = NULL where orderid=109
-UPDATE orders set status = NULL where orderid=108
-UPDATE orders set status = NULL where orderid=107
+UPDATE orders set status = NULL where customerid=1;
+UPDATE orders set status = NULL where customerid=2;
+UPDATE orders set status = NULL where customerid=3;
+
+-- Consultar bloqueos
