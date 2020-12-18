@@ -5,6 +5,59 @@
 {% block content %}
 <div class="mainHistorial">
   <div>
+    <br><br>Buscador<div class="searchbar">
+      <form action={{ url_for('busqueda_topUSA') }} method="POST" target="_parent">
+          <input id="film_name" name ="nombre_pelicula" type="text" placeholder="¿Qué buscas? (Nombre película)"><br>
+          <input id="actor_name" name ="nombre_actor" type="text" placeholder="¿Qué buscas? (Nombre actor)"><br>
+          <input id="director_name" name ="nombre_director" type="text" placeholder="¿Qué buscas? (Nombre director)"><br>
+          <input id="year" name ="ano_pelicula" type="text" placeholder="¿Qué buscas? (Ano película)"><br>
+          <input id="genre" name ="genero_pelicula" type="text" placeholder="¿Qué buscas? (Género película)"><br>
+          <button class="buttonS" type="submit" id="search">Search</button>
+      </form>
+    <br><br>Resultado busqueda<br>
+    <table class="tabletopUSA_search">
+      <tr class="header_row_table">
+        <th>Título</th>
+        <th>Género</th>
+        <th>Año</th>
+        <th>Directores</th>
+        <th>Actores</th>
+        <th>Películas más relacionadas</th>
+        <th>Películas relacionadas</th>
+      </tr>
+      {% for pelicula in search_result %}
+      <tr>
+        <td class="orden">{{pelicula["title"]}}</td>
+        <td class="orden">
+          {% for genero in pelicula["genres"]%}
+            {{genero}}<br>
+          {% endfor %}
+        </td>
+        <td class="orden">{{pelicula["year"]}}</td>
+        <td class="orden">
+          {% for directores in pelicula["directors"]%}
+            {{directores}}<br>
+          {% endfor %}
+        </td>
+        <td class="orden">
+          {% for actores in pelicula["actors"]%}
+            {{actores}}<br>
+          {% endfor %}
+        </td>
+        <td class="orden">
+          {% for mrm in pelicula["most_related_movies"]%}
+            {{mrm["title"]}}<br>
+          {% endfor %}
+        </td>
+        <td class="orden">
+          {% for rm in pelicula["related_movies"]%}
+            {{rm["title"]}}<br>
+          {% endfor %}
+        </td>
+      </tr>
+      {% endfor %}
+    </table>
+    <br>
     <br><br>Comedias de 1997 con "Life" en el título<br>
     <table class="tabletopUSA">
       <tr class="header_row_table">

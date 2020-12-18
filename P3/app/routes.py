@@ -392,6 +392,55 @@ def busqueda():
     stack_push(request.url)
     return render_template('busqueda.html', movies=peliculas)
 
+@app.route("/busqueda_topUSA", methods=['POST'])
+def busqueda_topUSA():
+    global mycol
+    consulta = {'$and': [] }
+    nombre_pelicula = request.form['nombre_pelicula']
+    if nombre_pelicula != '':
+        consulta['$and'].append({'title': {'$regex': '.*'+nombre_pelicula+'.*'}})
+    nombre_actor = request.form['nombre_actor']
+    if nombre_actor != '':
+        consulta['$and'].append({'actors': {'$regex': '.*'+nombre_actor+'.*'}})
+    nombre_director = request.form['nombre_director']
+    if nombre_director != '':
+        consulta['$and'].append({'directors': {'$regex': '.*'+nombre_director+'.*'}})
+    ano_pelicula = request.form['ano_pelicula']
+    if ano_pelicula != '':
+        consulta['$and'].append({'year': {'$regex': '.*'+ano_pelicula+'.*'}})
+    genero_pelicula = request.form['genero_pelicula']
+    if genero_pelicula != '':
+        consulta['$and'].append({'genres': {'$regex': '.*'+genero_pelicula+'.*'}})
+    search_result = mycol.find(consulta)
+    # Añadimos las peliculas de la tabla
+    # Comedias de 1997 con "Life" en el titulo
+    first_table = mycol.find({'$and': 
+                                [
+                                    {"year":'1997'}, 
+                                    {"genres":{'$elemMatch': {'$regex' : ".*Comedy.*"}}},
+                                    {"title": {'$regex': ".*Life.*"}}
+                                ]
+                            })
+
+    # Peliculas dirigidas por Woody Allen en los 90
+    second_table = mycol.find({'$and': 
+                                [
+                                    {'year': {'$lt':'2000'}}, 
+                                    {'year':{'$gt': '1989'}}, 
+                                    {'directors': {'$elemMatch': {'$regex': '.*Woody.*'}}},
+                                    {'directors': {'$elemMatch': {'$regex': '.*Allen.*'}}}
+                                ]
+                            })
+
+    # Peliculas en las que Johnny Galecki y Jim Parsons compartan reparto
+    third_table = mycol.find({"$and": 
+                                [
+                                    {"actors": {'$elemMatch': {'$regex': ".*Parsons, Jim.*"}}}, 
+                                    {"actors": {'$elemMatch': {'$regex': ".*Galecki, Johnny.*"}}}
+                                ]
+                            })
+    return render_template('topUSA.html', logged=logged(), search_result=list(search_result), first_table=list(first_table), second_table=list(second_table), third_table=list(third_table))
+
 
 # Redirects desde index/<id>
 @app.route("/index.html", methods=['GET', 'POST'])
