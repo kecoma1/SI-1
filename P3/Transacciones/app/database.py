@@ -118,7 +118,7 @@ def delCustomer(customerid, bFallo, bSQL, duerme, bCommit):
             else:
                 session.execute(del_)
             # Sleep justo después de la ejecución
-            time.sleep(40)
+            time.sleep(duerme)
             dbr.append("[info] Consulta "+str(i)+" de 3: ¡Ejecutada!")
 
             dbr.append("[info] Commit: en ejecución...")
